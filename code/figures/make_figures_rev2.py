@@ -69,13 +69,15 @@ colors_k = ['#2ca02c', '#1f77b4', '#d62728']
 ax.bar(range(len(regimes)), rate_k['mean'].values,
        color=colors_k, edgecolor='black', linewidth=0.8, width=0.55)
 ax.set_xticks(range(len(regimes)))
-ax.set_xticklabels(regimes, fontsize=12)
+ax.set_xticklabels(
+    [f'{r}\n($n$={c})' for r, c in zip(regimes, rate_k['count'].values)],
+    fontsize=12,
+)
 ax.set_ylabel('Temporal Core existence rate')
 ax.set_ylim(0, 1.12)
 ax.axhline(1.0, linestyle=':', color='gray', linewidth=0.8)
-for i, (v, c) in enumerate(zip(rate_k['mean'].values, rate_k['count'].values)):
+for i, v in enumerate(rate_k['mean'].values):
     ax.text(i, v + 0.03, f'{v:.2f}', ha='center', fontsize=11)
-    ax.text(i, -0.06, f'n={c}', ha='center', fontsize=10, color='gray')
 ax.set_title(r'Core existence rate by peak-queue regime $k$')
 plt.tight_layout()
 plt.savefig('fig3_core_vs_k.pdf', bbox_inches='tight')
@@ -91,9 +93,10 @@ ax.bar(range(len(pattern_order)), means.values, yerr=stderr.values,
 ax.set_xticks(range(len(pattern_order)))
 ax.set_xticklabels([pattern_labels[p] for p in pattern_order])
 ax.set_ylabel(r'$|\mathcal{F}| / (2^{n}-1)$')
-ax.set_ylim(0, 1.1)
-for i, v in enumerate(means.values):
-    ax.text(i, v + 0.02, f'{v:.2f}', ha='center', fontsize=10)
+ax.set_ylim(0, 1.15)
+for i, (v, se) in enumerate(zip(means.values, stderr.values)):
+    offset = (se if np.isfinite(se) else 0.0) + 0.025
+    ax.text(i, v + offset, f'{v:.2f}', ha='center', fontsize=10)
 ax.set_title('Feasible coalitions relative to all non-empty coalitions')
 plt.tight_layout()
 plt.savefig('fig4_coalition_reduction.pdf', bbox_inches='tight')
