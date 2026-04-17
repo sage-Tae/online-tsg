@@ -164,4 +164,4 @@ print(f"\n=== Temporal Nucleolus (singletons-only F) ===")
 print(f"  Uniform slack per player: (sum c({{i}}) - c(N)) / n = {slack:.3f}")
 for i in N:
     print(f"  x_{i} = c({{{i}}}) - slack = {tnu[i]:.3f}")
-print(f"  Sum x_i = {sum(tnu.values()):.3f} (should equal c*(N) = {c_N:.3f})")
+print(f"  Sum x_i = {sum(tnu.values()):.3f} (should equal C_online = {C_online:.3f})")
