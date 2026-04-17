@@ -13,7 +13,7 @@ plt.rcParams.update({
     'font.family': 'serif', 'axes.spines.top': False, 'axes.spines.right': False,
 })
 
-SRC = '/Users/sage/Documents/claude/TSG_experiment/experiments/logs/policy_comparison.csv'
+SRC = '../experiments/logs/policy_comparison.csv'
 df = pd.read_csv(SRC)
 nn = df[df.policy == 'nearest_neighbor'].copy()
 
