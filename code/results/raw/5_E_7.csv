@@ -1,0 +1,2 @@
+C_N_online,C_N_static,r,sum_individual,r_star,r_vs_rstar,temporal_epsilon,static_epsilon,temporal_core,static_core,theorem2_predicts_no_core,theorem4_predicts_safe,n_feasible_coalitions,n_static_coalitions,coalition_reduction_ratio,n,pattern,seed
+36.4525,30.1723,1.2081,78.4877,2.6013,r<r*,-5.059468,-3.599352,True,True,False,True,17,31,0.5484,5,E,7

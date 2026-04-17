@@ -1,0 +1,21 @@
+  [1/525] 0%  elapsed=   0.1s  eta=  41.9s
+  [53/525] 10%  elapsed=   2.1s  eta=  18.4s
+  [105/525] 20%  elapsed=   4.1s  eta=  16.2s
+  [158/525] 30%  elapsed=   6.3s  eta=  14.7s
+  [210/525] 40%  elapsed=   8.6s  eta=  13.0s
+  [263/525] 50%  elapsed=  12.8s  eta=  12.8s
+  [315/525] 60%  elapsed=  15.7s  eta=  10.5s
+  [368/525] 70%  elapsed=  33.1s  eta=  14.1s
+  [420/525] 80%  elapsed=  40.9s  eta=  10.2s
+  [473/525] 90%  elapsed= 504.2s  eta=  55.4s
+  [525/525] 100%  elapsed= 650.3s  eta=   0.0s
+
+Wrote 525 rows to /Users/sage/Documents/claude/TSG_experiment/experiments/logs/policy_comparison.csv
+Errors: 0
+
+=== Summary by policy ===
+                    r_mean  core_rate  empty_count  thm11_app  thm11_fires
+policy                                                                    
+batch_reoptimize    1.2570     1.0000            0         66            0
+cheapest_insertion  1.2764     0.9771            4         66            1
+nearest_neighbor    1.3593     0.8914           19         66           12

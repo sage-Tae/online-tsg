@@ -1,0 +1,15 @@
+tsg-agent-output-*/
+**/__pycache__/
+**/*.pyc
+**/venv/
+.DS_Store
+paper/main.aux
+paper/main.log
+paper/main.bbl
+paper/main.blg
+paper/main.out
+paper/main.toc
+paper/main.pdf
+paper/main.fdb_latexmk
+paper/main.fls
+paper/main.synctex.gz

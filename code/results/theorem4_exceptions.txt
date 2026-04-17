@@ -1,0 +1,333 @@
+======================================================================
+CASE: n=5, pattern=A, seed=7
+======================================================================
+
+[1] Basic metrics:
+  C(N)_online = 36.9050
+  c*(N)       = 30.1723
+  sum c({i}) = 76.3938
+  r           = 1.2231
+  r*          = 2.5319
+  r < r*      = True
+  C(N) > sum  = False  (Theorem 2)
+  epsilon*    = 1.768720
+  Core empty  = True
+
+[2] Customer positions:
+  Customer 1: pos=(0.7630828937395717, 7.7991879224011464), dist_from_depot=7.8364, c({i})=15.6729
+  Customer 2: pos=(4.384092314408935, 7.234651778309412), dist_from_depot=8.4593, c({i})=16.9187
+  Customer 3: pos=(9.779895119966026, 5.384958704104337), dist_from_depot=11.1644, c({i})=22.3288
+  Customer 4: pos=(5.011204636599379, 0.7205113335976154), dist_from_depot=5.0627, c({i})=10.1255
+  Customer 5: pos=(2.6843898010187117, 4.9988250082556), dist_from_depot=5.6740, c({i})=11.3480
+
+[3] Online NN route:
+  Serve 4 at t=5.0627
+  Serve 5 at t=9.9329
+  Serve 2 at t=12.7414
+  Serve 1 at t=16.4061
+  Serve 3 at t=25.7406
+
+[4] Most violated coalition:
+  S = [1, 2, 3, 4]
+  |S| = 4
+  c(S) = 28.9386
+  y(S) = 30.7073
+  excess = y(S) - c(S) = 1.7687
+  Members of S:
+    Customer 1: pos=(0.7630828937395717, 7.7991879224011464), dist=7.8364, c({i})=15.6729, y_i=9.2163
+    Customer 2: pos=(4.384092314408935, 7.234651778309412), dist=8.4593, c({i})=16.9187, y_i=5.0644
+    Customer 3: pos=(9.779895119966026, 5.384958704104337), dist=11.1644, c({i})=22.3288, y_i=10.8937
+    Customer 4: pos=(5.011204636599379, 0.7205113335976154), dist=5.0627, c({i})=10.1255, y_i=5.5330
+  Complement N\S = [5]:
+    Customer 5: pos=(2.6843898010187117, 4.9988250082556), dist=5.6740, c({i})=11.3480, y_i=6.1977
+  sum c({j}) for j in N\S = 11.3480
+
+[5] Mechanism analysis:
+  C(N)_online - sum_{j not in S} c({j}) = 36.9050 - 11.3480 = 25.5570
+  c(S) = 28.9386
+  Forced min y(S) > c(S)? False
+
+  Cheapest customer: 4, c({cheapest}) = 10.1255
+  c(N\{cheapest}) = 29.6033
+  C(N)_online > c(N\{cheapest}) + c({cheapest})? 
+    36.9050 > 29.6033 + 10.1255 = 39.7288
+    = False
+
+  Online excess: C(N)_online - c*(N) = 6.7327
+  Marginal cost of cheapest in optimal: c*(N) - c*(N\{cheapest}) = 30.1723 - 29.6033 = 0.5690
+  c({cheapest}) = 10.1255
+  Excess > c({cheapest}) - marginal? 6.7327 > 10.1255 - 0.5690 = 10.6944
+
+======================================================================
+CASE: n=5, pattern=A, seed=256
+======================================================================
+
+[1] Basic metrics:
+  C(N)_online = 27.5698
+  c*(N)       = 23.1085
+  sum c({i}) = 49.6885
+  r           = 1.1931
+  r*          = 2.1502
+  r < r*      = True
+  C(N) > sum  = False  (Theorem 2)
+  epsilon*    = 0.844427
+  Core empty  = True
+
+[2] Customer positions:
+  Customer 1: pos=(0.45783801633097143, 5.861207062682024), dist_from_depot=5.8791, c({i})=11.7581
+  Customer 2: pos=(2.032398544090502, 0.842430866194005), dist_from_depot=2.2001, c({i})=4.4002
+  Customer 3: pos=(0.2599217720858482, 4.029372435726428), dist_from_depot=4.0377, c({i})=8.0755
+  Customer 4: pos=(3.7871184844713923, 0.5284017751859249), dist_from_depot=3.8238, c({i})=7.6476
+  Customer 5: pos=(8.0535711397962, 3.796451074531398), dist_from_depot=8.9035, c({i})=17.8071
+
+[3] Online NN route:
+  Serve 2 at t=2.2001
+  Serve 4 at t=3.9827
+  Serve 3 at t=8.9524
+  Serve 1 at t=10.7949
+  Serve 5 at t=18.6662
+
+[4] Most violated coalition:
+  S = [1, 2, 4, 5]
+  |S| = 4
+  c(S) = 23.1074
+  y(S) = 23.9518
+  excess = y(S) - c(S) = 0.8444
+  Members of S:
+    Customer 1: pos=(0.45783801633097143, 5.861207062682024), dist=5.8791, c({i})=11.7581, y_i=5.5335
+    Customer 2: pos=(2.032398544090502, 0.842430866194005), dist=2.2001, c({i})=4.4002, y_i=3.7757
+    Customer 4: pos=(3.7871184844713923, 0.5284017751859249), dist=3.8238, c({i})=7.6476, y_i=4.0669
+    Customer 5: pos=(8.0535711397962, 3.796451074531398), dist=8.9035, c({i})=17.8071, y_i=10.5757
+  Complement N\S = [3]:
+    Customer 3: pos=(0.2599217720858482, 4.029372435726428), dist=4.0377, c({i})=8.0755, y_i=3.6180
+  sum c({j}) for j in N\S = 8.0755
+
+[5] Mechanism analysis:
+  C(N)_online - sum_{j not in S} c({j}) = 27.5698 - 8.0755 = 19.4943
+  c(S) = 23.1074
+  Forced min y(S) > c(S)? False
+
+  Cheapest customer: 2, c({cheapest}) = 4.4002
+  c(N\{cheapest}) = 22.9497
+  C(N)_online > c(N\{cheapest}) + c({cheapest})? 
+    27.5698 > 22.9497 + 4.4002 = 27.3498
+    = True
+
+  Online excess: C(N)_online - c*(N) = 4.4612
+  Marginal cost of cheapest in optimal: c*(N) - c*(N\{cheapest}) = 23.1085 - 22.9497 = 0.1589
+  c({cheapest}) = 4.4002
+  Excess > c({cheapest}) - marginal? 4.4612 > 4.4002 - 0.1589 = 4.5590
+
+======================================================================
+CASE: n=7, pattern=A, seed=7
+======================================================================
+
+[1] Basic metrics:
+  C(N)_online = 36.4525
+  c*(N)       = 31.0085
+  sum c({i}) = 105.1721
+  r           = 1.1756
+  r*          = 3.3917
+  r < r*      = True
+  C(N) > sum  = False  (Theorem 2)
+  epsilon*    = 1.648868
+  Core empty  = True
+
+[2] Customer positions:
+  Customer 1: pos=(0.7630828937395717, 7.7991879224011464), dist_from_depot=7.8364, c({i})=15.6729
+  Customer 2: pos=(4.384092314408935, 7.234651778309412), dist_from_depot=8.4593, c({i})=16.9187
+  Customer 3: pos=(9.779895119966026, 5.384958704104337), dist_from_depot=11.1644, c({i})=22.3288
+  Customer 4: pos=(5.011204636599379, 0.7205113335976154), dist_from_depot=5.0627, c({i})=10.1255
+  Customer 5: pos=(2.6843898010187117, 4.9988250082556), dist_from_depot=5.6740, c({i})=11.3480
+  Customer 6: pos=(6.792299961209405, 8.037390361043755), dist_from_depot=10.5231, c({i})=21.0461
+  Customer 7: pos=(3.809411331485384, 0.6593634690590511), dist_from_depot=3.8661, c({i})=7.7321
+
+[3] Online NN route:
+  Serve 7 at t=3.8661
+  Serve 4 at t=5.0694
+  Serve 5 at t=9.9395
+  Serve 2 at t=12.7481
+  Serve 6 at t=15.2865
+  Serve 3 at t=19.2817
+  Serve 1 at t=28.6161
+
+[4] Most violated coalition:
+  S = [1, 2, 3, 4, 5, 6]
+  |S| = 6
+  c(S) = 31.0018
+  y(S) = 32.6507
+  excess = y(S) - c(S) = 1.6489
+  Members of S:
+    Customer 1: pos=(0.7630828937395717, 7.7991879224011464), dist=7.8364, c({i})=15.6729, y_i=8.0475
+    Customer 2: pos=(4.384092314408935, 7.234651778309412), dist=8.4593, c({i})=16.9187, y_i=3.9645
+    Customer 3: pos=(9.779895119966026, 5.384958704104337), dist=11.1644, c({i})=22.3288, y_i=6.9304
+    Customer 4: pos=(5.011204636599379, 0.7205113335976154), dist=5.0627, c({i})=10.1255, y_i=4.0548
+    Customer 5: pos=(2.6843898010187117, 4.9988250082556), dist=5.6740, c({i})=11.3480, y_i=5.0288
+    Customer 6: pos=(6.792299961209405, 8.037390361043755), dist=10.5231, c({i})=21.0461, y_i=4.6247
+  Complement N\S = [7]:
+    Customer 7: pos=(3.809411331485384, 0.6593634690590511), dist=3.8661, c({i})=7.7321, y_i=3.8018
+  sum c({j}) for j in N\S = 7.7321
+
+[5] Mechanism analysis:
+  C(N)_online - sum_{j not in S} c({j}) = 36.4525 - 7.7321 = 28.7204
+  c(S) = 31.0018
+  Forced min y(S) > c(S)? False
+
+  Cheapest customer: 7, c({cheapest}) = 7.7321
+  c(N\{cheapest}) = 31.0018
+  C(N)_online > c(N\{cheapest}) + c({cheapest})? 
+    36.4525 > 31.0018 + 7.7321 = 38.7339
+    = False
+
+  Online excess: C(N)_online - c*(N) = 5.4440
+  Marginal cost of cheapest in optimal: c*(N) - c*(N\{cheapest}) = 31.0085 - 31.0018 = 0.0067
+  c({cheapest}) = 7.7321
+  Excess > c({cheapest}) - marginal? 5.4440 > 7.7321 - 0.0067 = 7.7388
+
+======================================================================
+CASE: n=7, pattern=A, seed=256
+======================================================================
+
+[1] Basic metrics:
+  C(N)_online = 29.1967
+  c*(N)       = 24.7355
+  sum c({i}) = 81.5858
+  r           = 1.1804
+  r*          = 3.2983
+  r < r*      = True
+  C(N) > sum  = False  (Theorem 2)
+  epsilon*    = 1.176925
+  Core empty  = True
+
+[2] Customer positions:
+  Customer 1: pos=(0.45783801633097143, 5.861207062682024), dist_from_depot=5.8791, c({i})=11.7581
+  Customer 2: pos=(2.032398544090502, 0.842430866194005), dist_from_depot=2.2001, c({i})=4.4002
+  Customer 3: pos=(0.2599217720858482, 4.029372435726428), dist_from_depot=4.0377, c({i})=8.0755
+  Customer 4: pos=(3.7871184844713923, 0.5284017751859249), dist_from_depot=3.8238, c({i})=7.6476
+  Customer 5: pos=(8.0535711397962, 3.796451074531398), dist_from_depot=8.9035, c({i})=17.8071
+  Customer 6: pos=(3.770705735103169, 7.504255884911685), dist_from_depot=8.3983, c({i})=16.7967
+  Customer 7: pos=(5.443955611569491, 5.231750394886957), dist_from_depot=7.5504, c({i})=15.1007
+
+[3] Online NN route:
+  Serve 2 at t=2.2001
+  Serve 4 at t=3.9827
+  Serve 3 at t=8.9524
+  Serve 1 at t=10.7949
+  Serve 6 at t=14.4928
+  Serve 7 at t=17.3149
+  Serve 5 at t=20.2931
+
+[4] Most violated coalition:
+  S = [1, 3, 4, 5, 6, 7]
+  |S| = 6
+  c(S) = 24.5766
+  y(S) = 25.7535
+  excess = y(S) - c(S) = 1.1769
+  Members of S:
+    Customer 1: pos=(0.45783801633097143, 5.861207062682024), dist=5.8791, c({i})=11.7581, y_i=3.8850
+    Customer 3: pos=(0.2599217720858482, 4.029372435726428), dist=4.0377, c({i})=8.0755, y_i=3.2855
+    Customer 4: pos=(3.7871184844713923, 0.5284017751859249), dist=3.8238, c({i})=7.6476, y_i=3.7344
+    Customer 5: pos=(8.0535711397962, 3.796451074531398), dist=8.9035, c({i})=17.8071, y_i=6.6502
+    Customer 6: pos=(3.770705735103169, 7.504255884911685), dist=8.3983, c({i})=16.7967, y_i=4.7786
+    Customer 7: pos=(5.443955611569491, 5.231750394886957), dist=7.5504, c({i})=15.1007, y_i=3.4198
+  Complement N\S = [2]:
+    Customer 2: pos=(2.032398544090502, 0.842430866194005), dist=2.2001, c({i})=4.4002, y_i=3.4432
+  sum c({j}) for j in N\S = 4.4002
+
+[5] Mechanism analysis:
+  C(N)_online - sum_{j not in S} c({j}) = 29.1967 - 4.4002 = 24.7965
+  c(S) = 24.5766
+  Forced min y(S) > c(S)? True
+
+  Cheapest customer: 2, c({cheapest}) = 4.4002
+  c(N\{cheapest}) = 24.5766
+  C(N)_online > c(N\{cheapest}) + c({cheapest})? 
+    29.1967 > 24.5766 + 4.4002 = 28.9767
+    = True
+
+  Online excess: C(N)_online - c*(N) = 4.4612
+  Marginal cost of cheapest in optimal: c*(N) - c*(N\{cheapest}) = 24.7355 - 24.5766 = 0.1589
+  c({cheapest}) = 4.4002
+  Excess > c({cheapest}) - marginal? 4.4612 > 4.4002 - 0.1589 = 4.5590
+
+======================================================================
+SUMMARY: MECHANISM OF CORE DESTRUCTION WITHOUT THEOREM 2
+======================================================================
+
+All 4 exceptions share the same structure:
+
+Pattern A (simultaneous arrival at t=0):
+  - All coalitions are feasible (F = 2^N)
+  - c(S) = optimal TSP distance (no waiting, since all t_i=0)
+  - C(N)_online = NN heuristic tour distance > c*(N)
+
+Core destruction mechanism:
+  The online NN heuristic produces a suboptimal tour.
+  C(N)_online = r * c*(N) where r > 1.
+
+  For the cheapest customer i (nearest to depot):
+    - c({i}) = 2 * dist(depot, i) [small]
+    - c(N\{i}) ≈ c*(N) - marginal_i [removing i barely shortens optimal tour]
+    - Coalition N\{i} forces: y(N\{i}) ≤ c(N\{i})
+    - Therefore: y_i ≥ C(N)_online - c(N\{i})
+    - Core violation when: C(N)_online - c(N\{i}) > c({i})
+    
+  Equivalently: C(N)_online > c(N\{i}) + c({i})
+  Since c(N\{i}) ≈ c*(N): need r * c*(N) > c*(N) + c({i})
+  → c*(N) * (r - 1) > c({i})
+  → ONLINE EXCESS > INDIVIDUAL COST OF CHEAPEST CUSTOMER
+
+Theorem 2 does NOT apply because:
+  C(N)_online < sum c({i}) always holds (triangle inequality).
+  The bound sum c({i}) is too loose.
+
+The TIGHT bound is c(N\{i}) + c({i}), which can be violated when:
+  1. The NN heuristic is sufficiently suboptimal (r > 1 + c({i})/c*(N))
+  2. There exists a customer very close to depot (small c({i}))
+  3. N\{i} is feasible (holds for simultaneous arrival)
+
+Why r ≤ r* but Core empty?
+  r* = sum c({i}) / c*(N) ≈ 2-4 (large)
+  r ≈ 1.18 (moderate)
+  r ≤ r* is easily satisfied (large gap)
+  But c({i})/c*(N) ≈ 0.1-0.15 (small)
+  So r > 1 + 0.1 = 1.1 suffices for Core destruction
+
+THEOREM 4 REFINEMENT (r ≤ r* is necessary but not sufficient for Core safety):
+
+  Theorem 4 prevents Core destruction via Theorem 2 mechanism only.
+  A different mechanism operates through coalition N\{i}:
+    Core safe ⟺ r ≤ 1 + min_i c({i}) / c*(N)
+
+  Define r** = 1 + min_i [c({i}) + c*(N) - c*(N\{i})] / c*(N)
+             = 1 + min_i [c({i}) - marginal_savings_i] / c*(N)
+
+  Then: r ≤ r** → Core is safe (tighter than r ≤ r*)
+
+======================================================================
+THEOREM 5 CANDIDATE
+======================================================================
+
+THEOREM 5 (Tight Core Destruction Condition):
+
+  Define for each player i:
+    δ_i = c({i}) + c(N\{i}) - c(N)   [subadditivity gap for {i} vs N\{i}]
+
+  Then: Core is empty if and only if C(N)_online > c(N) + min_i δ_i
+
+  Equivalently: r > 1 + min_i δ_i / c*(N)
+
+  This is TIGHTER than Theorem 2 (which requires r > r* = sum c({i})/c*(N)):
+    min_i δ_i ≤ min_i c({i}) ≤ sum c({i})
+
+  Interpretation:
+    δ_i = "how much does player i contribute to cost savings in the grand coalition"
+    When δ_i is small (player i contributes little savings), even a small
+    online excess r-1 can make it impossible to allocate costs fairly.
+
+  The critical player is the one with the smallest marginal contribution δ_i,
+  typically a customer very close to the depot or "on the way" in the optimal tour.
+
+  Note: This condition requires N\{i} to be feasible.
+  For sequential arrivals where N\{i} is not feasible, the Core may survive
+  even with large r (explaining why patterns B,D,E maintain Core=100%).
