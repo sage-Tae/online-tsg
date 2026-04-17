@@ -157,7 +157,8 @@ for i in range(len(order)-1):
 # max_i (c({i}) - x_i)  subject to sum x_i = c(N)
 # Optimal: x_i = c({i}) - (sum c({i}) - c(N))/n
 sum_singletons = sum(tsp_cost[(i,)] for i in N)
-slack = (sum_singletons - c_N) / len(N)
+# [tsg-agent T3/E1] Paper uses C_online as efficiency budget (Def 4)
+slack = (sum_singletons - C_online) / len(N)
 tnu = {i: tsp_cost[(i,)] - slack for i in N}
 print(f"\n=== Temporal Nucleolus (singletons-only F) ===")
 print(f"  Uniform slack per player: (sum c({{i}}) - c(N)) / n = {slack:.3f}")
