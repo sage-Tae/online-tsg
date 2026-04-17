@@ -13,3 +13,6 @@ paper/main.pdf
 paper/main.fdb_latexmk
 paper/main.fls
 paper/main.synctex.gz
+**/*.pyo
+.claude/
+*.bak
