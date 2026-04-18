@@ -157,7 +157,7 @@ def generate_arrivals(n, pattern, positions, seed, rho=None, tau=None):
 
     structure = PATTERN_STRUCTURE[pattern]
     ids = list(range(1, n + 1))
-    rng = np.random.RandomState(seed)
+    rng = np.random.RandomState(seed + 1000)  # independent from positions RNG
 
     if structure == 'simultaneous':
         return _arrivals_simultaneous(n, ids, rng)
