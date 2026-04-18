@@ -1,4 +1,6 @@
 tsg-agent-output-*/
+skills/
+
 **/__pycache__/
 **/*.pyc
 **/venv/

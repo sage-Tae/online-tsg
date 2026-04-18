@@ -1,0 +1,654 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{natbib}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[affil-it]{authblk}
+\usepackage{setspace}
+\usepackage{caption}
+\onehalfspacing
+
+\captionsetup[table]{skip=8pt}
+\hypersetup{colorlinks=true, linkcolor=blue!50!black, citecolor=blue!50!black, urlcolor=blue!60!black}
+
+\graphicspath{{../figures/}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{assumption}[theorem]{Assumption}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\N}{N}
+\newcommand{\CW}{\mathrm{CW}}
+\newcommand{\cstar}{c^{\ast}}
+
+\title{\textbf{Online Traveling Salesman Games: \\ Temporal Nucleolus and the Fragility of the Core under Dynamic Arrivals}}
+
+\author[1]{Seyun Jeong}
+\author[2]{Hyunchul Tae}
+\affil[1]{Department of Industrial and Management Engineering, Pohang University of Science and Technology (POSTECH), 77 Cheongam-ro, Nam-gu, Pohang, Gyeongbuk 37673, Republic of Korea}
+\affil[2]{Korea Institute of Industrial Technology (KITECH), 89 Yangdaegiro-gil, Ipjang-myeon, Seobuk-gu, Cheonan-si, Chungcheongnam-do 31056, Republic of Korea}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{Highlights}
+\begin{itemize}
+\item Online TSG: coalitions restricted to feasibility under arrival dynamics.
+\item Temporal Nucleolus via sequential LP over the feasibility family $\F$.
+\item Sufficient emptiness bound $r>r^{\ast\ast}$, tight for complement coalitions.
+\item Structural safeguard $k<n-1$ blocks the complement-coalition mechanism.
+\item Asymptotic tightening $r^{\ast\ast}\to 1$ at $O(n^{-1/2})$ confirmed to $n=50$.
+\end{itemize}
+
+\begin{abstract}
+\noindent We introduce the \emph{Online Traveling Salesman Game} (Online TSG), a cooperative game in which customers arrive over time and cost must be allocated only among coalitions realizable under the revealed arrival dynamics. The classical static TSG is recovered at simultaneous arrivals. We formalize the family $\F$ of feasible coalitions, define the Temporal Nucleolus as the lexicographic minimizer of excess restricted to $\F$, and give a sequential LP procedure to compute it. Four theoretical results characterize Core stability under dynamics: (i) the Temporal Nucleolus reduces to the static Nucleolus at simultaneous arrivals; (ii) $r > r^{\ast\ast}$ with $r^{\ast\ast}=1+\min_{i:\,N\setminus\{i\}\in\F} \delta_i/\cstar(N)$ (when applicable) is sufficient for Core emptiness via the complement-coalition mechanism; (iii) a bounded peak queue $k<n-1$ structurally blocks that mechanism; and (iv) $r^{\ast\ast}\to 1$ almost surely at rate $O(n^{-1/2})$ under uniform sampling, tying the cooperative-game threshold to the Beardwood--Halton--Hammersley $\sqrt{n}$ scaling of the Euclidean TSP. Over 175 random instances with $n\in\{5,7,10,12,15\}$ and seven arrival patterns, the sufficient condition fires correctly in 12 of 12 applicable cases, and every instance with $k<n-1$ (95 of 95) retains a nonempty Core. The complement-mechanism threshold $\bar r^{\ast\ast}=1.344$ is sharper than the classical bound $\bar r^{\ast}=4.351$ by a factor of $3.24$, and scale-up experiments to $n=50$ confirm that the structural safeguard holds even when $\bar r$ exceeds $2$. These findings delineate which online dispatching regimes admit stable cost sharing and which do not.
+\end{abstract}
+
+\noindent\textbf{Keywords:} Game theory; Online optimization; Cooperative game theory; Traveling salesman game; Nucleolus; Core stability; Dynamic routing.
+
+\section{Introduction}
+\label{sec:introduction}
+
+Urban last-mile logistics is characterized by requests that enter the system \emph{after} planning begins: online grocery orders, same-day parcels, ride-hail queues and crowdsourced pickups all share the feature that the identity of who will be served together with whom is not known until dispatch time \citep{pillac2013review,ausiello2001oltsp}. Operators nevertheless must share the routing cost among the customers who are eventually served on a joint tour, and the quality of this allocation shapes incentives for participation and pricing \citep{guajardo2016review}. Cooperative game theory, and specifically the Traveling Salesman Game (TSG) of \citet{potters1992tsg}, supplies the canonical framework in which a tour cost is divided so that no subset of customers has a strict incentive to defect; the Vehicle Routing Game (VRG) of \citet{gothe1996vrg,engevall2004heterogeneous} extends the idea to multi-vehicle settings. Classic applications of the VRG include school bus routing \citep{park2012schoolbus}, where the set of customers is fixed before the vehicle departs. Online counterparts arise naturally in same-day delivery and ride-hailing platforms, where requests arrive dynamically and the coalition of customers to be served jointly is revealed only during execution.
+
+The classical TSG, however, is defined under the tacit assumption that every customer is available to be visited at any point of the tour: any coalition $S\subseteq N$ can be \emph{imagined} as a self-contained instance, and its characteristic cost $c(S)$ is the optimal TSP tour on $S\cup\{0\}$. In online settings, this counterfactual is not available: a coalition $S$ is operationally meaningful only if there exists a moment at which all members of $S$ have arrived but none have yet been served. Ignoring temporality hides a central source of instability. Two customers who arrive far apart in time are never candidates to be served together, and pretending that they form a coalition distorts fairness. Recent work on online cooperative games \citep{ge2024incentives,aziz2025participation,goyal2025temporal} has begun to address temporality but not in the routing context.
+
+\paragraph{Research question.} What is the correct cooperative game-theoretic abstraction of the online traveling salesman problem, how does it compute, and---most importantly---when does it admit a stable allocation?
+
+\paragraph{Contributions.} We make four contributions.
+\begin{itemize}[leftmargin=1.5em]
+\item[\textbf{C1.}] \emph{Model.} We define the Online TSG $(N, c, \F)$ by restricting cost sharing to the family $\F$ of coalitions feasible under the realized arrival times, and we introduce the Temporal Nucleolus as the lexicographic minimizer of excess over $\F$. The classical static TSG is recovered as the special case where arrivals collapse to a single instant (Theorem~\ref{thm:static-equiv}).
+\item[\textbf{C2.}] \emph{Core theory under dynamics.} We provide a sufficient condition for empty Core based on an arrival-aware ratio $r^{\ast\ast}$, tight relative to the complement-coalition mechanism (Theorem~\ref{thm:empty-core}), paired with a structural obstruction: a bounded peak queue $k = \max_t |U_t| < n-1$ blocks that mechanism (Corollary~\ref{cor:cor52}). Together these delineate the regimes in which complement-coalition instability can arise; intermediate-coalition mechanisms remain possible in principle but prove empirically rare.
+\item[\textbf{C3.}] \emph{Asymptotic refinement.} Under uniform coordinate sampling, $r^{\ast\ast}\to 1$ at rate $O(n^{-1/2})$ almost surely (Theorem~\ref{thm:asymptotic}); this explains the empirical smallness of $r^{\ast\ast}$ without reference to specific simulation parameters and ties the cooperative-game threshold to the classical Beardwood--Halton--Hammersley $\sqrt{n}$ scaling of the Euclidean TSP.
+\item[\textbf{C4.}] \emph{Empirical calibration.} On 175 simulated instances across five coalition sizes and seven arrival patterns (plus 45 scale-up instances up to $n=50$) we verify every theoretical claim. The complement-mechanism threshold fires correctly in 12/12 applicable empty-core cases; the structural obstruction holds in 95/95 instances in which it applies; the mean threshold ($1.344$) is sharper than the classical bound ($4.351$) by a factor larger than three ($3.24$); and the asymptotic decay $r^{\ast\ast}\to 1$ is consistent with Theorem~\ref{thm:asymptotic}'s $O(n^{-1/2})$ rate on the scale-up grid.
+\end{itemize}
+
+\paragraph{Practical implication.} In operational terms, our results say that an online dispatch regime with fully sequential arrivals ($k<n-1$) is \emph{automatically} core-stable, whereas the pathological regime is the ``morning batch'' in which many orders sit simultaneously in the queue. This aligns with the observation, ubiquitous in practice, that same-day delivery platforms enforce short service windows precisely to keep the queue shallow.
+
+\paragraph{Structure.} Section~\ref{sec:related} situates our work within the literature on static TSG/VRG, dynamic and rolling-horizon games, online cooperative games, and nucleolus computation. Section~\ref{sec:problem} formalizes the Online TSG. Section~\ref{sec:nucleolus} defines and computes the Temporal Nucleolus. Section~\ref{sec:theory} develops the Core theory. Section~\ref{sec:experiments} reports computational experiments, and Section~\ref{sec:conclusion} concludes.
+
+\section{Related Work}
+\label{sec:related}
+
+We organize prior work along four streams and state, for each, the precise point of departure of our contribution.
+
+\subsection{Static Traveling Salesman and Vehicle Routing Games}
+The cooperative TSP was initiated by \citet{potters1992tsg} with a characteristic function equal to the optimal TSP tour cost on the chosen coalition. \citet{tamir1989core} showed that the Core may be empty even on the Euclidean line, and the gap between fair and feasible allocations was quantified via approximation in \citet{faigle1998approximate} and \citet{blaser2008metric}. In parallel the Vehicle Routing Game (VRG) received a Nucleolus-based treatment by \citet{gothe1996vrg}, extended to heterogeneous fleets by \citet{engevall2004heterogeneous} and to time-window settings by \citet{tae2020vrgtw} and \citet{arroyo2024vrptw}. The Shapley value formulation of cooperative TSP under rolling horizons is treated by \citet{kimms2016rolling}, and a core-based variant by \citet{kimms2016core}. A broad survey is given by \citet{guajardo2016review}. \emph{Departure.} Every cited study defines coalitions over the full customer set $2^N$: coalition identity is assumed known \emph{a priori}. We replace $2^N$ with the data-dependent family $\F$ of coalitions realizable under the online arrival process.
+
+\subsection{Dynamic and Rolling-Horizon Cooperative Games}
+\citet{kranich2005dynamic} proposed Core concepts for TU games played over discrete time. \citet{habis2010weak} defined the weak sequential Core to accommodate renegotiation, and \citet{lehrer2013dynamic} studied how the Core evolves as information unfolds. \citet{kimms2016rolling} applied rolling horizons to cooperative TSP, redistributing cost as new customers enter. \emph{Departure.} These works abstract away the physical routing cost structure: coalitions are described combinatorially with exogenous values $v(S,t)$. In contrast we retain the metric TSP cost $c(S)$ and let temporality enter through the \emph{admissibility} of coalitions, which couples the game to the dispatch policy.
+
+\subsection{Online Cooperative Games}
+\citet{bullinger2023online} studied online coalition formation under random arrival and dissolution. \citet{ge2024incentives} and \citet{zhang2025incentives} designed incentives for early arrival in online cost-sharing settings. \citet{aziz2025participation} characterized participation incentives for players entering over time. \citet{goyal2025temporal} introduce Temporal Cooperative Games, in which the characteristic function is indexed by time. \emph{Departure.} These models differ from ours in two respects. First, \citet{bullinger2023online} formalize coalition \emph{formation} (which players group with whom) rather than cost sharing within a fixed grand coalition, so their stability concepts and ours address distinct strategic problems. Second, and common to the whole stream, none of these models equip the online coalition process with a TSP or routing cost structure; the inequalities that define our Temporal Core reflect exactly the geometric interactions among customers in the plane, allowing the sharp thresholds $r^{\ast\ast}$ and structural bound $k<n-1$ established in Section~\ref{sec:theory}.
+
+\subsection{Nucleolus Computation}
+\citet{schmeidler1969nucleolus} introduced the Nucleolus as the lexicographic minimizer of the excess vector. The sequential-LP approach that we adopt descends from Kohlberg's algorithm and its careful modernization by \citet{guajardo2015nucleolus}, with further scaling to large games by \citet{nguyen2016large}. Nucleolus-based ridesharing is treated in \citet{lu2019ridesharing}, and Nucleolus computation for the VRG with time windows (VRPTW) in \citet{tae2020vrgtw}. \emph{Departure.} Our LP cascade is defined over $\F$ rather than $2^N\setminus\{\emptyset\}$: in sequential arrival regimes this can reduce the per-LP constraint count by more than an order of magnitude (Section~\ref{sec:experiments}), keeping the method computationally viable for realistic problem sizes.
+
+A separate line of theoretical work relevant to our asymptotic analysis (Theorem~\ref{thm:asymptotic}) is the probabilistic theory of Euclidean combinatorial optimization, initiated by \citet{beardwood1959shortest} and systematized by \citet{steele1981subadditive,steele1997probability}. The Beardwood--Halton--Hammersley theorem characterizes the $\sqrt{n}$ scaling of the optimal Euclidean TSP tour, which in our setting controls the denominator of $r^{\ast\ast}$ and hence its asymptotic tightening. To the best of our knowledge, this asymptotic perspective on cooperative routing games is new: prior cooperative TSP and VRG studies \citep{potters1992tsg,gothe1996vrg,engevall2004heterogeneous,kimms2016core} treat the coalition cost as a fixed quantity rather than as a random variable with a known limit distribution.
+
+\section{Problem Definition}
+\label{sec:problem}
+
+\subsection{Notation}
+We consider a depot $0$ and $n$ customers $N = \{1,\ldots,n\}$, located in a metric space with symmetric travel cost $d$. A single vehicle leaves the depot, visits a subset of customers, and returns. Each customer $i\in N$ is associated with a random \emph{arrival time} $a_i \in \mathbb{R}_+$, revealed online, at which its request enters the system, and a \emph{service time} $s_i \ge a_i$ at which the vehicle first serves it in the realized execution. Table~\ref{tab:notation} collects the notation used throughout.
+
+\begin{table}[t]
+\centering
+\caption{Notation.}
+\label{tab:notation}
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+Symbol & Meaning \\
+\midrule
+$N,\; n$ & Grand coalition of customers and its cardinality \\
+$d(i,j)$ & Symmetric travel cost (metric) from $i$ to $j$ \\
+$c(S)$ & Optimal TSP tour cost on $S\cup\{0\}$, \emph{time-independent} \\
+$\cstar(N)$ & $c(N)$; the grand-coalition TSP optimum \\
+$a_i,\; s_i$ & Arrival and service time of customer $i$ \\
+$U_t$ & Customers that have arrived by $t$ and are not yet served, $U_t=\{i:a_i\le t< s_i\}$ \\
+$\F$ & Family of \emph{feasible coalitions}: $S\in\F \iff \exists\, t,\ S\subseteq U_t$ \\
+$\CW(S)$ & Common window $\bigcap_{i\in S}[a_i, s_i)$ \\
+$C(N)_{\text{online}}$ & Cost of the online tour realized by the dispatch policy \\
+$r$ & Competitive ratio $C(N)_{\text{online}}/\cstar(N)$ \\
+$\delta_i$ & $c(\{i\})+c(N\setminus\{i\})-\cstar(N)$ \\
+$r^{\ast\ast}$ & $1+\min_{i:\,N\setminus\{i\}\in\F}\delta_i/\cstar(N)$: tight threshold (Thm.~\ref{thm:empty-core}); undefined if no such $i$ exists \\
+$r^{\ast}$ & $\sum_i c(\{i\})/\cstar(N)$: Remark~\ref{rem:rstar} upper bound \\
+$k$ & $\max_t |U_t|$: peak size of the waiting queue \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Feasible coalitions and the characteristic function}
+
+The starting point is that the characteristic cost $c(S)$ of a coalition is \emph{defined in the same way as in the static TSG}: it is the cost of the optimal TSP tour on $S\cup\{0\}$ irrespective of time. Temporality enters only through the admissibility of coalitions.
+
+\begin{definition}[Common waiting window]
+For a coalition $S\subseteq N$,
+$\CW(S) := \bigcap_{i\in S} [a_i, s_i)$.
+\end{definition}
+
+\begin{definition}[Feasible coalition]
+\label{def:feasible}
+A nonempty coalition $S\subseteq N$ is \emph{feasible} under the realized arrival/service sequence $(a, s)$ if $\CW(S)\neq\emptyset$, equivalently if there exists an event time $t$ at which $S\subseteq U_t$. Let
+$\F := \{S\subseteq N : \CW(S)\neq\emptyset\}$
+denote the family of feasible coalitions.
+\end{definition}
+
+Note that $\{i\}\in\F$ for every $i$ (singletons are always feasible at $a_i$) and $N\in\F$ whenever all $n$ customers sit simultaneously in the queue at some instant.
+
+\begin{definition}[Online TSG]
+\label{def:online-tsg}
+An \emph{Online Traveling Salesman Game} is a triple $(N, c, \F)$ where $N$ is the customer set, $c:2^N\setminus\{\emptyset\}\to\mathbb{R}_+$ is the TSP characteristic cost defined on every nonempty subset (and used in core constraints only for $S\in\F$), and $\F\subseteq 2^N\setminus\{\emptyset\}$ is the family from Definition~\ref{def:feasible}.
+\end{definition}
+
+An \emph{allocation} is a vector $x\in\mathbb{R}^n$ with $\sum_i x_i = C(N)_{\text{online}}$, where $C(N)_{\text{online}}$ denotes the realized online tour cost. The \emph{Temporal Core} is
+\[
+\mathrm{Core}(N,c,\F) := \bigl\{ x\in\mathbb{R}^n : \textstyle\sum_i x_i = C(N)_{\text{online}},\; \sum_{i\in S} x_i \le c(S)\ \forall S\in\F \bigr\}.
+\]
+In the static boundary case $C(N)_{\text{online}} = \cstar(N) = c(N)$, and the classical \citet{potters1992tsg} definition is recovered. Compared with the static TSG, the Temporal Core imposes fewer inequalities---only those for $S\in\F$. Table~\ref{tab:static-vs-temporal} summarizes the contrast.
+
+\paragraph{Characteristic cost versus realized cost.} The characteristic function $c(S)$ is the time-independent optimal TSP tour on $S\cup\{0\}$, matching the classical \citet{potters1992tsg} definition. The realized online tour cost $C(N)_{\text{online}}$, by contrast, is the total travel distance of the tour actually executed by the online dispatch policy, which may exceed $\cstar(N)$ because the online policy cannot anticipate future arrivals; in general $C(N)_{\text{online}} \ge \cstar(N)$. We use $\sum_i x_i = C(N)_{\text{online}}$ as the efficiency budget because this is the cost the platform must actually allocate; the competitive ratio $r = C(N)_{\text{online}}/\cstar(N)$ measures the overhead introduced by online dispatch, since the online policy must commit to visits without seeing future arrivals. The threshold $r^{\ast\ast}$ (Theorem~\ref{thm:empty-core}) is a function of coordinate geometry alone through $c(\{i\})$, $c(N\setminus\{i\})$, and $\cstar(N)$.
+
+\begin{table}[t]
+\centering
+\caption{Static TSG versus Online TSG.}
+\label{tab:static-vs-temporal}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+ & Static TSG \citep{potters1992tsg} & Online TSG (this paper) \\
+\midrule
+Coalitions considered & All $S\subseteq N$, $S\neq\emptyset$ & $S\in\F$ \\
+Characteristic function & $c(S)$ = TSP on $S\cup\{0\}$ & Same \\
+Core constraints & $2^n-1$ & $|\F|\le 2^n-1$ \\
+Recovers classical TSG & --- & Yes, when $\F=2^N\setminus\{\emptyset\}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{example}[Solomon C101, first five customers]
+\label{ex:solomon}
+We illustrate the Online TSG on the first five customers of the Solomon C101 benchmark \citep{solomon1987benchmarks}. Depot is at $(35, 35)$ and coordinates/ready times are as in Table~\ref{tab:solomon}. The online policy is nearest-neighbor departing from the depot at $t=0$.
+
+\begin{table}[h]
+\centering
+\caption{Solomon C101 first five customers used in Example~\ref{ex:solomon}.}
+\label{tab:solomon}
+\small
+\begin{tabular}{@{}cccccc@{}}
+\toprule
+$i$ & $(x_i, y_i)$ & ready $a_i$ & due & $c(\{i\})$ & service $s_i$ \\
+\midrule
+1 & (45, 68) & 912 & 967 & 68.964 & 912.00 \\
+2 & (45, 70) & 825 & 870 & 72.801 & 825.00 \\
+3 & (42, 66) &  65 & 146 & 63.561 &  65.00 \\
+4 & (42, 68) & 727 & 782 & 67.469 & 727.00 \\
+5 & (40, 69) &  15 &  67 & 68.731 &  34.37 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Euclidean distances give $\cstar(N)=77.593$ and realized online cost $C(N)_{\text{online}}=80.059$, so $r = 1.032$. Because the vehicle spends most of its time idle waiting for each successive ready window, the service timeline is fully sequential in the sense of Lemma~\ref{lem:lemma52}: one verifies that $s_j \le a_{j+1}$ for every consecutive pair in the ready-time order $(5,3,4,2,1)$. Consequently, by Corollary~\ref{cor:cor51} (equivalently Corollary~\ref{cor:cor52}, since $k = \max_t|U_t| = 1 < n-1=4$), Theorem~\ref{thm:empty-core} is vacuous: \emph{no} complement coalition $N\setminus\{i\}$ is feasible. The quantities $\delta_i = c(\{i\}) + c(N\setminus\{i\}) - \cstar(N)$ are still well-defined as numerical combinations of TSP costs---one obtains $\delta_i \in [62.66, 70.20]$ and hence the formal ratio $1+\min_i \delta_i/\cstar(N) \approx 1.81$ (this numerical value is shown for illustrative comparison only; $r^{\ast\ast}$ itself is undefined in this instance because the minimum in its definition is taken over the empty set). The inequality $r > r^{\ast\ast}$ is thus not testable and Theorem~\ref{thm:empty-core} makes no prediction here.
+
+Adopting the convention $\{i\}\in\F$ (singletons are always feasible at arrival) and using $\sum_i x_i = C(N)_{\text{online}}$ as the efficiency budget, the Temporal Nucleolus minimizes $\max_i\{x_i - c(\{i\})\}$ subject to efficiency, yielding the equal-excess allocation
+\[
+(x_1, x_2, x_3, x_4, x_5) \;=\; (16.67,\; 20.51,\; 11.27,\; 15.18,\; 16.44),
+\]
+with uniform slack $c(\{i\})-x_i = 52.29$ across customers. The static TSG allocation (computed on $2^N\setminus\{\emptyset\}$, treating every coalition as feasible) is instead the Nucleolus of the full 31-constraint game; this example shows how temporal restriction discards $26$ of those $31$ constraints while preserving core existence.
+\end{example}
+
+\section{The Temporal Nucleolus}
+\label{sec:nucleolus}
+
+Even when the Core is nonempty it is typically a polytope, and one needs a selection rule. We adopt the nucleolus of \citet{schmeidler1969nucleolus}, adapted to the feasible family $\F$.
+
+\subsection{Definition}
+For an allocation $x$ and $S\in\F$, the \emph{excess} is $e(S, x) := \sum_{i\in S} x_i - c(S)$. Let $\theta(x)$ be the vector $(e(S,x))_{S\in\F}$ sorted in non-increasing order.
+
+\begin{definition}[Temporal Nucleolus]
+\label{def:tnu}
+The Temporal Nucleolus of $(N, c, \F)$ is
+\[
+\mathrm{TNu}(N,c,\F) := \arg\!\min{}^{\text{lex}} \bigl\{ \theta(x) : \textstyle\sum_i x_i = C(N)_{\text{online}}\bigr\},
+\]
+where the minimization is lexicographic over the sorted excess vector.
+\end{definition}
+
+\subsection{Sequential LP computation}
+
+Following the standard technique of \citet{guajardo2015nucleolus}, the Temporal Nucleolus is computed by solving at most $|\F|$ linear programs. At stage $q$ the LP
+\begin{equation}
+\label{eq:lp-q}
+\begin{aligned}
+\min_{x,\varepsilon} \;& \varepsilon \\
+\text{s.t. } \;& \sum_{i} x_i = C(N)_{\text{online}}, \\
+& \sum_{i\in S} x_i - c(S) \le \varepsilon \qquad \forall S\in\F\setminus\F_{<q}, \\
+& \sum_{i\in S} x_i - c(S) = \varepsilon_{q(S)}^{\ast} \qquad \forall S\in\F_{<q},
+\end{aligned}
+\end{equation}
+determines the $q$-th largest coordinate of $\theta$. Here $\F_{<q}$ collects the coalitions whose excess was fixed at earlier stages with optimal value $\varepsilon_{q(S)}^{\ast}$. Finiteness of $\F$ guarantees termination in at most $|\F|$ stages; each LP has $n+1$ variables and $|\F|+1$ constraints.
+
+The restriction from $2^N\setminus\{\emptyset\}$ to $\F$ materially reduces problem size whenever arrivals are spread in time. Section~\ref{sec:experiments} reports empirically $|\F|/(2^n-1)$ as low as $0.061$ for heavily sequential patterns.
+
+\subsection{Reduction to the static game at simultaneous arrivals}
+
+\begin{theorem}[Static TSG as a boundary case]
+\label{thm:static-equiv}
+If $a_1 = a_2 = \cdots = a_n$ and $s_i > a_1$ for every $i\in N$, then $\F = 2^N\setminus\{\emptyset\}$ and the Temporal Nucleolus coincides with the static Nucleolus of \citet{potters1992tsg}.
+\end{theorem}
+
+\begin{proof}
+By assumption there exists $t^{\star}\in[a_1,\min_i s_i)$ with $U_{t^{\star}} = N$. Every $S\subseteq N$ satisfies $S\subseteq U_{t^{\star}}$, so $\CW(S)\supseteq [a_1,\min_i s_i)\neq\emptyset$ and $\F = 2^N\setminus\{\emptyset\}$. The Temporal Nucleolus LP cascade~\eqref{eq:lp-q} reduces to the standard Kohlberg sequence for the TSG, whose fixed point is the static Nucleolus. Since lexicographic minimization is deterministic, the two coincide.
+\end{proof}
+
+In short, the Online TSG is a proper generalization: the static theory is the $k=n$ extremal case where the peak queue contains everybody at once.
+
+\section{Theoretical Results}
+\label{sec:theory}
+
+We now develop the Core theory. Section~\ref{ssec:empty} establishes conditions under which the Temporal Core is \emph{empty}; Section~\ref{ssec:survive} gives conditions under which it is guaranteed \emph{nonempty}. Section~\ref{ssec:discussion} discusses the relationships between the parameters $r$, $r^{\ast\ast}$, $k$, and the queue dynamics.
+
+\subsection{Conditions under which the Core vanishes}
+\label{ssec:empty}
+
+\begin{remark}[Necessary super-additivity failure]
+\label{rem:remark1}
+If the online tour obeys $C(N)_{\text{online}} > \sum_{i\in N} c(\{i\})$, then any allocation summing to $C(N)_{\text{online}}$ violates the singleton constraints $\sum_{\{i\}} x_i \le c(\{i\})$, so the Temporal Core is empty. This is only a \emph{loose} condition; in our experiments it almost never fires because $C(N)_{\text{online}}/\cstar(N) < \sum_i c(\{i\})/\cstar(N) = r^{\ast}$ by a large margin.
+\end{remark}
+
+\begin{remark}[Remark~\ref{rem:remark1} reinterpreted as a ratio]
+\label{rem:rstar}
+Dividing both sides by $\cstar(N)$, Remark~\ref{rem:remark1} is equivalent to $r > r^{\ast}$, where $r^{\ast} := \sum_i c(\{i\})/\cstar(N)$. Because $r^{\ast}$ is typically in the range $3$--$4$ while the competitive ratio of reasonable online policies is close to $1$, this test is rarely tight.
+\end{remark}
+
+We sharpen Remark~\ref{rem:remark1} substantially by exploiting complement coalitions of the form $N\setminus\{i\}$.
+
+\begin{lemma}[Feasibility of $N\setminus\{i\}$]
+\label{lem:lemma51}
+For each $i\in N$, $N\setminus\{i\}\in\F$ if and only if $\max_{j\neq i} a_j < \min_{j\neq i} s_j$.
+\end{lemma}
+
+\begin{proof}
+($\Rightarrow$) If $N\setminus\{i\}\in\F$ there is $t$ with $N\setminus\{i\}\subseteq U_t$. Then $a_j\le t < s_j$ for every $j\neq i$, so $\max_j a_j \le t < \min_j s_j$ (both over $j\neq i$). ($\Leftarrow$) Conversely, if $\max_{j\neq i} a_j < \min_{j\neq i} s_j$, any $t$ in the open interval between them satisfies $a_j\le t<s_j$ for all $j\neq i$, so $N\setminus\{i\}\subseteq U_t$ and $N\setminus\{i\}\in\F$.
+\end{proof}
+
+\begin{lemma}[Fully sequential arrivals preclude $N\setminus\{i\}\in\F$]
+\label{lem:lemma52}
+If arrivals are fully sequential in the sense that $s_j \le a_{j+1}$ for all $j=1,\ldots,n-1$ (each customer is served before the next arrives), then $N\setminus\{i\}\notin\F$ for every $i\in N$.
+\end{lemma}
+
+\begin{proof}
+Fix $i$ and assume customers are indexed in arrival order $1,\ldots,n$ so that $a_1 \le \cdots \le a_n$. Let $\ell^{\star}=\max\{j:j\neq i\}$ and $j^{\star}=\min\{j:j\neq i\}$ denote, respectively, the latest and earliest arrival-order indices other than $i$. By the sequential-arrival hypothesis $s_j \le a_{j+1}$ applied along the chain $j^{\star}, j^{\star}+1, \ldots, \ell^{\star}-1$, we obtain $s_{j^{\star}} \le a_{j^{\star}+1} \le s_{j^{\star}+1} \le \cdots \le a_{\ell^{\star}}$, hence $a_{\ell^{\star}} \ge s_{j^{\star}}$. Therefore $\max_{j\neq i} a_j \ge \min_{j\neq i} s_j$, violating the if-and-only-if criterion of Lemma~\ref{lem:lemma51}.
+\end{proof}
+
+\begin{theorem}[Sufficient condition for empty Temporal Core via complement coalitions]
+\label{thm:empty-core}
+Assume that $N\setminus\{i\}\in\F$ for some $i\in N$. Let
+\[
+\delta_i := c(\{i\}) + c(N\setminus\{i\}) - \cstar(N),\qquad r^{\ast\ast}:= 1 + \min_{i:\,N\setminus\{i\}\in\F} \delta_i/\cstar(N).
+\]
+If $r = C(N)_{\text{online}}/\cstar(N) > r^{\ast\ast}$, then the Temporal Core is empty.
+\end{theorem}
+
+\begin{proof}
+Let $i^{\star}\in\arg\min_{i:\,N\setminus\{i\}\in\F} \delta_i$. Both $\{i^{\star}\}\in\F$ (singletons are always feasible) and $N\setminus\{i^{\star}\}\in\F$. Suppose, for contradiction, that $x$ lies in the Temporal Core. The two core inequalities read
+\begin{align}
+x_{i^{\star}} &\le c(\{i^{\star}\}), \label{eq:sing}\\
+\sum_{j\neq i^{\star}} x_j &\le c(N\setminus\{i^{\star}\}).\label{eq:comp}
+\end{align}
+Adding~\eqref{eq:sing} and~\eqref{eq:comp} gives $\sum_{j\in N} x_j \le c(\{i^{\star}\}) + c(N\setminus\{i^{\star}\}) = \cstar(N) + \delta_{i^{\star}}$. But the efficiency constraint forces $\sum_j x_j = C(N)_{\text{online}} = r\cdot \cstar(N)$. Hence $r\le 1 + \delta_{i^{\star}}/\cstar(N) = r^{\ast\ast}$, contradicting the hypothesis $r>r^{\ast\ast}$.
+\end{proof}
+
+Because $\min_i \delta_i$ is typically small ($\delta_i=0$ corresponds to $\{i\},N\setminus\{i\}$ partitioning the grand tour with no overhead), $r^{\ast\ast}$ is close to $1$ and thus an operationally informative threshold. We stress that Theorem~\ref{thm:empty-core} is tight only \emph{within the complement-coalition mechanism}: an intermediate-size coalition $S$ with $|S|\in\{2,\ldots,n-2\}$ can independently violate the Core inequality $\sum_{i\in S} x_i \le c(S)$. Section~\ref{sec:experiments} exhibits seven such instances with $r \le r^{\ast\ast}$ whose Core is nonetheless empty.
+
+\begin{corollary}[Fully sequential arrivals disarm Theorem~\ref{thm:empty-core}]
+\label{cor:cor51}
+If arrivals are fully sequential in the sense of Lemma~\ref{lem:lemma52}, then Theorem~\ref{thm:empty-core} is vacuous: no $N\setminus\{i\}$ is feasible, so its hypothesis cannot hold.
+\end{corollary}
+
+\begin{proof}
+Direct from Lemma~\ref{lem:lemma52} and the hypothesis of Theorem~\ref{thm:empty-core}.
+\end{proof}
+
+\begin{theorem}[Asymptotic tightening of $r^{\ast\ast}$]
+\label{thm:asymptotic}
+Assume customer coordinates $x_1,\ldots,x_n$ are drawn i.i.d.\ from the uniform distribution on $[0,L]^2$, with the depot placed at the origin $(0,0)$. Suppose the arrival pattern is such that $N\setminus\{i\}\in\F$ for at least one index $i$. Then
+\[
+r^{\ast\ast} \;=\; 1 + \frac{\min_{\,i:\,N\setminus\{i\}\in\F} \delta_i}{\cstar(N)}\;\xrightarrow{\text{a.s.}}\; 1 \quad \text{as } n\to\infty,
+\]
+with rate $r^{\ast\ast}-1 = O(n^{-1/2})$ almost surely, uniformly over the arrival patterns satisfying the hypothesis.
+\end{theorem}
+
+\begin{proof}
+Fix any index $i^{0}$ with $N\setminus\{i^{0}\}\in\F$. We bound $\delta_{i^{0}}$ first, then scale by $\cstar(N)$.
+
+\emph{Step 1: insertion and monotonicity bounds.}
+Inserting the detour $\text{depot}\to x_{i^{0}}\to\text{depot}$ into any tour of $N\setminus\{i^{0}\}$ shows
+\begin{equation}\label{eq:insert}
+\cstar(N) \;\le\; c(N\setminus\{i^{0}\}) + c(\{i^{0}\}),
+\end{equation}
+whence $\cstar(N) - c(N\setminus\{i^{0}\}) \le c(\{i^{0}\}) = 2\,d(0,x_{i^{0}})$.
+Conversely, removing $x_{i^{0}}$ from the optimal tour on $N$ and short-cutting its two tour neighbors yields a valid Hamiltonian cycle on $N\setminus\{i^{0}\}\cup\{0\}$ of no greater length, by the triangle inequality~\citep[\S 2.1]{steele1997probability}; hence $c(N\setminus\{i^{0}\}) \le \cstar(N)$ and $\cstar(N) - c(N\setminus\{i^{0}\}) \ge 0$. Combining:
+\[
+0 \;\le\; \delta_{i^{0}} \;=\; c(\{i^{0}\}) - \bigl[\,\cstar(N) - c(N\setminus\{i^{0}\})\bigr] \;\le\; c(\{i^{0}\}) \;=\; 2\,d(0,x_{i^{0}}).
+\]
+Since $x_{i^{0}}\in[0,L]^2$, $d(0,x_{i^{0}})\le L\sqrt{2}$ and thus $\delta_{i^{0}} \le 2L\sqrt{2} = O(1)$, independent of the arrival pattern.
+
+\emph{Step 2: BHH lower bound on $\cstar(N)$.} By the Beardwood--Halton--Hammersley theorem \citep{beardwood1959shortest,steele1981subadditive}, the length of the optimal Hamiltonian cycle through $n$ i.i.d.\ uniform points in $[0,L]^2$ satisfies
+\[
+\frac{\cstar(N)}{\sqrt{n}} \;\xrightarrow{\text{a.s.}}\; \beta_{\mathrm{BHH}}\,L \quad \text{as } n\to\infty,
+\]
+for a universal constant $\beta_{\mathrm{BHH}}>0$. Adding a fixed depot shifts the length by $O(1)$, which is absorbed into the $o(\sqrt{n})$ term; hence $\cstar(N) = \Theta(\sqrt{n})$ a.s.
+
+\emph{Step 3: ratio.} Combining Steps~1--2,
+\[
+r^{\ast\ast}-1 \;=\; \frac{\min_{\,i:\,N\setminus\{i\}\in\F}\delta_i}{\cstar(N)} \;\le\; \frac{\delta_{i^{0}}}{\cstar(N)} \;\le\; \frac{2L\sqrt{2}}{\beta_{\mathrm{BHH}}\,L\,\sqrt{n}\,(1+o(1))} \;=\; O(n^{-1/2}) \quad\text{a.s.}
+\]
+The numerator bound from Step~1 uses only the fixed coordinates $x_{i^{0}}\in[0,L]^2$ and not the arrival pattern, so the rate holds uniformly across patterns meeting the hypothesis. Non-negativity $r^{\ast\ast}-1\ge 0$ from Step~1 completes the claim.
+\end{proof}
+
+\begin{remark}[Faster decay when a depot-close complement is feasible]
+\label{rem:asymptotic-tighter}
+Let $i^{\star}\in\arg\min_i d(0,x_i)$ denote the customer closest to the depot. Under i.i.d.\ uniform sampling on $[0,L]^2$, the minimum of $n$ points' distances to the origin satisfies $\min_i d(0,x_i) = \Theta(n^{-1/2})$ almost surely (by standard extreme-value arguments; the radial density of uniform points near the depot satisfies $p(r)\propto r$ as $r\to 0$, whether the depot sits inside the square or at its corner, yielding the same $n^{-1/2}$ rate up to a constant). If, in addition, $N\setminus\{i^{\star}\}\in\F$---a condition automatically met when all customers share a waiting window, and more broadly whenever the arrival pattern admits the depot-closest customer's complement---Step~1 of the proof applied to $i^{\star}$ yields $\delta_{i^{\star}} \le 2\,d(0,x_{i^{\star}}) = \Theta(n^{-1/2})$ a.s., hence
+\[
+r^{\ast\ast}-1 \;=\; \frac{\min_i \delta_i}{\cstar(N)} \;\le\; \frac{\delta_{i^{\star}}}{\cstar(N)} \;=\; O(n^{-1}) \quad\text{a.s.,}
+\]
+a faster rate than the generic $O(n^{-1/2})$ of Theorem~\ref{thm:asymptotic}.
+
+Operationally, the faster $O(n^{-1})$ rate applies primarily to arrival patterns close to the simultaneous regime, where Theorem~\ref{thm:empty-core}'s hypothesis is easily met. In sparser regimes (sequential patterns, large queue gaps) $r^{\ast\ast}$ is not defined in the first place---no $N\setminus\{i\}$ need be feasible---and the Remark is vacuous; Corollary~\ref{cor:cor52}'s structural obstruction governs those regimes.
+\end{remark}
+
+\subsection{Conditions under which the Core survives}
+\label{ssec:survive}
+
+\begin{theorem}[Inheritance of Static Core stability]
+\label{thm:core-inheritance}
+If $C(N)_{\text{online}} = \cstar(N)$, i.e.\ the online tour is optimal, then every static-TSG Core allocation remains in the Temporal Core; in particular $\mathrm{Core}_{\text{static}}(N,c)\subseteq\mathrm{Core}(N,c,\F)$.
+\end{theorem}
+
+\begin{proof}
+Let $x\in\mathrm{Core}_{\text{static}}$. Efficiency is inherited since $\sum_i x_i = c(N) = \cstar(N) = C(N)_{\text{online}}$. For any $S\in\F\subseteq 2^N\setminus\{\emptyset\}$, the static constraint $\sum_{i\in S} x_i\le c(S)$ is already imposed on $x$, so it also holds in the temporal setting.
+\end{proof}
+
+\begin{corollary}[Structural obstruction of the complement mechanism]
+\label{cor:cor52}
+If the peak waiting queue satisfies $k=\max_t |U_t| < n-1$, then no coalition of the form $N\setminus\{i\}$ is feasible and Theorem~\ref{thm:empty-core} cannot fire. The only remaining \emph{a priori} mechanism for emptying the Temporal Core under $k<n-1$ is Remark~\ref{rem:remark1}, which is dominated by $r^{\ast}$ and rarely binds in practice. Intermediate-coalition violations remain logically possible; their empirical frequency is characterized in Section~\ref{sec:experiments}.
+\end{corollary}
+
+\begin{proof}
+If $N\setminus\{i\}\in\F$ for some $i$, then at some instant $t$ the queue $U_t$ contains all $j\neq i$, so $|U_t|\ge n-1$ and $k\ge n-1$, contradicting $k<n-1$. The second claim follows from Theorem~\ref{thm:empty-core} and Remarks~\ref{rem:remark1}--\ref{rem:rstar}.
+\end{proof}
+
+\subsection{Discussion}
+\label{ssec:discussion}
+
+Parameters interact as follows.
+\begin{itemize}[leftmargin=1.5em]
+\item The \emph{tight} threshold $r^{\ast\ast}$ is sensitive only to the cheapest complement coalition: a single pair $(i,N\setminus\{i\})\in\F$ with small $\delta_i$ is enough to expose the Core.
+\item The structural parameter $k$ bounds queue depth. Since $N\setminus\{i\}$-feasibility requires $|U_t|\ge n-1$, the inequality $k<n-1$ is exactly the combinatorial negation of Theorem~\ref{thm:empty-core}'s hypothesis.
+\item Arrival patterns interpolate between two extremes: simultaneous ($k=n$, $\F=2^N\setminus\{\emptyset\}$, classical TSG) and fully sequential ($k\le 1$ in the steady state, Theorem~\ref{thm:empty-core} vacuous).
+\end{itemize}
+In the language of queueing theory, if customer inter-arrival rate $\lambda$ exceeds service throughput by enough that $k\ge n-1$ with positive probability, the Core is at risk; otherwise it is safe. This provides an actionable design lever: dispatchers that enforce short promise times (thereby serving orders before too many accumulate) are automatically promoting stable cost allocation.
+
+\section{Computational Experiments}
+\label{sec:experiments}
+
+We report a computational study whose purpose is to (i) verify that the theoretical conditions fire exactly as predicted, (ii) quantify how much sharper $r^{\ast\ast}$ is than $r^{\ast}$, and (iii) characterize the empirical frequency of Core existence across realistic arrival regimes.
+
+\subsection{Design}
+
+Instances are generated by sampling $n$ customer coordinates uniformly in $[0,10]^2$ with Euclidean cost. Coordinates and times are dimensionless, with vehicle speed normalized to one unit of distance per unit of time; the arrival patterns are designed to span a range of load regimes from saturated (pattern A) to light (pattern B5) as measured by the ratio of typical travel time to inter-arrival interval. Depot is at the origin. The online tour is computed by the nearest-neighbor heuristic; Section~\ref{ssec:policy} compares this baseline with cheapest-insertion and batch re-optimization policies. The static TSP $\cstar(S)$ for each $S$ is computed exactly by dynamic programming for $|S|\le 15$. The Temporal Nucleolus is computed by the sequential LP~\eqref{eq:lp-q} implemented with \textsc{scipy.optimize.linprog}.
+
+Table~\ref{tab:design} summarizes the design. Seven arrival patterns are studied, chosen to span the $k$-spectrum.
+
+\begin{table}[t]
+\centering
+\caption{Experimental design: 7 patterns $\times$ 5 sizes $\times$ 5 seeds $=$ 175 instances.}
+\label{tab:design}
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+Factor & Levels \\
+\midrule
+$n$ (coalition size) & $5,\,7,\,10,\,12,\,15$ \\
+Arrival pattern & A (simultaneous), B1/B2/B5 (sequential, Poisson rate $\lambda\in\{1,2,5\}$), \\
+                & C (clustered batches), D (reverse-order), E (uniformly random) \\
+Seed & $\{7,\,42,\,99,\,123,\,256\}$ \\
+Service policy & Nearest neighbor from current position \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Verification of Theorem~\ref{thm:static-equiv}}
+
+For the 25 pattern-A (simultaneous) instances we compared the Temporal Nucleolus with the static Nucleolus computed on the unrestricted coalition family $2^N\setminus\{\emptyset\}$. The two coincide coordinate-wise in every instance (maximum absolute deviation $<10^{-9}$), confirming Theorem~\ref{thm:static-equiv}.
+
+\subsection{Verification of Theorem~\ref{thm:empty-core}}
+
+Table~\ref{tab:thm5} is the $2\times 2$ contingency of Theorem~\ref{thm:empty-core}'s prediction against the observed Core status, conditional on the theorem being applicable (i.e.\ $\exists\, i$ with $N\setminus\{i\}\in\F$).
+
+\begin{table}[t]
+\centering
+\caption{Theorem~\ref{thm:empty-core}: predicted versus observed Core status on the 66 applicable instances.}
+\label{tab:thm5}
+\small
+\begin{tabular}{@{}lcc|c@{}}
+\toprule
+& \textbf{Core empty (obs.)} & \textbf{Core nonempty (obs.)} & Total \\
+\midrule
+\textbf{Predicted empty} ($r>r^{\ast\ast}$) & 12 & 0 & 12 \\
+\textbf{Not predicted} ($r\le r^{\ast\ast}$) & 7 & 47 & 54 \\
+\midrule
+Total & 19 & 47 & 66 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Every instance classified by Theorem~\ref{thm:empty-core} as ``empty'' is indeed empty (no false positives). This matches the logical content of the theorem: $r>r^{\ast\ast}$ is a \emph{sufficient} condition. Seven additional empty-Core cases occur at $r\le r^{\ast\ast}$; these arise through a different mechanism (binding inequalities on intermediate-size feasible coalitions), which we leave for future work. Figure~\ref{fig:r-rss} plots $r$ versus $r^{\ast\ast}$ and makes the separation visible: red $\times$-marks (empty Core) lie on or above the diagonal, while the blue dots (nonempty Core) lie below. The sharpness of $r^{\ast\ast}$ relative to $r^{\ast}$ is further illustrated in Figure~\ref{fig:rhist}.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.65\textwidth]{fig2_r_vs_rstar.pdf}
+\caption{Empirical test of Theorem~\ref{thm:empty-core}. The dashed line is $r=r^{\ast\ast}$; every instance strictly above the diagonal has an empty Core.}
+\label{fig:r-rss}
+\end{figure}
+
+\subsection{Verification of Corollary~\ref{cor:cor52}}
+
+Partitioning the 175 instances by peak queue regime yields the following (Figure~\ref{fig:core-k}): 95 instances with $k<n-1$ all have nonempty Core, consistent with Corollary~\ref{cor:cor52}; 14 instances with $k=n-1$ also all have nonempty Core; and 47 of 66 instances with $k=n$ retain a nonempty Core. Empty Cores occur only in the $k=n$ regime---and even there, as a minority phenomenon---strongly supporting the structural bound as an organizing principle, even though Corollary~\ref{cor:cor52} does not formally exclude intermediate-coalition violations when $k<n-1$. A per-pattern breakdown across the size grid $n\in\{5,7,10,12,15\}$ is deferred to Appendix~\ref{app:aux} (Figure~\ref{fig:core-n}).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.7\textwidth]{fig3_core_vs_k.pdf}
+\caption{Temporal Core existence rate stratified by peak-queue regime $k$. The empty-Core mechanism of Theorem~\ref{thm:empty-core} requires $k\ge n-1$; empirically, empty Cores are observed only at $k=n$.}
+\label{fig:core-k}
+\end{figure}
+
+\subsection{Pattern-level analysis}
+\label{ssec:pattern}
+
+Table~\ref{tab:pattern} reports the salient statistics per arrival pattern, pooled over $n$ and seeds. Figure~\ref{fig:coal-red} visualizes the relative size of $\F$.
+
+\begin{table}[t]
+\centering
+\caption{Pattern-level aggregate statistics ($5\times 5=25$ instances per pattern). $\bar r^{\ast}$, being a function of coordinates only ($r^{\ast} = \sum_i c(\{i\})/\cstar(N)$), is identical across all patterns at $4.351$ and is reported as an overall value rather than per-pattern. Em-dashes in $\bar r^{\ast\ast}$ indicate patterns where Theorem~\ref{thm:empty-core} is never applicable (no complement coalition is feasible).}
+\label{tab:pattern}
+\small
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+Pattern & Core rate & $\bar r$ (sd) & $\bar r^{\ast\ast}$ (sd) & $\overline{|\F|/(2^n-1)}$ & Thm.~\ref{thm:empty-core} applicable \\
+\midrule
+A (simul.)             & 0.36 & 1.125 (0.102) & 1.181 (0.059) & 1.000 & 25 / 25 \\
+B1 (seq., $\lambda=1$) & 1.00 & 1.286 (0.146) & 1.528 (0.124) & 0.332 & 10 / 25 \\
+B2 (seq., $\lambda=2$) & 1.00 & 1.312 (0.163) & 1.691 (0.064) & 0.158 &  2 / 25 \\
+B5 (seq., $\lambda=5$) & 1.00 & 1.808 (0.328) &      ---      & 0.061 &  0 / 25 \\
+C (clustered)          & 0.88 & 1.199 (0.149) & 1.363 (0.169) & 0.512 & 25 / 25 \\
+D (reverse)            & 1.00 & 1.415 (0.188) &      ---      & 0.101 &  0 / 25 \\
+E (random)             & 1.00 & 1.370 (0.208) & 1.606 (0.043) & 0.207 &  4 / 25 \\
+\midrule
+Overall                & 0.89 & 1.359 (0.281) & 1.344 (0.194) & 0.339 & 66 / 175 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Three patterns stand out. Simultaneous arrivals (A) yield the lowest Core-existence rate (36\%), consistent with $\F=2^N\setminus\{\emptyset\}$ maximizing the number of Core constraints. Heavy sequential patterns (B5, D) leave $|\F|$ at only 6--10\% of $2^n-1$ and render Theorem~\ref{thm:empty-core} inapplicable. The clustered pattern (C) occupies an intermediate regime where Theorem~\ref{thm:empty-core} applies to every instance but is binding in only $12\%$ of them.
+
+A noteworthy secondary observation: the mean competitive ratio $\bar r$ rises sharply in the heavily sequential regimes (B5: $1.81$, D: $1.42$, E: $1.37$) because the online tour takes detours to reach customers as they arrive while $\cstar(N)$ reflects the offline-optimal route. Despite this large $\bar r$, the empirical Core-existence rate stays at $100\%$ for these patterns---a direct consequence of $|\F|/(2^n-1)$ being small. This is the operational content of Corollary~\ref{cor:cor52} and of the broader sequential-pattern argument of Section~\ref{ssec:discussion}: when the queue stays shallow, a high $\bar r$ does not jeopardize Core stability because the complement-coalition mechanism is structurally blocked, irrespective of how much the online policy must detour to reach staggered arrivals.
+
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.85\textwidth]{fig4_coalition_reduction.pdf}
+\caption{Relative size of the feasible coalition family, $|\F|/(2^n-1)$.}
+\label{fig:coal-red}
+\end{figure}
+
+\subsection{\texorpdfstring{Sharpness of $r^{\ast\ast}$ versus $r^{\ast}$}{Sharpness of r** versus r*}}
+
+Figure~\ref{fig:rhist} contrasts the distributions of the complement-mechanism threshold $r^{\ast\ast}$ (Theorem~\ref{thm:empty-core}) and the classical bound $r^{\ast}$ (Remark~\ref{rem:rstar}). Empirically, $\bar r^{\ast\ast}=1.344$ versus $\bar r^{\ast}=4.351$, a factor of $3.24$. Because the realized ratio $\bar r = 1.359$ is close to $r^{\ast\ast}$ but far below $r^{\ast}$, Theorem~\ref{thm:empty-core} is operationally informative whereas Remark~\ref{rem:rstar} almost never fires. The classical bound grows with $n$ because $r^{\ast} = \sum_i c(\{i\})/\cstar(N)$ has a numerator scaling linearly in $n$ while $\cstar(N)$ scales like $\sqrt{n}$ on uniform planar instances; $r^{\ast\ast}$, in contrast, is pinned near $1$ because the cheapest complement pair $(\{i\}, N\setminus\{i\})$ nearly partitions the grand tour. This explains why the gap between the two widens with $n$ and quantifies the practical advance of the temporal analysis.
+
+A secondary point worth noting: $r^{\ast}$ depends only on coordinates---it equals $\sum_i c(\{i\})/\cstar(N)$, and neither the numerator nor the denominator sees arrivals---so under our uniform-square sampling $\bar r^{\ast}$ has essentially no variance across patterns. The operational shortfall of $r^{\ast}$ is therefore structural: it is blind to the online arrival process altogether.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.8\textwidth]{fig5_rstar_vs_rss.pdf}
+\caption{Histograms of $r^{\ast\ast}$ and $r^{\ast}$ over all instances. $r^{\ast\ast}$ concentrates near the empirical $r$, making it an informative threshold; $r^{\ast}$ lies far to the right and rarely binds.}
+\label{fig:rhist}
+\end{figure}
+
+\subsection{Robustness to dispatch policy}
+\label{ssec:policy}
+
+We rerun the 175-instance grid under three dispatch policies: nearest-neighbor (NN, the baseline used in the preceding subsections), cheapest-insertion (CI), and batch re-optimization (BR, which solves the shortest Hamiltonian path from the vehicle's current position through the waiting queue $U_t$ back to the depot by Held--Karp at each dispatch event). Table~\ref{tab:policy} summarizes the aggregate outcomes on all $175\times 3 = 525$ policy-instance pairs.
+
+\begin{table}[t]
+\centering
+\caption{Dispatch-policy robustness over the 175-instance grid. $\bar r$ is the mean competitive ratio; the last two columns report how often the complement-coalition hypothesis is testable and how often Theorem~\ref{thm:empty-core} fires.}
+\label{tab:policy}
+\small
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+Policy & $\bar r$ & Core rate & Empty count & Thm.~\ref{thm:empty-core} applicable & Thm.~\ref{thm:empty-core} fires \\
+\midrule
+Nearest-neighbor      & 1.359 & 0.891 & 19 & 66 & 12 \\
+Cheapest-insertion    & 1.276 & 0.977 &  4 & 66 &  1 \\
+Batch re-optimization & 1.257 & 1.000 &  0 & 66 &  0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Three observations stand out. First, the mean competitive ratio decreases monotonically from $1.359$ (NN) to $1.276$ (CI) to $1.257$ (BR), reflecting the increasing quality of the online plan. Second, the empirical Core-existence rate increases correspondingly: NN yields 19 empty Cores (11\%), CI only 4 (2\%), and BR none. Third, and central to our theoretical claims, \emph{every} instance in which the Theorem~\ref{thm:empty-core} hypothesis $r > r^{\ast\ast}$ holds is observed empty---12/12 for NN, 1/1 for CI, 0/0 for BR---with no false positives under any policy. The Corollary~\ref{cor:cor52} safeguard ($k<n-1\Rightarrow$ complement mechanism blocked) likewise holds without exception across all three policies.
+
+The applicability count (66 of 175 instances) is identical across policies. This is not a coincidence: the feasibility of a specific complement coalition $N\setminus\{i\}$ depends on whether its members' service-time window overlaps, a condition that is insensitive to the policy's dispatch order in our arrival patterns. The threshold $r^{\ast\ast}$ itself is fully policy-independent---it is a function of TSP costs and arrivals, not of service times---so only the realized $r$ varies with policy, and $r > r^{\ast\ast}$ becomes rarer as the policy improves. This is exactly what is observed in Table~\ref{tab:policy}.
+
+\subsection{Scale-up to larger \texorpdfstring{$n$}{n}}
+\label{ssec:scaleup}
+
+Our main study at $n\le 15$ is capped by the $O(n^2 2^n)$ cost of Held--Karp. To test whether the theoretical and empirical findings of the preceding subsections persist at larger scales, we extend the study to $n\in\{20,30,50\}$ for three representative patterns---A (simultaneous), B2 (sequential $\lambda=2$), and C (clustered)---spanning the Core-fragile, Core-safe, and intermediate regimes. Each cell uses 5 seeds, giving 45 scale-up instances with NN dispatch.
+
+\paragraph{Solver and calibration.} For $n\le 20$ we use exact Held--Karp (pure distance); for $n>20$ we use the LKH heuristic of \citet{helsgaun2000effective} via the \texttt{elkai} Python wrapper. Calibration against Held--Karp on 15 instances at $n=15$ yielded a relative error of $0.000\%$ in every case, so at this scale LKH is effectively exact for our pure-distance $c^{\ast}(S)$.
+
+\begin{table}[t]
+\centering
+\caption{Scale-up aggregate statistics (5 seeds each). Em-dashes in $\bar r^{\ast\ast}$ indicate no feasible complement coalition (Theorem~\ref{thm:empty-core} vacuous). For pattern A with $n\ge 30$ the Core LP is intractable to enumerate, since $|\F|=2^n-1$; emptiness there is certified a priori by Theorem~\ref{thm:empty-core} (all $r_i$ exceed $r^{\ast\ast}$).}
+\label{tab:scaleup}
+\small
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+Pattern & $n$ & Core rate & $\bar r$ & $\bar r^{\ast\ast}$ & $\bar k$ \\
+\midrule
+A (simul.)  & 20 & 0 / 5 & 1.167 & 1.119 & 20.0 \\
+A (simul.)  & 30 & 0 / 5$^{\dagger}$ & 1.187 & 1.096 & 30.0 \\
+A (simul.)  & 50 & 0 / 5$^{\dagger}$ & 1.211 & 1.068 & 50.0 \\
+\midrule
+B2 (seq., $\lambda=2$) & 20 & 5 / 5 & 1.762 & --- & 8.4 \\
+B2 (seq., $\lambda=2$) & 30 & 5 / 5 & 1.804 & --- & 10.0 \\
+B2 (seq., $\lambda=2$) & 50 & 5 / 5 & 2.128 & --- & 10.4 \\
+\midrule
+C (clustered)          & 20 & 0 / 5 & 1.335 & 1.119 & 19.8 \\
+C (clustered)          & 30 & 0 / 5 & 1.282 & 1.096 & 30.0 \\
+C (clustered)          & 50 & 0 / 5 & 1.282 & 1.068 & 50.0 \\
+\bottomrule
+\end{tabular}
+
+{\footnotesize $^{\dagger}$ Core LP not enumerated; emptiness certified by Theorem~\ref{thm:empty-core}.}
+\end{table}
+
+Three findings emerge.
+
+\paragraph{Finding 1: $\bar r^{\ast\ast}$ decays with $n$, confirming Theorem~\ref{thm:asymptotic}.} For pattern A, $\bar r^{\ast\ast}$ drops from $1.181$ at $n=15$ (Table~\ref{tab:pattern}) to $1.119$, $1.096$, $1.068$ at $n=20, 30, 50$, respectively. Pattern C exhibits the same decay (B2 has no feasible complement at any scale, so $\bar r^{\ast\ast}$ is undefined). The observed rate of decrease is consistent with the $O(n^{-1/2})$ bound of Theorem~\ref{thm:asymptotic} (and within the $O(n^{-1})$ improvement of Remark~\ref{rem:asymptotic-tighter} for the simultaneous-arrival case A).
+
+\paragraph{Finding 2: Pattern C undergoes an empirical phase transition between $n=15$ and $n=20$.} At $n=15$ the clustered pattern had an $88\%$ Core-existence rate with $\bar r = 1.199 < \bar r^{\ast\ast} = 1.363$ (Table~\ref{tab:pattern}). By $n=20$ the two quantities have crossed: $\bar r = 1.335 > \bar r^{\ast\ast} = 1.119$, and all 5 test instances have an empty Core; the same holds at $n=30, 50$. Two concurrent effects drive the transition: $\bar r$ increases (the NN competitive ratio degrades with more customers and the clustered zig-zag accumulates realized waiting), while $\bar r^{\ast\ast}$ decreases by Theorem~\ref{thm:asymptotic}. Clustered patterns are thus Core-stable only at modest $n$.
+
+\paragraph{Finding 3: Pattern B2 remains Core-stable even at $\bar r=2.13$.} At $n=50$, the realized online tour for pattern B2 is more than twice the optimal static tour distance, yet every instance retains a nonempty Core. Structurally, B2's sparse arrivals keep $\bar k \le 11$ even at $n=50$, so every complement coalition $N\setminus\{i\}$ is infeasible, Theorem~\ref{thm:empty-core} is vacuous, and Corollary~\ref{cor:cor52}'s obstruction applies. This is the most vivid validation of the ``small $k$, safe Core'' principle at scale: Core stability does not require low $r$---it requires a shallow queue.
+
+\paragraph{Intractability of pattern A at $n\ge 30$.} For pattern A, $|\F| = 2^n-1$, so the Core LP has $10^9$ and $10^{15}$ constraints at $n=30$ and $n=50$ respectively, well beyond enumeration. Theorem~\ref{thm:empty-core} nevertheless certifies Core emptiness \emph{a priori} in all five seeds at each $n$: every complement coalition is feasible, so $r^{\ast\ast}$ is well-defined; numerically $r > r^{\ast\ast}$ holds in each case (Table~\ref{tab:scaleup}). The intractability of pattern A therefore itself \emph{demonstrates} the $k<n-1$ versus $k=n$ divide identified in Corollary~\ref{cor:cor52}: the regime where the Core LP becomes infeasible to enumerate is precisely the regime where Theorem~\ref{thm:empty-core} can certify emptiness without enumeration.
+
+\paragraph{Summary.} The qualitative findings of the earlier subsections persist up to $n=50$, with one refinement: the tail of Core-empty clustered instances at $n=15$ expands to near-certain Core emptiness by $n=20$ because $r^{\ast\ast}$ tightens with $n$ (Theorem~\ref{thm:asymptotic}). Corollary~\ref{cor:cor52}'s safeguard, in contrast, only strengthens with $n$: even at $\bar r=2.13$, the Core survives whenever $k<n-1$.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+We introduced the Online Traveling Salesman Game, in which coalitions are restricted to those realizable under the online arrival process, and defined the Temporal Nucleolus as the lexicographic excess minimizer over this restricted family. We showed that the classical (static) TSG is recovered at the boundary case of simultaneous arrivals, that the Temporal Core is empty whenever the competitive ratio exceeds a complement-mechanism threshold $r^{\ast\ast}$, and that a bounded waiting queue ($k<n-1$) structurally blocks the complement-coalition empty-Core mechanism (Corollary~\ref{cor:cor52}), with empirical Core nonemptiness in 95 of 95 such instances. Numerical experiments over 175 instances confirm every theoretical prediction and show that this threshold is sharper than the classical bound by a factor larger than three ($3.24$), making it the first operationally informative threshold for cost-sharing stability in online routing.
+
+\paragraph{Platform-design implication.} From a platform-design perspective, our results provide an actionable guideline: enforcing short service-time promises---equivalently, keeping the peak queue depth below $n-1$---is not merely an operational efficiency measure: it structurally rules out the complement-coalition empty-Core mechanism. Intermediate-coalition violations remain logically possible but are empirically rare (Section~\ref{sec:experiments}).
+
+\paragraph{Limitations and future work.} Three limitations merit explicit discussion.
+
+\emph{(i) Dispatch policy.} Theorems~\ref{thm:empty-core} and~\ref{thm:core-inheritance} and Corollary~\ref{cor:cor52} use only the realized tuple $(r, \F, k)$ and are therefore policy-independent in their statements. Section~\ref{ssec:policy} extends the empirical study to cheapest-insertion and batch re-optimization policies: the qualitative conclusions---Theorem~\ref{thm:empty-core}'s direction of implication and Corollary~\ref{cor:cor52}'s structural obstruction---are preserved, while the absolute value of $\bar r$ varies by policy as expected. Extending to learning-based or forecasting-aware dispatch policies remains open.
+
+\emph{(ii) Instance scale.} Section~\ref{ssec:scaleup} extends the study to $n\in\{20,30,50\}$ for patterns A, B2, and C, using LKH \citep{helsgaun2000effective} for $c^{\ast}(S)$ at $n>20$ with calibration error $\eta=0.000\%$ on $n=15$ pure-distance benchmarks. Three findings emerge: $\bar r^{\ast\ast}$ decays as $O(n^{-1/2})$ (Theorem~\ref{thm:asymptotic}), pattern C undergoes a phase transition between $n=15$ and $n=20$ as $\bar r$ overtakes $\bar r^{\ast\ast}$, and pattern B2 remains Core-stable even at $\bar r = 2.13$ ($n=50$)---a direct validation of Corollary~\ref{cor:cor52}. Pattern A is Core-LP intractable for $n\ge 30$ because $|\F| = 2^n - 1$ there; emptiness is nevertheless certified \emph{a priori} by Theorem~\ref{thm:empty-core}. Extending to $n\ge 100$, to non-uniform geometries, and to explicit heavy-tailed queueing models remains for future work.
+
+\emph{(iii) Intermediate-coalition mechanism.} The seven empty-Core instances with $r\le r^{\ast\ast}$ (Table~\ref{tab:thm5}) are explained neither by the complement-coalition mechanism of Theorem~\ref{thm:empty-core} nor by Remark~\ref{rem:remark1}. We conjecture that a tight characterization involves a minimum over balanced collections of intermediate-size feasible coalitions (in the sense of \citealp{shapley1971core}) and leave its precise form as an open problem.
+
+\emph{Broader directions.} Beyond these limitations, natural extensions include the Online Vehicle Routing Game with multiple vehicles and capacity constraints, and an A3-style consistency axiom so that allocations computed across rolling-horizon windows agree on overlapping coalitions.
+
+\section*{CRediT author statement}
+\textbf{Seyun Jeong:} Conceptualization, Methodology, Formal analysis, Software, Writing --- original draft. \textbf{Hyunchul Tae:} Conceptualization, Methodology, Supervision, Writing --- review \& editing.
+
+\section*{Acknowledgments}
+The authors thank collaborators for helpful discussions on earlier drafts.
+
+\section*{Declarations of interest}
+The authors declare no competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Data and code availability}
+All code, random seeds, and raw CSV results used in the computational study (Sections~\ref{sec:experiments} and~\ref{ssec:scaleup}) are available at \url{https://github.com/sage-Tae/online-tsg}. The repository contains the Held--Karp and LKH implementations, the dispatch-policy simulators for nearest-neighbor, cheapest-insertion, and batch re-optimization, and the Temporal Nucleolus LP solver, along with scripts reproducing all tables and figures in this paper.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\appendix
+\section{Auxiliary plots}
+\label{app:aux}
+
+Figure~\ref{fig:core-n} breaks down the aggregate Core-existence rates of Section~\ref{sec:experiments} by arrival pattern and coalition size $n$. The qualitative story in the main text---sequential and clustered regimes retain full Core existence, while simultaneous arrivals collapse as $n$ grows---is fully captured by Figure~\ref{fig:core-k} in the main text; this appendix plot is provided for reference.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.75\textwidth]{fig3_core_vs_n.pdf}
+\caption{Core-existence rate versus coalition size $n$, broken down by arrival pattern. Sequential and clustered regimes retain full Core existence; simultaneous arrivals (A) collapse to $0\%$ at $n=15$. Patterns B1, B2, B5, D, and E all overlap at $1.00$ across the grid; only A and C visibly decay.}
+\label{fig:core-n}
+\end{figure}
+
+\end{document}
