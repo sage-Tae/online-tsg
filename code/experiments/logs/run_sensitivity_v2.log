@@ -1,0 +1,63 @@
+  WARNING: |U_t|=19 > 15, skipping subset enumeration
+  WARNING: |U_t|=18 > 15, skipping subset enumeration
+  WARNING: |U_t|=17 > 15, skipping subset enumeration
+  WARNING: |U_t|=16 > 15, skipping subset enumeration
+  WARNING: |U_t|=19 > 15, skipping subset enumeration
+  WARNING: |U_t|=18 > 15, skipping subset enumeration
+  WARNING: |U_t|=17 > 15, skipping subset enumeration
+  WARNING: |U_t|=16 > 15, skipping subset enumeration
+  WARNING: |U_t|=19 > 15, skipping subset enumeration
+  WARNING: |U_t|=18 > 15, skipping subset enumeration
+  WARNING: |U_t|=17 > 15, skipping subset enumeration
+  WARNING: |U_t|=16 > 15, skipping subset enumeration
+  WARNING: |U_t|=19 > 15, skipping subset enumeration
+  WARNING: |U_t|=18 > 15, skipping subset enumeration
+  WARNING: |U_t|=17 > 15, skipping subset enumeration
+  WARNING: |U_t|=16 > 15, skipping subset enumeration
+  WARNING: |U_t|=16 > 15, skipping subset enumeration
+  WARNING: |U_t|=16 > 15, skipping subset enumeration
+  WARNING: |U_t|=16 > 15, skipping subset enumeration
+  WARNING: |U_t|=16 > 15, skipping subset enumeration
+  WARNING: |U_t|=19 > 15, skipping subset enumeration
+  WARNING: |U_t|=18 > 15, skipping subset enumeration
+  WARNING: |U_t|=17 > 15, skipping subset enumeration
+  WARNING: |U_t|=16 > 15, skipping subset enumeration
+  WARNING: |U_t|=19 > 15, skipping subset enumeration
+  WARNING: |U_t|=18 > 15, skipping subset enumeration
+  WARNING: |U_t|=17 > 15, skipping subset enumeration
+  WARNING: |U_t|=16 > 15, skipping subset enumeration
+  WARNING: |U_t|=19 > 15, skipping subset enumeration
+  WARNING: |U_t|=18 > 15, skipping subset enumeration
+  WARNING: |U_t|=17 > 15, skipping subset enumeration
+  WARNING: |U_t|=16 > 15, skipping subset enumeration
+  WARNING: |U_t|=19 > 15, skipping subset enumeration
+  WARNING: |U_t|=18 > 15, skipping subset enumeration
+  WARNING: |U_t|=17 > 15, skipping subset enumeration
+  WARNING: |U_t|=16 > 15, skipping subset enumeration
+Running 24 sensitivity instances (seed=42)
+  [1/24] n=10 pat=B_heavy α=0.5 r=1.422531 r**=1.132391 k=10 elapsed=0.1s
+  [2/24] n=10 pat=B_heavy α=1.0 r=1.422531 r**=1.132391 k=10 elapsed=0.2s
+  [3/24] n=10 pat=B_heavy α=2.0 r=1.422531 r**=1.132391 k=10 elapsed=0.3s
+  [4/24] n=10 pat=B_heavy α=5.0 r=1.422531 r**=1.132391 k=10 elapsed=0.4s
+  [5/24] n=10 pat=B_medium α=0.5 r=1.422531 r**=1.132391 k=10 elapsed=0.5s
+  [6/24] n=10 pat=B_medium α=1.0 r=1.422531 r**=1.132391 k=10 elapsed=0.6s
+  [7/24] n=10 pat=B_medium α=2.0 r=1.422531 r**=1.132391 k=10 elapsed=0.7s
+  [8/24] n=10 pat=B_medium α=5.0 r=1.422531 r**=1.132391 k=10 elapsed=0.8s
+  [9/24] n=10 pat=C α=0.5 r=1.253096 r**=1.132391 k=10 elapsed=0.9s
+  [10/24] n=10 pat=C α=1.0 r=1.253096 r**=1.132391 k=10 elapsed=1.0s
+  [11/24] n=10 pat=C α=2.0 r=1.253096 r**=1.132391 k=10 elapsed=1.1s
+  [12/24] n=10 pat=C α=5.0 r=1.253096 r**=1.132391 k=10 elapsed=1.2s
+  [13/24] n=20 pat=B_heavy α=0.5 r=1.489589 r**=1.103939 k=20 elapsed=315.3s
+  [14/24] n=20 pat=B_heavy α=1.0 r=1.489589 r**=1.103939 k=20 elapsed=624.7s
+  [15/24] n=20 pat=B_heavy α=2.0 r=1.489589 r**=1.103939 k=20 elapsed=933.1s
+  [16/24] n=20 pat=B_heavy α=5.0 r=1.489589 r**=1.103939 k=20 elapsed=1241.1s
+  [17/24] n=20 pat=B_medium α=0.5 r=1.489589 r**=None k=17 elapsed=1421.2s
+  [18/24] n=20 pat=B_medium α=1.0 r=1.489589 r**=None k=17 elapsed=1601.4s
+  [19/24] n=20 pat=B_medium α=2.0 r=1.489589 r**=None k=17 elapsed=1781.6s
+  [20/24] n=20 pat=B_medium α=5.0 r=1.489589 r**=None k=17 elapsed=1960.7s
+  [21/24] n=20 pat=C α=0.5 r=1.346868 r**=1.103939 k=20 elapsed=2265.4s
+  [22/24] n=20 pat=C α=1.0 r=1.346868 r**=1.103939 k=20 elapsed=2572.2s
+  [23/24] n=20 pat=C α=2.0 r=1.346868 r**=1.103939 k=20 elapsed=2878.4s
+  [24/24] n=20 pat=C α=5.0 r=1.346868 r**=1.103939 k=20 elapsed=3184.4s
+
+Wrote 24 rows to /Users/sage/Documents/claude/TSG_agent/code/experiments/logs/sensitivity_v2.csv  (3184.4s)
