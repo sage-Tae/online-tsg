@@ -6,7 +6,7 @@ Code and data for the paper:
 > Seyun Jeong (POSTECH) and Hyunchul Tae (KITECH)
 > Submitted to *European Journal of Operational Research*, 2026
 
-**Current version: v2.1.7** (major revision, April 19, 2026)
+**Current version: v2.1.8** (major revision, April 19, 2026)
 
 Version history:
 - v2.0.x — initial submission (v2.0, v2.0.1, v2.0.2, v2.0.3)
@@ -17,6 +17,7 @@ Version history:
 - v2.1.5 — seed 123 scale-up alignment (Finding 4 two-tier pattern, `run_seed123_check.py` TARGETS 5 → 2, REPRODUCIBILITY labels)
 - v2.1.6 — ZIP-rebuildability fix (`\graphicspath` extended for clean-room extraction, Data-Files table `seed123_core_check.csv` 5 → 2 rows, `scripts/verify_zip_rebuild.sh` added)
 - v2.1.7 — documentation semantic-sweep consistency pass (REPRODUCIBILITY §4 heading `5 instances` → `2 instances`, README version/Reproducibility-tags/repo-tree synced, `scripts/verify_doc_consistency.sh` added)
+- v2.1.8 — EJOR 30-page compliance split (Appendix A/B/C moved to a separate `paper/supplementary.pdf`; main manuscript trimmed to 30 pages; §2 Related Work consolidated; `scripts/verify_zip_rebuild.sh` extended to validate both PDFs)
 
 ## Overview
 
@@ -26,7 +27,7 @@ among coalitions realizable under revealed arrival dynamics. This repository
 contains all code, seeds, and raw results needed to reproduce the paper's
 numerical claims.
 
-## Key results (sanity checkpoints, v2.1.7)
+## Key results (sanity checkpoints, v2.1.8)
 
 | Paper location | Quantity | Value |
 |---|---|---|
@@ -36,15 +37,15 @@ numerical claims.
 | §6.4 | Four-mechanism decomposition of 67 NN empties | 37 + 11 + 10 + 9 |
 | Corollary 17 (§6.4) | k < n−1 Core empirical nonempty rate | 70/79 (88.6%; 9 intermediate-mechanism exceptions) |
 | §6.6 | Sharpness ratio r̄*/r̄**, r̄*/r̄*** | 3.56 (4.351/1.223), 3.97 (4.351/1.096) |
-| Appendix B | Scale invariance (r relative std across α) | 0.00e+00 |
-| Appendix C | Near-complement cases (Table 10) | 10 |
-| Appendix C | Intermediate cases (Table 11) | 9 |
+| Supplementary §S2 | Scale invariance (r relative std across α) | 0.00e+00 |
+| Supplementary §S3 | Near-complement cases (Supp. Table S2) | 10 |
+| Supplementary §S3 | Intermediate cases (Supp. Table S3) | 9 |
 
 ## Repository structure
 
 ```
 .
-├── paper/             # LaTeX source + references.bib (main.pdf built locally)
+├── paper/             # main.tex + supplementary.tex + references.bib (main.pdf + supplementary.pdf built locally)
 ├── code/
 │   ├── src/           # algorithm implementations (Held-Karp, LKH, TNu LP, policies,
 │   │                  #  config.py, generators.py, core_lp_restricted.py)
@@ -85,8 +86,8 @@ random seeds, and mapping between paper tables/figures and scripts.
 
 - `paper-submission-v1` / `v1.1` / `v1.2`: prior submission states (L = 10 coordinate convention); superseded by v2.1.2 and subsequent iterations.
 - `paper-submission-v2.0` / `v2.0.1` / `v2.0.2` / `v2.0.3` / `v2.1.0` (local only): intermediate revisions under Steele N2 convention; superseded by v2.1.2 and subsequent iterations.
-- `v2.1.2` / `v2.1.3` / `v2.1.4` / `v2.1.5` / `v2.1.6` (intermediate major-revision iterations): 4-mechanism taxonomy, Proposition 12, Observation 15, corrected feasibility family F, then a sequence of documentation-polish and ZIP-rebuildability fixes. See the version-history block above for per-iteration scope. Restore any locally via `git checkout <tag>`.
-- `v2.1.7` (current, major revision): documentation semantic-sweep consistency pass — `REPRODUCIBILITY.md` §4 heading corrected from `5 instances` to `2 instances` (the last residual v2.1.2-scope label), version/supersedes labels synced across README and REPRODUCIBILITY, repo-tree clarified that the top-level `figures/` symlink is dev-only (not shipped in the ZIP; the shipped paper resolves figures via `code/figures/`), and `scripts/verify_doc_consistency.sh` added so future iterations cannot silently regress on the same class of stale labels. Restore locally via `git checkout v2.1.7`.
+- `v2.1.2` / `v2.1.3` / `v2.1.4` / `v2.1.5` / `v2.1.6` / `v2.1.7` (intermediate major-revision iterations): 4-mechanism taxonomy, Proposition 12, Observation 15, corrected feasibility family F, then a sequence of documentation-polish and ZIP-rebuildability fixes capped by the v2.1.7 end-to-end consistency sweep. See the version-history block above for per-iteration scope. Restore any locally via `git checkout <tag>`.
+- `v2.1.8` (current, major revision): EJOR 30-page compliance split. The three appendices are moved from `paper/main.tex` into a new `paper/supplementary.tex` (§S1 per-pattern Core-existence, §S2 scale invariance, §S3 restricted Core LP + classification tables). The main manuscript is trimmed to exactly 30 pages (`\bibsep` compression + §2 Related Work consolidated from 5 subsections to 3); the Supplementary is 6 pages. Body references rewritten as "Supplementary Materials §S*" and "Supplementary Figure/Table S*". §6.8 adds a self-contained one-paragraph summary of the restricted-LP methodology. `scripts/verify_zip_rebuild.sh` extended to build and validate both `main.pdf` (≤30-page hard cap) and `supplementary.pdf`. Theorem/proof statements, CSV data, and figure PDFs are unchanged. Restore locally via `git checkout v2.1.8`.
 
 ## Citation
 
