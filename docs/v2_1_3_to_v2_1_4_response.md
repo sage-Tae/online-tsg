@@ -116,5 +116,5 @@ against, even if superseded by v2.1.4).
 
 - **ZIP**: `TSG_agent_submission_v2_1_4_20260419.zip` (742 KB, 66 files)
 - **SHA256 file**: `TSG_agent_submission_v2_1_4_20260419.sha256`
-- **SHA256**: `8aa1e0a00d72267a1c3ddc983a8db3b970e2dfc8de863c0101842c545880e8a2`
-- **Git tag**: `v2.1.4` on commit `6f8e1af`
+- **SHA256**: recorded in the accompanying `TSG_agent_submission_v2_1_4_20260419.sha256` file (hash self-referencing issue: embedding the final ZIP SHA inside a document that the ZIP itself contains is impossible, so the authoritative record is the separate `.sha256` file).
+- **Git tag**: `v2.1.4` on commit `b00813e`
