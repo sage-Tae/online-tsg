@@ -2,11 +2,11 @@
 
 Code and data for the paper:
 
-> **Online Traveling Salesman Games: Temporal Nucleolus, Empty Cores, and Complement-Coalition Mechanisms**
+> **Online Traveling Salesman Games: Temporal Nucleolus and the Fragility of the Core under Dynamic Arrivals**
 > Seyun Jeong (POSTECH) and Hyunchul Tae (KITECH)
 > Submitted to *European Journal of Operational Research*, 2026
 
-**Current version: v2.1.9** (major revision, April 19, 2026)
+**Current version: v2.1.10** (major revision, April 19, 2026)
 
 Version history:
 - v2.0.x — initial submission (v2.0, v2.0.1, v2.0.2, v2.0.3)
@@ -19,6 +19,7 @@ Version history:
 - v2.1.7 — documentation semantic-sweep consistency pass (REPRODUCIBILITY §4 heading `5 instances` → `2 instances`, README version/Reproducibility-tags/repo-tree synced, `scripts/verify_doc_consistency.sh` added)
 - v2.1.8 — EJOR 30-page compliance split (Appendix A/B/C moved to a separate `paper/supplementary.pdf`; main manuscript trimmed to 30 pages; §2 Related Work consolidated; `scripts/verify_zip_rebuild.sh` extended to validate both PDFs)
 - v2.1.9 — EJOR desk-check compliance (Abstract rewritten formula-free and theorem-reference-free at 238 words; Keywords trimmed 7 → 5 with one EJOR-list term; `make_figures_v3.py` Figure 2 caption's "see Appendix C" → "see Supplementary Materials S3" + Fig 2 regenerated; REPRODUCIBILITY Data-Files table pruned of unshipped logs / Design-Documents section)
+- v2.1.10 — EJOR Highlights compliance + package polish (separate `paper/highlights.{tex,pdf,txt}` with 5 bullets each ≤ 85 chars, formula-free and abbreviation-free; in-manuscript `\section*{Highlights}` removed from `main.tex`; active `Appendix B/C` text in REPRODUCIBILITY replaced by `Supplementary Materials §S2/§S3`; README repo-tree and Citation block synced to current paper title; `verify_zip_rebuild.sh` extended to build highlights.pdf)
 
 ## Overview
 
@@ -28,7 +29,7 @@ among coalitions realizable under revealed arrival dynamics. This repository
 contains all code, seeds, and raw results needed to reproduce the paper's
 numerical claims.
 
-## Key results (sanity checkpoints, v2.1.9)
+## Key results (sanity checkpoints, v2.1.10)
 
 | Paper location | Quantity | Value |
 |---|---|---|
@@ -46,7 +47,8 @@ numerical claims.
 
 ```
 .
-├── paper/             # main.tex + supplementary.tex + references.bib (main.pdf + supplementary.pdf built locally)
+├── paper/             # main.tex + supplementary.tex + highlights.tex + references.bib
+│                      # (main.pdf + supplementary.pdf + highlights.pdf built locally)
 ├── code/
 │   ├── src/           # algorithm implementations (Held-Karp, LKH, TNu LP, policies,
 │   │                  #  config.py, generators.py, core_lp_restricted.py)
@@ -59,8 +61,7 @@ numerical claims.
 │                      #  exists locally for the paper's graphicspath, but
 │                      #  is NOT shipped in the submission ZIP — the ZIP
 │                      #  references `code/figures/` directly)
-├── phase1_design.md   # experimental design rationale
-├── phase3_narrative.md # paper revision narrative
+├── scripts/           # gate checks: verify_zip_rebuild.sh, verify_doc_consistency.sh
 ├── REPRODUCIBILITY.md # full reproduction guide
 └── LICENSE
 ```
@@ -87,8 +88,8 @@ random seeds, and mapping between paper tables/figures and scripts.
 
 - `paper-submission-v1` / `v1.1` / `v1.2`: prior submission states (L = 10 coordinate convention); superseded by v2.1.2 and subsequent iterations.
 - `paper-submission-v2.0` / `v2.0.1` / `v2.0.2` / `v2.0.3` / `v2.1.0` (local only): intermediate revisions under Steele N2 convention; superseded by v2.1.2 and subsequent iterations.
-- `v2.1.2` / `v2.1.3` / `v2.1.4` / `v2.1.5` / `v2.1.6` / `v2.1.7` / `v2.1.8` (intermediate major-revision iterations): 4-mechanism taxonomy, Proposition 12, Observation 15, corrected feasibility family F; a sequence of documentation-polish and ZIP-rebuildability fixes; and the EJOR 30-page compliance split at v2.1.8 (appendices moved to a separate `paper/supplementary.pdf`). See the version-history block above for per-iteration scope. Restore any locally via `git checkout <tag>`.
-- `v2.1.9` (current, major revision): EJOR desk-check compliance pass. Abstract rewritten formula-free and theorem-reference-free at 238 words (within EJOR's 50–250 band) with all abbreviations defined on first use; Keywords trimmed 7 → 5 with one entry (Routing) drawn from EJOR's official keyword list; `code/figures/make_figures_v3.py` Figure 2 caption's "see Appendix C" replaced by "see Supplementary Materials S3" and Figure 2 regenerated (no figure PDF contains the word "Appendix"); `REPRODUCIBILITY.md` Data-Files table pruned of four unshipped-log rows (only `run_main_v2_full.log` is actually in the ZIP) and the Design-Documents section removed (phase1_design.md, phase3_narrative.md, phase3_results_summary.json are internal working files not shipped). Theorem / Proposition / Corollary / Remark / Observation statements and proofs are unchanged; CSVs and `src/` are unchanged bit-for-bit. Restore locally via `git checkout v2.1.9`.
+- `v2.1.2` / `v2.1.3` / `v2.1.4` / `v2.1.5` / `v2.1.6` / `v2.1.7` / `v2.1.8` / `v2.1.9` (intermediate major-revision iterations): 4-mechanism taxonomy, Proposition 12, Observation 15, corrected feasibility family F; a sequence of documentation-polish and ZIP-rebuildability fixes; the EJOR 30-page compliance split at v2.1.8 (appendices moved to `paper/supplementary.pdf`); and the v2.1.9 abstract / keyword / figure-caption desk-check pass. See the version-history block above for per-iteration scope. Restore any locally via `git checkout <tag>`.
+- `v2.1.10` (current, major revision): EJOR Highlights desk-check compliance plus package polish. Highlights moved out of `main.tex` into a separate `paper/highlights.tex` / `paper/highlights.pdf` / `paper/highlights.txt` (5 bullets, each ≤ 85 characters, formula-free and abbreviation-free per EJOR). Active-text "Appendix B/C" references in `REPRODUCIBILITY.md` replaced by "Supplementary Materials §S2/§S3" (historical refs in Version History preserved). README repository-tree drops two unshipped internal working files and adds the `scripts/` directory; README title and BibTeX citation synced to the current paper title. `scripts/verify_zip_rebuild.sh` extended to build and validate `highlights.pdf` in addition to `main.pdf` (≤ 30 pages) and `supplementary.pdf`. Theorem / Proposition / Corollary / Remark / Observation statements and proofs unchanged; CSVs and `src/` unchanged bit-for-bit. Restore locally via `git checkout v2.1.10`.
 
 ## Citation
 
@@ -97,8 +98,8 @@ If you use this code or build on the results, please cite:
 ```bibtex
 @article{jeong2026online,
   author = {Jeong, Seyun and Tae, Hyunchul},
-  title  = {Online Traveling Salesman Games: Temporal Nucleolus,
-            Empty Cores, and Complement-Coalition Mechanisms},
+  title  = {Online Traveling Salesman Games: Temporal Nucleolus
+            and the Fragility of the Core under Dynamic Arrivals},
   year   = {2026},
   note   = {Under review at European Journal of Operational Research}
 }
