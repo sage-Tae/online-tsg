@@ -1,11 +1,11 @@
-# Reproducibility Guide — Online TSG (v2.1.3)
+# Reproducibility Guide — Online TSG (v2.1.5)
 
-This document describes how to reproduce the empirical results in the paper *"Online Traveling Salesman Games: Temporal Nucleolus, Empty Cores, and Complement-Coalition Mechanisms"* (major revision, v2.1.3).
+This document describes how to reproduce the empirical results in the paper *"Online Traveling Salesman Games: Temporal Nucleolus, Empty Cores, and Complement-Coalition Mechanisms"* (major revision, v2.1.5).
 
 ## Paper Info
 
-- **Version**: v2.1.3 (major revision; supersedes v2.0, v2.1.0, v2.1.2)
-- **Pages**: 34
+- **Version**: v2.1.5 (major revision; supersedes v2.0, v2.1.0, v2.1.2, v2.1.3, v2.1.4)
+- **Pages**: 35
 - **Experimental instances**: 596 total
   - Main study: 525 (5 sizes × 7 patterns × 5 seeds × 3 policies)
   - Scale-up: 45 (3 sizes × 3 patterns × 5 seeds × NN)
@@ -92,9 +92,10 @@ cd code/experiments
 python3 run_seed123_check.py
 ```
 
-- **Runtime**: ~12 hours (n=30 and n=50 Pattern A dominated by LKH calls on ~10,000 sampled coalitions each). Requires augmented summary CSV from Step 1.5 for cross-checks.
-- **Output**: `logs/seed123_core_check.csv` (2 rows used in Appendix C: n=20 and n=30 seed 123 under Pattern A) + `logs/run_seed123_check.log`. The 3 legacy control rows from the v2.1.2 analysis are backed up at `logs/legacy/seed123_core_check_extended.csv` (not tracked or shipped).
-- **Source for**: Appendix C "Scale-up certification" 2-row table.
+- **Runtime**: ~5 hours total for the 2 shipped rows (n=20 seed 123 Pattern A ≈ 1 h, n=30 seed 123 Pattern A ≈ 4 h; both dominated by LKH calls on ~10,000 sampled coalitions each). Requires augmented summary CSV from Step 1.5 for cross-checks.
+- **Output**: `logs/seed123_core_check.csv` (2 rows: n=20 and n=30 seed 123 under Pattern A — exactly the Appendix C Table). TARGETS in the script match this scope; `logs/run_seed123_check.log` records execution traces.
+- **Source for**: Appendix C "Scale-up certification" 2-row table. The n=50 seed 123 case is analytically covered by Theorem 11 firing directly (Finding 4) and does not require restricted-LP treatment in v2.1.5.
+- **Legacy scope**: the v2.1.4-and-earlier 5-entry TARGETS list (adding n=50 seed 123 and two control rows for Theorem-11-fires sanity checks) is preserved at `code/scripts/legacy/run_seed123_check_extended.py`.
 
 ### 5. Figures regeneration
 
@@ -148,7 +149,7 @@ For Pattern A at seed = 123 (n ∈ {20, 30}), Theorem 11 is vacuous (r ≤ r**) 
 | `code/src/tsp_scaleup.py` | LKH wrapper (via `elkai`) for large n |
 | `code/src/core_lp_restricted.py` | Restricted Core LP (Appendix C) |
 
-## Data Files (v2.1.3)
+## Data Files (v2.1.5)
 
 All in `code/experiments/logs/`:
 
@@ -163,7 +164,7 @@ All in `code/experiments/logs/`:
 | `run_sensitivity_v2.log` | — | Execution log of sensitivity |
 | `run_seed123_check.log` | — | Execution log of restricted LP |
 
-Legacy CSVs (`policy_comparison.csv`, `scaleup.csv`, etc.) correspond to the v1.2 submission and are retained for historical reference; they are **not** the basis for v2.1.3's reported numbers.
+Legacy CSVs (`policy_comparison.csv`, `scaleup.csv`, etc.) correspond to the v1.2 submission and are retained for historical reference; they are **not** the basis for v2.1.5's reported numbers.
 
 ## Design Documents
 
@@ -181,7 +182,7 @@ pdflatex -interaction=nonstopmode main.tex
 pdflatex -interaction=nonstopmode main.tex
 ```
 
-Expected output: `paper/main.pdf`, 34 pages, 0 errors, 0 undefined references or citations.
+Expected output: `paper/main.pdf`, 35 pages, 0 errors, 0 undefined references or citations.
 
 Required TeX packages: `natbib`, `mathtools`, `multirow`, `enumitem`, `authblk`, `setspace`, `caption`, `amsmath`, `amssymb`, `amsthm`, `graphicx`, `booktabs`, `hyperref`, `xcolor`, `geometry`.
 
@@ -191,4 +192,6 @@ Required TeX packages: `natbib`, `mathtools`, `multirow`, `enumitem`, `authblk`,
 - **v2.0** (intermediate major revision): 29 pages, 599 instances, N2 convention (L = √n, Steele 1997), near-complement mechanism (Remark + Appendix C), scale invariance verification (Appendix B), pattern re-parameterization to ρ-based taxonomy.
 - **v2.1.0** (intermediate; responded to 5 fundamental critiques): 30 pages, §2.5 Restricted Cooperation Games added, Definition 3 proper-subset constraints, over-claim tone-downs, Nucleolus algorithmic details.
 - **v2.1.2** (intermediate; post-F-generation fix): 34 pages, corrected feasibility family F via post-hoc reconstruction per paper Definition 2, Proposition 12 (balanced-complement threshold), Observation 15 (intermediate-coalition mechanism), 4-mechanism taxonomy.
-- **v2.1.3** (current): 34 pages. Sync fixes: Conclusion and README numerics aligned to v2.1.2 data, Figure 1 caption corrected (broken "Fig None" reference fixed, four-mechanism decomposition explicit), Nucleolus §4.2 algorithmic-details tone-downed to two-tier scope (first-stage LP for Core judgment; simplified cascade for Nucleolus point under non-degeneracy), B_medium nonemptiness claim at n>15 restricted-LP-caveated.
+- **v2.1.3** (intermediate): 34 pages. Sync fixes: Conclusion and README numerics aligned to v2.1.2 data, Figure 1 caption corrected (broken "Fig None" reference fixed, four-mechanism decomposition explicit), Nucleolus §4.2 algorithmic-details tone-downed to two-tier scope (first-stage LP for Core judgment; simplified cascade for Nucleolus point under non-degeneracy), B_medium nonemptiness claim at n>15 restricted-LP-caveated.
+- **v2.1.4** (intermediate): 35 pages. Reproducibility polish: Step 1.5 `augment_summary.py` documented; seed123 CSV aligned with Appendix C (2 rows; 3 legacy rows retained untracked); §6.8 Summary tone-down.
+- **v2.1.5** (current): 35 pages. Scale-up near-complement scope aligned across paper/script/CSV. Finding 4 rewritten as a two-tier pattern (restricted LP at n=20, 30; Theorem 11 fires directly at n=50), consistent with Theorem 14's $O(n^{-1/2})$ tightening. `run_seed123_check.py` TARGETS reduced from 5 to 2 to match Appendix C (legacy 5-entry version retained at `code/scripts/legacy/run_seed123_check_extended.py`).

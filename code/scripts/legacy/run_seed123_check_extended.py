@@ -27,20 +27,13 @@ from src.core_lp_restricted import check_core_restricted
 DEPOT = (0.0, 0.0)
 
 TARGETS = [
-    # v2.1.5 scope: 2 near-complement cases as reported in Appendix C.
-    # Seed 123 under Pattern A has Theorem 11 vacuous at n=20 and n=30
-    # (r <= r**); the restricted LP certifies Core emptiness in both.
+    # Seed 123: Phase 2.5 showed Thm11 fires=False at n=20,30 (potential intermediate)
     ('A', 20, 123),
     ('A', 30, 123),
-    #
-    # Legacy entries (v2.1.4 and earlier, 5-row study) are preserved at
-    # scripts/legacy/run_seed123_check_extended.py for reproducibility of
-    # the v2.1.2 analysis. They are NOT part of the current v2.1.5 paper
-    # Appendix C:
-    #   ('A', 50, 123)  -- now covered by Theorem 11 firing directly
-    #                      (r = 1.306 > r** = 1.081); Finding 4 paragraph.
-    #   ('A', 20,   7)  -- Theorem 11 fires; control row, not cited.
-    #   ('A', 30,  42)  -- Theorem 11 fires; control row, not cited.
+    ('A', 50, 123),
+    # Control: Thm11 fires cases -> should be Core empty (LP correctness sanity check)
+    ('A', 20, 7),
+    ('A', 30, 42),
 ]
 
 NUM_SAMPLES = 10000
