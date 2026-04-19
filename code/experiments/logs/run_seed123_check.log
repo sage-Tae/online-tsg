@@ -1,0 +1,137 @@
+  WARNING: |U_t|=20 > 15, skipping subset enumeration
+  WARNING: |U_t|=19 > 15, skipping subset enumeration
+  WARNING: |U_t|=18 > 15, skipping subset enumeration
+  WARNING: |U_t|=17 > 15, skipping subset enumeration
+  WARNING: |U_t|=16 > 15, skipping subset enumeration
+  WARNING: |U_t|=30 > 15, skipping subset enumeration
+  WARNING: |U_t|=29 > 15, skipping subset enumeration
+  WARNING: |U_t|=28 > 15, skipping subset enumeration
+  WARNING: |U_t|=27 > 15, skipping subset enumeration
+  WARNING: |U_t|=26 > 15, skipping subset enumeration
+  WARNING: |U_t|=25 > 15, skipping subset enumeration
+  WARNING: |U_t|=24 > 15, skipping subset enumeration
+  WARNING: |U_t|=23 > 15, skipping subset enumeration
+  WARNING: |U_t|=22 > 15, skipping subset enumeration
+  WARNING: |U_t|=21 > 15, skipping subset enumeration
+  WARNING: |U_t|=20 > 15, skipping subset enumeration
+  WARNING: |U_t|=19 > 15, skipping subset enumeration
+  WARNING: |U_t|=18 > 15, skipping subset enumeration
+  WARNING: |U_t|=17 > 15, skipping subset enumeration
+  WARNING: |U_t|=16 > 15, skipping subset enumeration
+  WARNING: |U_t|=50 > 15, skipping subset enumeration
+  WARNING: |U_t|=49 > 15, skipping subset enumeration
+  WARNING: |U_t|=48 > 15, skipping subset enumeration
+  WARNING: |U_t|=47 > 15, skipping subset enumeration
+  WARNING: |U_t|=46 > 15, skipping subset enumeration
+  WARNING: |U_t|=45 > 15, skipping subset enumeration
+  WARNING: |U_t|=44 > 15, skipping subset enumeration
+  WARNING: |U_t|=43 > 15, skipping subset enumeration
+  WARNING: |U_t|=42 > 15, skipping subset enumeration
+  WARNING: |U_t|=41 > 15, skipping subset enumeration
+  WARNING: |U_t|=40 > 15, skipping subset enumeration
+  WARNING: |U_t|=39 > 15, skipping subset enumeration
+  WARNING: |U_t|=38 > 15, skipping subset enumeration
+  WARNING: |U_t|=37 > 15, skipping subset enumeration
+  WARNING: |U_t|=36 > 15, skipping subset enumeration
+  WARNING: |U_t|=35 > 15, skipping subset enumeration
+  WARNING: |U_t|=34 > 15, skipping subset enumeration
+  WARNING: |U_t|=33 > 15, skipping subset enumeration
+  WARNING: |U_t|=32 > 15, skipping subset enumeration
+  WARNING: |U_t|=31 > 15, skipping subset enumeration
+  WARNING: |U_t|=30 > 15, skipping subset enumeration
+  WARNING: |U_t|=29 > 15, skipping subset enumeration
+  WARNING: |U_t|=28 > 15, skipping subset enumeration
+  WARNING: |U_t|=27 > 15, skipping subset enumeration
+  WARNING: |U_t|=26 > 15, skipping subset enumeration
+  WARNING: |U_t|=25 > 15, skipping subset enumeration
+  WARNING: |U_t|=24 > 15, skipping subset enumeration
+  WARNING: |U_t|=23 > 15, skipping subset enumeration
+  WARNING: |U_t|=22 > 15, skipping subset enumeration
+  WARNING: |U_t|=21 > 15, skipping subset enumeration
+  WARNING: |U_t|=20 > 15, skipping subset enumeration
+  WARNING: |U_t|=19 > 15, skipping subset enumeration
+  WARNING: |U_t|=18 > 15, skipping subset enumeration
+  WARNING: |U_t|=17 > 15, skipping subset enumeration
+  WARNING: |U_t|=16 > 15, skipping subset enumeration
+  WARNING: |U_t|=20 > 15, skipping subset enumeration
+  WARNING: |U_t|=19 > 15, skipping subset enumeration
+  WARNING: |U_t|=18 > 15, skipping subset enumeration
+  WARNING: |U_t|=17 > 15, skipping subset enumeration
+  WARNING: |U_t|=16 > 15, skipping subset enumeration
+  WARNING: |U_t|=30 > 15, skipping subset enumeration
+  WARNING: |U_t|=29 > 15, skipping subset enumeration
+  WARNING: |U_t|=28 > 15, skipping subset enumeration
+  WARNING: |U_t|=27 > 15, skipping subset enumeration
+  WARNING: |U_t|=26 > 15, skipping subset enumeration
+  WARNING: |U_t|=25 > 15, skipping subset enumeration
+  WARNING: |U_t|=24 > 15, skipping subset enumeration
+  WARNING: |U_t|=23 > 15, skipping subset enumeration
+  WARNING: |U_t|=22 > 15, skipping subset enumeration
+  WARNING: |U_t|=21 > 15, skipping subset enumeration
+  WARNING: |U_t|=20 > 15, skipping subset enumeration
+  WARNING: |U_t|=19 > 15, skipping subset enumeration
+  WARNING: |U_t|=18 > 15, skipping subset enumeration
+  WARNING: |U_t|=17 > 15, skipping subset enumeration
+  WARNING: |U_t|=16 > 15, skipping subset enumeration
+
+=== A, n=20, seed=123 ===
+  L=4.4721, rho=inf, tau=0.0000
+  C_online=18.2252, c*(N)=16.9248, r=1.0768
+  Sampling up to 10000 feasible coalitions from 2^20...
+  Sampled 10000 feasible coalitions.
+  LP: 20 vars, 9999 constraints
+  LP: 9999 constraints
+  core_nonempty_restricted: False
+  eps*: 0.76546427
+  violating sizes: [18, 19]
+  elapsed: 3206.7s
+
+=== A, n=30, seed=123 ===
+  L=5.4772, rho=inf, tau=0.0000
+  C_online=28.7826, c*(N)=27.7414, r=1.0375
+  Sampling up to 10000 feasible coalitions from 2^30...
+  Sampled 10000 feasible coalitions.
+  LP: 30 vars, 9999 constraints
+  LP: 9999 constraints
+  core_nonempty_restricted: False
+  eps*: 0.66198223
+  violating sizes: [28, 29]
+  elapsed: 15653.4s
+
+=== A, n=50, seed=123 ===
+  L=7.0711, rho=inf, tau=0.0000
+  C_online=56.3911, c*(N)=43.1848, r=1.3058
+  Sampling up to 10000 feasible coalitions from 2^50...
+  Sampled 10000 feasible coalitions.
+  LP: 50 vars, 9999 constraints
+  LP: 9999 constraints
+  core_nonempty_restricted: False
+  eps*: 12.387337
+  violating sizes: [48, 49]
+  elapsed: 8322.4s
+
+=== A, n=20, seed=7 ===
+  L=4.4721, rho=inf, tau=0.0000
+  C_online=24.3596, c*(N)=20.0341, r=1.2159
+  Sampling up to 10000 feasible coalitions from 2^20...
+  Sampled 10000 feasible coalitions.
+  LP: 20 vars, 9999 constraints
+  LP: 9999 constraints
+  core_nonempty_restricted: False
+  eps*: 3.5742771
+  violating sizes: [18, 19]
+  elapsed: 3175.7s
+
+=== A, n=30, seed=42 ===
+  L=5.4772, rho=inf, tau=0.0000
+  C_online=33.0651, c*(N)=26.7007, r=1.2384
+  Sampling up to 10000 feasible coalitions from 2^30...
+  Sampled 10000 feasible coalitions.
+  LP: 30 vars, 9999 constraints
+  LP: 9999 constraints
+  core_nonempty_restricted: False
+  eps*: 5.5959251
+  violating sizes: [29]
+  elapsed: 15361.8s
+
+Done. Output: /Users/sage/Documents/claude/TSG_agent/code/experiments/logs/seed123_core_check.csv
