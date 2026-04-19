@@ -21,3 +21,7 @@ paper/main.synctex.gz
 
 # Phase 2 pre-correction archives (kept locally, not tracked)
 **/archive_v2_1_0/
+
+# Legacy pre-correction seed123 extended CSV (retained locally, not tracked,
+# not included in submission ZIP; superseded by 2-row Appendix C table)
+**/logs/legacy/

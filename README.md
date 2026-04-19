@@ -4,7 +4,16 @@ Code and data for the paper:
 
 > **Online Traveling Salesman Games: Temporal Nucleolus, Empty Cores, and Complement-Coalition Mechanisms**
 > Seyun Jeong (POSTECH) and Hyunchul Tae (KITECH)
-> Submitted to *European Journal of Operational Research*, 2026 (major revision v2.0)
+> Submitted to *European Journal of Operational Research*, 2026
+
+**Current version: v2.1.4** (major revision, April 19, 2026)
+
+Version history:
+- v2.0.x — initial submission (v2.0, v2.0.1, v2.0.2, v2.0.3)
+- v2.1.0 — first-round review response (superseded; F-generation bug)
+- v2.1.2 — F-generation fix + 4-mechanism taxonomy (Proposition 12, Observation 15)
+- v2.1.3 — documentation sync (Conclusion, Figure 1 caption, README, Nucleolus scope, B_medium caveat)
+- v2.1.4 — reproducibility polish (augment step, seed123 CSV alignment, §6.8 Summary tone-down, version labels)
 
 ## Overview
 

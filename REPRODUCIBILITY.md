@@ -46,7 +46,21 @@ python3 run_main.py --output logs/policy_comparison_v2_full.csv
 
 - **Runtime**: ~13 minutes on a laptop.
 - **Output CSV columns** (18): n, pattern, seed, policy, L, rho, tau, C_N_online, c_star_N, r, r_star, r_ss, n_feasible, k, core_nonempty, core_epsilon, theorem11_applicable, theorem11_fires.
-- **Source for**: Tables 5–7, Section 6.4 strata, all figures.
+- **Source for**: Tables 5-7, Section 6.4 strata, all figures (after Step 1.5 augment below).
+
+### 1.5. Augment summary CSV with `r_sss` and `empty_mechanism` columns
+
+`run_main.py` produces 18 columns. Figure regeneration, the 4-mechanism taxonomy, and the Table 6 `r***` column all require two additional columns: `r_sss` (balanced-complement threshold, Proposition 12) and `empty_mechanism` (4-way classification: single / balanced / near / intermediate / core_nonempty). These are computed by a post-processing script that reads and overwrites the same CSV in place:
+
+```bash
+cd code
+python3 scripts/augment_summary.py
+```
+
+- **Input / output**: `code/experiments/logs/policy_comparison_v2_full.csv` (read and overwritten; the script hard-codes this path).
+- **Runtime**: ~15 minutes (reruns the simulator for each of 525 rows to recover `coalition_costs` needed for the binding-size classification).
+- **Output columns after Step 1.5** (20 total): the original 18 plus `r_sss` and `empty_mechanism`.
+- **Required by**: `make_figures_v3.py` (Step 5) and the Appendix C restricted-LP analysis in `scripts/residual_binding_analysis.py`. Must be run before those downstream steps; idempotent on re-runs.
 
 ### 2. Scale-up study (45 instances)
 
@@ -78,9 +92,9 @@ cd code/experiments
 python3 run_seed123_check.py
 ```
 
-- **Runtime**: ~12 hours (n=30 and n=50 Pattern A dominated by LKH calls on ~10,000 sampled coalitions each).
-- **Output**: `logs/seed123_core_check.csv` + `logs/run_seed123_check.log`.
-- **Source for**: Appendix C, Table C.1.
+- **Runtime**: ~12 hours (n=30 and n=50 Pattern A dominated by LKH calls on ~10,000 sampled coalitions each). Requires augmented summary CSV from Step 1.5 for cross-checks.
+- **Output**: `logs/seed123_core_check.csv` (2 rows used in Appendix C: n=20 and n=30 seed 123 under Pattern A) + `logs/run_seed123_check.log`. The 3 legacy control rows from the v2.1.2 analysis are backed up at `logs/legacy/seed123_core_check_extended.csv` (not tracked or shipped).
+- **Source for**: Appendix C "Scale-up certification" 2-row table.
 
 ### 5. Figures regeneration
 
@@ -91,7 +105,7 @@ python3 make_figures_v3.py
 
 - **Runtime**: ~10 seconds.
 - **Output**: 5 PDF figures in `code/figures/` (`fig2_r_vs_rstar`, `fig3_core_vs_k`, `fig3_core_vs_n`, `fig4_coalition_reduction`, `fig5_rstar_vs_rss`).
-- **Input**: `policy_comparison_v2_full.csv`.
+- **Input**: `policy_comparison_v2_full.csv` **after Step 1.5 augment** (requires the `r_sss` and `empty_mechanism` columns; running this step on the 18-column raw output will fail).
 
 ## Design Framework (N2 Convention)
 
