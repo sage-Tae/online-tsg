@@ -45,28 +45,45 @@ pattern_short = {
 
 
 # =========================================================================
-# Fig 2: r vs r** scatter (main Figure 1 in paper: fig2_r_vs_rstar.pdf)
+# Fig 2: r vs r** scatter, with 4-mechanism classification overlay
 # =========================================================================
 applicable = nn.dropna(subset=['r_ss']).copy()
-non_app = nn[nn.r_ss.isna()].copy()
-core_yes = applicable[applicable.core_nonempty]
-core_no = applicable[~applicable.core_nonempty]
-assert non_app.core_nonempty.all(), "Non-applicable expected nonempty Core"
 
-fig, ax = plt.subplots(figsize=(6.5, 5))
-ax.scatter(core_yes['r_ss'], core_yes['r'], s=28, alpha=0.6,
+# Classify by empty_mechanism column (present after Phase 2 augment)
+core_yes  = applicable[applicable['empty_mechanism'] == 'core_nonempty']
+single    = applicable[applicable['empty_mechanism'] == 'single_complement']
+balanced  = applicable[applicable['empty_mechanism'] == 'balanced_complement']
+near_comp = applicable[applicable['empty_mechanism'] == 'near_complement']
+
+fig, ax = plt.subplots(figsize=(7, 5.5))
+ax.scatter(core_yes['r_ss'], core_yes['r'], s=24, alpha=0.55,
            color='#1f77b4', edgecolor='none',
            label=f'Core non-empty (n={len(core_yes)})')
-ax.scatter(core_no['r_ss'], core_no['r'], s=55, alpha=0.95,
+ax.scatter(single['r_ss'], single['r'], s=60, alpha=0.95,
            color='#d62728', edgecolor='black', linewidth=0.6, marker='X',
-           label=f'Core empty (n={len(core_no)})')
+           label=f'Single-complement / Thm 11 (n={len(single)})')
+ax.scatter(balanced['r_ss'], balanced['r'], s=55, alpha=0.95,
+           color='#ff7f0e', edgecolor='black', linewidth=0.6, marker='s',
+           label=f'Balanced-complement / Prop 12 (n={len(balanced)})')
+ax.scatter(near_comp['r_ss'], near_comp['r'], s=55, alpha=0.95,
+           color='#9467bd', edgecolor='black', linewidth=0.6, marker='D',
+           label=f'Near-complement / Remark 13 (n={len(near_comp)})')
+
+# Intermediate cases (Obs 15) have r_ss = NaN, so they cannot be plotted
+# on this (r, r**) panel.  Annotate count.
+inter_count = len(nn[nn['empty_mechanism'] == 'intermediate'])
+ax.text(0.02, 0.98,
+        f'+{inter_count} intermediate (Obs 15) at r**=undefined; see Fig {None}',
+        transform=ax.transAxes, fontsize=8, verticalalignment='top',
+        color='#2ca02c', style='italic')
+
 mn = min(applicable['r_ss'].min(), applicable['r'].min()) - 0.02
 mx = max(applicable['r_ss'].max(), applicable['r'].max()) + 0.02
 ax.plot([mn, mx], [mn, mx], 'k--', linewidth=0.8, label=r'$r = r^{**}$')
 ax.set_xlabel(r'$r^{**} = 1 + \min_i \delta_i / c^\ast(N)$')
 ax.set_ylabel(r'$r = C(N)_{\mathrm{online}}/c^\ast(N)$')
-ax.set_title(r'Theorem 11: $r > r^{**} \Rightarrow$ Core $= \emptyset$')
-ax.legend(loc='lower right', frameon=True)
+ax.set_title(r'$r > r^{**} \Rightarrow$ Core $= \emptyset$; four-mechanism overlay')
+ax.legend(loc='lower right', frameon=True, fontsize=9)
 ax.set_xlim(mn, mx)
 ax.set_ylim(mn, mx)
 plt.tight_layout()
@@ -127,20 +144,24 @@ plt.close()
 
 
 # =========================================================================
-# Fig 5: r** vs r* histogram
+# Fig 5: r**, r***, and r* histograms (3-way comparison)
 # =========================================================================
-fig, ax = plt.subplots(figsize=(6.8, 4))
+fig, ax = plt.subplots(figsize=(7, 4))
 r_max = max(nn.r_star.max(), nn.r_ss.max(skipna=True)) + 0.3
 bins = np.linspace(1.0, r_max, 50)
-ax.hist(nn['r_ss'].dropna(), bins=bins, alpha=0.7, color='#2ca02c',
+ax.hist(nn['r_ss'].dropna(), bins=bins, alpha=0.65, color='#2ca02c',
         edgecolor='black', linewidth=0.5,
-        label=r'$r^{**}$ (tight bound, Thm. 11)')
-ax.hist(nn['r_star'], bins=bins, alpha=0.55, color='#d62728',
-        edgecolor='black', linewidth=0.5, label=r'$r^{*}$ (Remark 8 bound)')
+        label=r'$r^{**}$ (Thm. 11, single-complement)')
+ax.hist(nn['r_sss'].dropna(), bins=bins, alpha=0.65, color='#1f77b4',
+        edgecolor='black', linewidth=0.5,
+        label=r'$r^{***}$ (Prop. 12, balanced-complement)')
+ax.hist(nn['r_star'], bins=bins, alpha=0.45, color='#d62728',
+        edgecolor='black', linewidth=0.5,
+        label=r'$r^{*}$ (classical bound, Remark 8)')
 ax.set_xlabel('Threshold value')
 ax.set_ylabel('Frequency')
-ax.set_title(r'Distribution of critical ratios $r^{**}$ and $r^{*}$')
-ax.legend()
+ax.set_title(r'Distributions of critical ratios $r^{**}$, $r^{***}$, and $r^{*}$')
+ax.legend(fontsize=9)
 plt.tight_layout()
 plt.savefig('fig5_rstar_vs_rss.pdf', bbox_inches='tight')
 plt.close()
@@ -171,7 +192,10 @@ print("Regenerated: fig2_r_vs_rstar, fig3_core_vs_k, fig3_core_vs_n,")
 print("             fig4_coalition_reduction, fig5_rstar_vs_rss")
 print(f"  Input: {SRC}, NN rows = {len(nn)}")
 print(f"  Applicable (r** defined): {len(applicable)}")
-print(f"  Empty & applicable: {len(core_no)}")
+print(f"  single (Thm 11 fires): {len(single)}")
+print(f"  balanced-complement: {len(balanced)}")
+print(f"  near-complement: {len(near_comp)}")
+print(f"  intermediate (Obs 15, r**=undef): {inter_count}")
 print(f"  Nonempty & applicable: {len(core_yes)}")
 print(f"  k regimes: k<n-1={int(rate_k.loc[r'$k<n-1$', 'count'])}, "
       f"k=n-1={int(rate_k.loc[r'$k=n-1$', 'count'])}, "
