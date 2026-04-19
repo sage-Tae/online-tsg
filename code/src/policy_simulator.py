@@ -1,34 +1,46 @@
 """Online TSG simulator parameterized by dispatch policy.
 
-Same event semantics as src.simulator.OnlineTSGSimulator but the choice
-of next customer from U_t is delegated to a policy callback. C(N)_online
-is the total elapsed time including waiting, matching the project
-convention in src.simulator.
+Event semantics match the paper's Online TSG (Section 3):
+  - Customer i arrives at time a_i and enters the waiting queue U_t.
+  - The vehicle, following the dispatch policy, picks the next served
+    customer from U_t; its serve time s_i is the instant that customer
+    is reached.
+  - The total online cost C(N)_online returned here is the *total
+    travel distance* of the realized tour (from depot through all
+    customers and back), matching paper Section 3.2 and Table 1.
+
+Feasible coalitions F are reconstructed post-hoc from the realized
+(arrivals, serve_times) pair using the paper Definition 2
+(src.feasibility.reconstruct_F), so dispatch-iteration miss effects
+that previously truncated F are eliminated.
 """
 
 import sys
-from itertools import combinations
 
-from src.tsp import tsp_cost, dist
+from src.tsp import dist
+from src.feasibility import reconstruct_F, compute_coalition_costs
 
 
 def run_with_policy(positions, arrival_times, policy_fn,
                     depot=(0, 0), speed=1.0, coalition_cache=None):
     """Run the online TSG with the given dispatch policy.
 
-    Returns dict with C_N (total elapsed time), coalition_costs, route,
-    events, serve_times, k (= max |U_t| observed), and players.
+    Returns dict with:
+      C_N            : total travel distance of the realized tour
+      coalition_costs: {S: c(S)} for every S in F per Definition 2
+      route, events, serve_times
+      k              : max_t |U_t|  (peak waiting-queue size)
+      players        : sorted list of customer ids
     """
     all_ids = sorted(positions.keys())
+    n = len(all_ids)
     arrivals = sorted(all_ids, key=lambda i: arrival_times[i])
 
-    # cache may be shared across multiple policy runs for the same instance
     if coalition_cache is None:
         coalition_cache = {}
 
     U_t = set()
     V_t = set()
-    coalition_costs = {}  # subsets actually encountered in F during this run
     events = []
     route = []
     serve_times = {}
@@ -36,9 +48,10 @@ def run_with_policy(positions, arrival_times, policy_fn,
 
     vehicle_pos = depot
     current_time = 0.0
+    total_travel = 0.0
     arrival_idx = 0
 
-    while len(V_t) < len(all_ids):
+    while len(V_t) < n:
         # arrivals up to current_time
         while arrival_idx < len(arrivals):
             cid = arrivals[arrival_idx]
@@ -49,26 +62,6 @@ def run_with_policy(positions, arrival_times, policy_fn,
                 arrival_idx += 1
             else:
                 break
-
-        # coalition enumeration only; k is measured later at service events
-        if U_t:
-            if len(U_t) > 15:
-                print(f"  WARNING: |U_t|={len(U_t)} > 15, skipping subset enumeration",
-                      file=sys.stderr)
-            else:
-                u_list = sorted(U_t)
-                for size in range(1, len(u_list) + 1):
-                    for subset in combinations(u_list, size):
-                        fs = frozenset(subset)
-                        if fs not in coalition_costs:
-                            if fs in coalition_cache:
-                                coalition_costs[fs] = coalition_cache[fs]
-                            else:
-                                cost, _ = tsp_cost(depot, list(subset),
-                                                   positions, arrival_times,
-                                                   speed)
-                                coalition_costs[fs] = cost
-                                coalition_cache[fs] = cost
 
         if not U_t:
             if arrival_idx < len(arrivals):
@@ -86,9 +79,7 @@ def run_with_policy(positions, arrival_times, policy_fn,
         arrival_at_cust = current_time + travel_time
         serve_time = max(arrival_at_cust, arrival_times[best_id])
 
-        # Sweep in all arrivals up to serve_time (so peak-queue count covers
-        # arrivals that occurred during travel/wait) and measure k at the
-        # service-event instant, matching the k = max_t |U_t| definition.
+        # Sweep in arrivals up to serve_time (for peak-queue measurement)
         while arrival_idx < len(arrivals):
             cid = arrivals[arrival_idx]
             if arrival_times[cid] <= serve_time + 1e-9:
@@ -102,6 +93,8 @@ def run_with_policy(positions, arrival_times, policy_fn,
         if len(U_t) > k_max:
             k_max = len(U_t)
 
+        # Accumulate travel distance (not elapsed time)
+        total_travel += best_d
         current_time = serve_time
         vehicle_pos = positions[best_id]
 
@@ -112,34 +105,49 @@ def run_with_policy(positions, arrival_times, policy_fn,
         events.append({'type': 'SERVE', 'time': serve_time,
                        'customer': best_id, 'vehicle_pos': vehicle_pos})
 
-    return_time = dist(vehicle_pos, depot) / speed
-    total_time = current_time + return_time
+    # Return-to-depot leg
+    return_leg = dist(vehicle_pos, depot)
+    total_travel += return_leg
 
-    grand = frozenset(all_ids)
-    if grand not in coalition_costs:
+    # Reconstruct F per paper Definition 2 and compute c(S) for S in F
+    if n <= 15:
+        F = reconstruct_F(n, arrival_times, serve_times)
+        coalition_costs = compute_coalition_costs(
+            F, positions, arrival_times, depot=depot, speed=speed,
+            cache=coalition_cache,
+        )
+    else:
+        # Fallback: n too large for full 2^n enumeration.
+        # We retain singletons + the grand coalition only; experiments
+        # at n > 15 use the restricted-LP path (Appendix C) or the
+        # scaleup runner, both of which reconstruct F themselves.
+        coalition_costs = {}
+        from src.tsp import tsp_cost
+        for cid in all_ids:
+            fs = frozenset([cid])
+            if fs in coalition_cache:
+                coalition_costs[fs] = coalition_cache[fs]
+            else:
+                cost, _ = tsp_cost(depot, [cid], positions, arrival_times, speed)
+                coalition_costs[fs] = cost
+                coalition_cache[fs] = cost
+        grand = frozenset(all_ids)
         if grand in coalition_cache:
             coalition_costs[grand] = coalition_cache[grand]
         else:
             cost, _ = tsp_cost(depot, all_ids, positions, arrival_times, speed)
             coalition_costs[grand] = cost
             coalition_cache[grand] = cost
-    for cid in all_ids:
-        fs = frozenset([cid])
-        if fs not in coalition_costs:
-            if fs in coalition_cache:
-                coalition_costs[fs] = coalition_cache[fs]
-            else:
-                cost, _ = tsp_cost(depot, [cid], positions, arrival_times,
-                                   speed)
-                coalition_costs[fs] = cost
-                coalition_cache[fs] = cost
+        print(f"  WARNING: n={n} > 15, coalition_costs truncated to "
+              f"singletons+N; use scaleup path for full analysis",
+              file=sys.stderr)
 
     return {
         'events': events,
         'route': route,
         'serve_times': serve_times,
         'coalition_costs': coalition_costs,
-        'C_N': total_time,
+        'C_N': total_travel,   # total travel distance (paper definition)
         'players': all_ids,
         'k': k_max,
     }
