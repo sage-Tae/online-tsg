@@ -500,26 +500,29 @@ For the 25 pattern-A (simultaneous) instances we compared the Temporal Nucleolus
 
 \subsection{Verification of Theorem~\ref{thm:empty-core}}
 
-Table~\ref{tab:thm5} is the $2\times 2$ contingency of Theorem~\ref{thm:empty-core}'s prediction against the observed Core status, conditional on the theorem being applicable (i.e.\ $\exists\, i$ with $N\setminus\{i\}\in\F$).
+Table~\ref{tab:thm5} is the four-mechanism contingency of predicted versus observed Core status under NN dispatch on the full 175-instance main grid.
 
 \begin{table}[t]
 \centering
-\caption{Theorem~\ref{thm:empty-core}: predicted versus observed Core status on the 80 applicable instances (NN policy).}
+\caption{Four-mechanism contingency: each of the 175 NN-policy instances classified by its empty-Core mechanism, against the observed Core status. Mechanism labels correspond to Theorem~\ref{thm:empty-core} (single-complement), Proposition~\ref{prop:bondareva-complement} (balanced-complement), Remark~\ref{rem:near-complement} (near-complement), and Observation~\ref{obs:intermediate} (intermediate). The four mechanisms together cover all 67 observed empty Cores; no false positives arise.}
 \label{tab:thm5}
 \small
 \begin{tabular}{@{}lcc|c@{}}
 \toprule
-& \textbf{Core empty (obs.)} & \textbf{Core nonempty (obs.)} & Total \\
+Classification & Core empty (obs.) & Core nonempty (obs.) & Total \\
 \midrule
-\textbf{Predicted empty} ($r>r^{\ast\ast}$)   & 14 & 0  & 14 \\
-\textbf{Not predicted} ($r\le r^{\ast\ast}$)  &  7 & 59 & 66 \\
+Single-complement (Theorem~\ref{thm:empty-core} fires)          & 37 &   0 &  37 \\
+Balanced-complement (Proposition~\ref{prop:bondareva-complement} only) & 11 &   0 &  11 \\
+Near-complement (Remark~\ref{rem:near-complement})              & 10 &   0 &  10 \\
+Intermediate (Observation~\ref{obs:intermediate})               &  9 &   0 &   9 \\
+No mechanism predicts emptiness                                  &  0 & 108 & 108 \\
 \midrule
-Total & 21 & 59 & 80 \\
+Total & 67 & 108 & 175 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Every instance classified by Theorem~\ref{thm:empty-core} as ``empty'' is indeed empty (no false positives). This matches the logical content of the theorem: $r>r^{\ast\ast}$ is a \emph{sufficient} condition. Seven additional empty-Core cases occur at $r\le r^{\ast\ast}$; these arise through the near-complement mechanism of Remark~\ref{rem:near-complement}, whose quantitative evidence is given in Section~\ref{ssec:cor16} and whose restricted-LP certification is detailed in Appendix~\ref{app:restricted-lp}. Figure~\ref{fig:r-rss} plots $r$ versus $r^{\ast\ast}$: instances strictly above the diagonal ($r>r^{\ast\ast}$) are predicted empty by Theorem~\ref{thm:empty-core} and indeed all have empty Cores, while the seven near-complement empty-Core instances sit at or below the diagonal ($r\le r^{\ast\ast}$) and are covered by the mechanism of Remark~\ref{rem:near-complement}. The sharpness of $r^{\ast\ast}$ relative to $r^{\ast}$ is further illustrated in Figure~\ref{fig:rhist}.
+Every instance classified by any of the four mechanisms as ``empty'' is indeed empty (no false positives across 525 policy-instance pairs). Theorem~\ref{thm:empty-core} and Proposition~\ref{prop:bondareva-complement} are \emph{sufficient} conditions covering 48 of 67 NN empties; the remaining 19 split into 10 near-complement and 9 intermediate cases that are certified only by the Core LP. Figure~\ref{fig:r-rss} plots $r$ versus $r^{\ast\ast}$: instances strictly above the diagonal ($r>r^{\ast\ast}$) are the single-complement mechanism, while balanced-complement, near-complement, and intermediate cases lie at or below the diagonal and are covered by their respective certificates. The sharpness of $r^{\ast\ast}$ and $r^{\ast\ast\ast}$ relative to $r^{\ast}$ is illustrated in Figure~\ref{fig:rhist}.
 
 \begin{figure}[t]
 \centering
@@ -590,31 +593,31 @@ Table~\ref{tab:pattern} reports the salient statistics per arrival pattern, pool
 
 \begin{table}[t]
 \centering
-\caption{Pattern-level aggregate statistics (NN policy, $5\times 5=25$ instances per pattern). $\bar r^{\ast}$, being a function of coordinates only ($r^{\ast} = \sum_i c(\{i\})/\cstar(N)$), is identical across all patterns at $4.351$ and is reported as an overall value rather than per-pattern. Em-dashes in $\bar r^{\ast\ast}$ indicate patterns where Theorem~\ref{thm:empty-core} is never applicable (no complement coalition is feasible).}
+\caption{Pattern-level aggregate statistics (NN policy, $5\times 5=25$ instances per pattern). $\bar r^{\ast}$, being a function of coordinates only ($r^{\ast} = \sum_i c(\{i\})/\cstar(N)$), is identical across all patterns at $4.351$ and reported as an overall value rather than per-pattern. Em-dashes in $\bar r^{\ast\ast}$ (resp.\ $\bar r^{\ast\ast\ast}$) indicate patterns where Theorem~\ref{thm:empty-core} (resp.\ Proposition~\ref{prop:bondareva-complement}) is never applicable.}
 \label{tab:pattern}
 \small
-\begin{tabular}{@{}lcccccc@{}}
+\begin{tabular}{@{}lcccccccc@{}}
 \toprule
-Pattern & $\rho$ & Core rate & $\bar r$ (sd) & $\bar r^{\ast\ast}$ (sd) & $\overline{|\F|/(2^n-1)}$ & Thm.~\ref{thm:empty-core} applicable \\
+Pattern & $\rho$ & Core rate & $\bar r$ (sd) & $\bar r^{\ast\ast}$ (sd) & $\bar r^{\ast\ast\ast}$ & $\overline{|\F|/(2^n-1)}$ & Thm 11 app/fires & Prop 12 app/fires \\
 \midrule
-A                           & $\infty$ & 0.36 & 1.125 (0.102) & 1.181 (0.059) & 1.000 & 25 / 25 \\
-$\text{B}_{\text{heavy}}$   & 4.0      & 0.92 & 1.233 (0.127) & 1.459 (0.114) & 0.505 & 24 / 25 \\
-$\text{B}_{\text{medium}}$  & 2.0      & 1.00 & 1.273 (0.135) & 1.575 (0.117) & 0.307 &  7 / 25 \\
-$\text{B}_{\text{light}}$   & 0.5      & 1.00 & 1.713 (0.184) &      ---      & 0.057 &  0 / 25 \\
-C                           & 2.0      & 0.88 & 1.199 (0.148) & 1.368 (0.170) & 0.505 & 24 / 25 \\
-D                           & 1.0      & 1.00 & 1.332 (0.121) &      ---      & 0.111 &  0 / 25 \\
-E                           & 1.0      & 1.00 & 1.406 (0.168) &      ---      & 0.149 &  0 / 25 \\
+A                           & $\infty$ & 0.36 & 1.125 (0.102) & 1.181 (0.059) & 1.092 & 1.000 & 25 / 9  & 25 / 15 \\
+$\text{B}_{\text{heavy}}$   & 4.0      & 0.20 & 1.233 (0.127) & 1.187 (0.061) & 1.094 & 0.985 & 25 / 15 & 24 / 20 \\
+$\text{B}_{\text{medium}}$  & 2.0      & 0.56 & 1.273 (0.135) & 1.305 (0.148) & 1.150 & 0.590 & 13 / 3  &  7 /  4 \\
+$\text{B}_{\text{light}}$   & 0.5      & 1.00 & 1.690 (0.210) &      ---      &  ---  & 0.077 &  0 / 0  &  0 /  0 \\
+C                           & 2.0      & 0.28 & 1.197 (0.149) & 1.181 (0.059) & 1.087 & 0.985 & 25 / 10 & 24 / 18 \\
+D                           & 1.0      & 1.00 & 1.332 (0.121) & 1.398 (0.217) &  ---  & 0.196 &  3 / 0  &  0 /  0 \\
+E                           & 1.0      & 0.92 & 1.337 (0.169) & 1.505 (0.139) &  ---  & 0.273 &  5 / 0  &  0 /  0 \\
 \midrule
-Overall                     & ---      & 0.88 & 1.326 (0.228) & 1.355 (0.178) & 0.376 & 80 / 175 \\
+Overall                     & ---      & 0.62 & 1.312 (0.224) & 1.223 (0.121) & 1.096 & 0.587 & 96 / 37 & 80 / 57 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 Three patterns stand out. Simultaneous arrivals (A, $\rho=\infty$) yield the lowest Core-existence rate ($36\%$), consistent with $\F=2^N\setminus\{\emptyset\}$ maximizing the number of Core constraints. Light-load and fully-dispersed sequential patterns ($\text{B}_{\text{light}}$, D, E) leave $|\F|$ at only $6$--$15\%$ of $2^n-1$ and render Theorem~\ref{thm:empty-core} inapplicable ($0/25$ in each). The clustered pattern (C) and the heavy-load $\text{B}_{\text{heavy}}$ both have $\rho\ge 2$ and yield $\overline{|\F|/(2^n-1)}\approx 0.5$, placing them in the saturated regime where Theorem~\ref{thm:empty-core} applies to nearly every instance but is binding in only $12\%$ (C) and $8\%$ ($\text{B}_{\text{heavy}}$) of them.
 
-A noteworthy secondary observation: the mean competitive ratio $\bar r$ rises sharply in the heavily sequential regimes ($\text{B}_{\text{light}}$: $1.71$, E: $1.41$, D: $1.33$) because the online tour takes detours to reach customers as they arrive while $\cstar(N)$ reflects the offline-optimal route. Despite this large $\bar r$, the empirical Core-existence rate stays at $100\%$ for these patterns---a direct consequence of $|\F|/(2^n-1)$ being small. This is the operational content of Corollary~\ref{cor:cor52} and of the broader sequential-pattern argument of Section~\ref{ssec:discussion}: when the queue stays shallow, a high $\bar r$ does not jeopardize Core stability because the complement-coalition mechanism is structurally blocked, irrespective of how much the online policy must detour to reach staggered arrivals.
+A secondary observation: the mean competitive ratio $\bar r$ rises sharply in the heavily sequential regimes ($\text{B}_{\text{light}}$: $1.69$, E: $1.34$, D: $1.33$) because the online tour takes detours to reach customers as they arrive while $\cstar(N)$ reflects the offline-optimal route. In patterns $\text{B}_{\text{light}}$ and D the queue stays shallow throughout, and Corollary~\ref{cor:cor52} blocks every complement-based mechanism; the Core remains nonempty in all 25 instances for each pattern. In pattern E the same obstruction blocks complement mechanisms, yet 2 of the 25 instances still exhibit empty Cores via the intermediate-coalition mechanism of Observation~\ref{obs:intermediate}---see \S\ref{ssec:cor16}. The operational content of Corollary~\ref{cor:cor52} is therefore precise: a shallow queue rules out complement and balanced-complement mechanisms, but does not by itself prevent intermediate-coalition violations at high $\bar r$.
 
-\paragraph{Load parameter $\rho$ alone does not determine Core stability.} Patterns $\text{B}_{\text{medium}}$ and C share the same load parameter $\rho=2$ yet exhibit qualitatively different behavior. For $\text{B}_{\text{medium}}$ (uniform sequential arrivals), Theorem~\ref{thm:empty-core} is applicable in only $7/25$ instances and fires in $0$ of them (Core rate $100\%$). For C (two angularly-interleaved batches), Theorem~\ref{thm:empty-core} is applicable in $24/25$ instances and fires in $3/25$ (Core rate $88\%$). The structural difference in the arrival geometry alone accounts for this gap. This confirms that $\rho$, while necessary for placing a pattern on the saturation spectrum, is not sufficient to characterize Core stability: the spatial-temporal structure of the arrival process matters independently.
+\paragraph{Load parameter $\rho$ alone does not determine Core stability.} Patterns $\text{B}_{\text{medium}}$ and C share the same load parameter $\rho=2$ yet exhibit qualitatively different behavior. $\text{B}_{\text{medium}}$ (uniform sequential arrivals) is complement-mechanism-free in most instances (Theorem~\ref{thm:empty-core} is applicable in only $13/25$ and fires in $3/25$), yet 7 further instances are empty through the intermediate mechanism, giving an overall Core rate of $0.56$. C (two angularly-interleaved batches) places almost every instance ($24/25$) into the Theorem~\ref{thm:empty-core}-applicable regime, where single-complement violations fire in $10/25$, producing a Core rate of $0.28$. The structural difference in the arrival geometry alone accounts for this gap. This confirms that $\rho$, while necessary for placing a pattern on the saturation spectrum, is not sufficient to characterize Core stability: the spatial-temporal structure of the arrival process and the dispatch-policy dynamics both matter independently.
 
 
 \begin{figure}[t]
@@ -626,14 +629,14 @@ A noteworthy secondary observation: the mean competitive ratio $\bar r$ rises sh
 
 \subsection{\texorpdfstring{Sharpness of $r^{\ast\ast}$ versus $r^{\ast}$}{Sharpness of r** versus r*}}
 
-Figure~\ref{fig:rhist} contrasts the distributions of the complement-mechanism threshold $r^{\ast\ast}$ (Theorem~\ref{thm:empty-core}) and the classical bound $r^{\ast}$ (Remark~\ref{rem:rstar}). Empirically, $\bar r^{\ast\ast}=1.355$ versus $\bar r^{\ast}=4.351$, a factor of $3.21$. Because the realized ratio $\bar r = 1.326$ is close to $r^{\ast\ast}$ but far below $r^{\ast}$, Theorem~\ref{thm:empty-core} is operationally informative whereas Remark~\ref{rem:rstar} almost never fires. The classical bound grows with $n$ because $r^{\ast} = \sum_i c(\{i\})/\cstar(N)$ has a numerator scaling linearly in $n$ while $\cstar(N)$ scales like $\sqrt{n}$ on uniform planar instances; $r^{\ast\ast}$, in contrast, is pinned near $1$ because the cheapest complement pair $(\{i\}, N\setminus\{i\})$ nearly partitions the grand tour. This explains why the gap between the two widens with $n$ and quantifies the practical advance of the temporal analysis.
+Figure~\ref{fig:rhist} contrasts the distributions of the single-complement threshold $r^{\ast\ast}$ (Theorem~\ref{thm:empty-core}), the balanced-complement threshold $r^{\ast\ast\ast}$ (Proposition~\ref{prop:bondareva-complement}), and the classical bound $r^{\ast}$ (Remark~\ref{rem:rstar}). Empirically, on the NN grid $\bar r^{\ast\ast}=1.223$ and $\bar r^{\ast\ast\ast}=1.096$ versus $\bar r^{\ast}=4.351$; the sharpness factors are $r^{\ast}/r^{\ast\ast} \approx 3.56$ and $r^{\ast}/r^{\ast\ast\ast} \approx 3.97$. Because the realized ratio $\bar r = 1.312$ is close to $r^{\ast\ast}$ and $r^{\ast\ast\ast}$ but far below $r^{\ast}$, Theorem~\ref{thm:empty-core} and Proposition~\ref{prop:bondareva-complement} are operationally informative whereas Remark~\ref{rem:rstar} almost never fires. The classical bound grows with $n$ because $r^{\ast} = \sum_i c(\{i\})/\cstar(N)$ has a numerator scaling linearly in $n$ while $\cstar(N)$ scales like $\sqrt{n}$ on uniform planar instances; $r^{\ast\ast}$ and $r^{\ast\ast\ast}$, in contrast, are pinned near $1$ because complement coalitions $N\setminus\{i\}$ nearly partition the grand tour. This explains why the gap between the two widens with $n$ and quantifies the practical advance of the temporal analysis. Note that $r^{\ast\ast\ast}$ averages across complements while $r^{\ast\ast}$ takes the minimum of $\delta_i$; the two thresholds catch different instances---of the 57 Proposition~\ref{prop:bondareva-complement} fires under NN, 20 are outside the Theorem~\ref{thm:empty-core} single-complement regime.
 
 A secondary point worth noting: $r^{\ast}$ depends only on coordinates---it equals $\sum_i c(\{i\})/\cstar(N)$, and neither the numerator nor the denominator sees arrivals---so under our uniform-square sampling $\bar r^{\ast}$ has essentially no variance across patterns. The operational shortfall of $r^{\ast}$ is therefore structural: it is blind to the online arrival process altogether.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.8\textwidth]{fig5_rstar_vs_rss.pdf}
-\caption{Histograms of $r^{\ast\ast}$ and $r^{\ast}$ over all instances. $r^{\ast\ast}$ concentrates near the empirical $r$, making it an informative threshold; $r^{\ast}$ lies far to the right and rarely binds.}
+\caption{Histograms of $r^{\ast\ast}$, $r^{\ast\ast\ast}$, and $r^{\ast}$ over all NN instances. $r^{\ast\ast}$ and $r^{\ast\ast\ast}$ concentrate near the empirical $r$ (making them informative Core-emptiness thresholds via Theorem~\ref{thm:empty-core} and Proposition~\ref{prop:bondareva-complement}); $r^{\ast}$ lies far to the right and rarely binds.}
 \label{fig:rhist}
 \end{figure}
 
@@ -644,23 +647,23 @@ We rerun the 175-instance grid under three dispatch policies: nearest-neighbor (
 
 \begin{table}[t]
 \centering
-\caption{Dispatch-policy robustness over the 175-instance grid. $\bar r$ is the mean competitive ratio; the last two columns report how often the complement-coalition hypothesis is testable and how often Theorem~\ref{thm:empty-core} fires.}
+\caption{Dispatch-policy robustness over the 175-instance grid. $\bar r$ is the mean competitive ratio; the last columns report how often each analytic mechanism fires and how many intermediate-coalition empty-Core cases (Observation~\ref{obs:intermediate}) arise.}
 \label{tab:policy}
 \small
-\begin{tabular}{@{}lccccc@{}}
+\begin{tabular}{@{}lccccccc@{}}
 \toprule
-Policy & $\bar r$ & Core rate & Empty count & Thm.~\ref{thm:empty-core} applicable & Thm.~\ref{thm:empty-core} fires \\
+Policy & $\bar r$ & Core rate & Empty & Thm~\ref{thm:empty-core} app/fires & Prop~\ref{prop:bondareva-complement} app/fires & Obs~\ref{obs:intermediate} \\
 \midrule
-Nearest-neighbor      & 1.326 & 0.880 & 21 & 80 & 14 \\
-Cheapest-insertion    & 1.236 & 0.977 &  4 & 80 &  1 \\
-Batch re-optimization & 1.214 & 1.000 &  0 & 80 &  0 \\
+Nearest-neighbor      & 1.312 & 0.617 & 67 & 96/37 & 80/57 & 9 \\
+Cheapest-insertion    & 1.223 & 0.823 & 31 & 97/17 & 80/30 & 0 \\
+Batch re-optimization & 1.201 & 0.857 & 25 & 97/ 7 & 80/25 & 0 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Three observations stand out. First, the mean competitive ratio decreases monotonically from $1.326$ (NN) to $1.236$ (CI) to $1.214$ (BR), reflecting the increasing quality of the online plan. Second, the empirical Core-existence rate increases correspondingly: NN yields 21 empty Cores (12\%), CI only 4 (2\%), and BR none. Third, and central to our theoretical claims, \emph{every} instance in which the Theorem~\ref{thm:empty-core} hypothesis $r > r^{\ast\ast}$ holds is observed empty---14/14 for NN, 1/1 for CI, 0/0 for BR---with no false positives under any policy. The Corollary~\ref{cor:cor52} safeguard ($k<n-1\Rightarrow$ complement mechanism blocked) likewise holds without exception across all three policies.
+Three observations stand out. First, the mean competitive ratio decreases monotonically from $1.312$ (NN) to $1.223$ (CI) to $1.201$ (BR), reflecting the increasing quality of the online plan. Second, the empirical Core-existence rate increases correspondingly: NN yields 67 empty Cores ($38\%$), CI 31 ($18\%$), and BR 25 ($14\%$). Third, and central to our theoretical claims, \emph{every} instance in which the Theorem~\ref{thm:empty-core} hypothesis $r>r^{\ast\ast}$ holds is observed empty (37/37 for NN, 17/17 for CI, 7/7 for BR), and \emph{every} instance in which Proposition~\ref{prop:bondareva-complement}'s hypothesis $r>r^{\ast\ast\ast}$ holds is likewise observed empty (57/57, 30/30, 25/25), with no false positives under any policy. The Corollary~\ref{cor:cor52} safeguard holds analytically without exception across all three policies: no instance with $k<n-1$ has $r>r^{\ast\ast}$ or $r>r^{\ast\ast\ast}$. Intermediate-coalition empty Cores (Observation~\ref{obs:intermediate}) appear exclusively under NN; CI and BR produce \emph{zero} intermediate cases in the 175-instance grid, corroborating the policy-sensitivity of that mechanism.
 
-The applicability count ($80$ of $175$ instances) is identical across policies. This is not a coincidence: the feasibility of a specific complement coalition $N\setminus\{i\}$ depends on whether its members' service-time window overlaps, a condition that is insensitive to the policy's dispatch order in our arrival patterns. The threshold $r^{\ast\ast}$ itself is fully policy-independent---it is a function of TSP costs and arrivals, not of service times---so only the realized $r$ varies with policy, and $r > r^{\ast\ast}$ becomes rarer as the policy improves. This is exactly what is observed in Table~\ref{tab:policy}.
+Applicability counts are nearly identical across policies: Theorem~\ref{thm:empty-core} is applicable in $96$--$97$ of the $175$ instances, and Proposition~\ref{prop:bondareva-complement} in $80$ (the applicability gap is because Proposition~\ref{prop:bondareva-complement} requires \emph{every} complement $N\setminus\{i\}$ to be feasible whereas Theorem~\ref{thm:empty-core} requires only one). Applicability is mostly insensitive to policy because the feasibility of a specific $N\setminus\{i\}$ depends on the overlap of service-time windows, which is only weakly affected by dispatch order for our arrival patterns. The thresholds $r^{\ast\ast}$ and $r^{\ast\ast\ast}$ themselves are policy-independent as functions of TSP costs and arrivals (not service times), so only the realized $r$ varies with policy; $r>r^{\ast\ast}$ and $r>r^{\ast\ast\ast}$ both become rarer as the policy improves, which is exactly what Table~\ref{tab:policy} shows.
 
 \subsection{Scale-up to larger \texorpdfstring{$n$}{n}}
 \label{ssec:scaleup}
