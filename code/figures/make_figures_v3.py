@@ -73,7 +73,7 @@ ax.scatter(near_comp['r_ss'], near_comp['r'], s=55, alpha=0.95,
 # on this (r, r**) panel.  Annotate count.
 inter_count = len(nn[nn['empty_mechanism'] == 'intermediate'])
 ax.text(0.02, 0.98,
-        f'+{inter_count} intermediate (Obs 15) at r**=undefined; see Appendix C',
+        f'+{inter_count} intermediate (Obs 15) at r**=undefined; see Supplementary Materials S3',
         transform=ax.transAxes, fontsize=8, verticalalignment='top',
         color='#2ca02c', style='italic')
 
@@ -168,7 +168,7 @@ plt.close()
 
 
 # =========================================================================
-# Fig 3_core_vs_n (Appendix A): Core existence rate versus n per pattern
+# Fig 3_core_vs_n (Supplementary Materials S1): Core existence rate versus n per pattern
 # =========================================================================
 fig, ax = plt.subplots(figsize=(7.5, 4.3))
 markers = ['o', 's', '^', 'D', 'v', 'P', 'X']
