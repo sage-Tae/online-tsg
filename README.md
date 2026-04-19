@@ -2,10 +2,9 @@
 
 Code and data for the paper:
 
-> **Online Traveling Salesman Games: Temporal Nucleolus and the Fragility
-> of the Core under Dynamic Arrivals**
+> **Online Traveling Salesman Games: Temporal Nucleolus, Empty Cores, and Complement-Coalition Mechanisms**
 > Seyun Jeong (POSTECH) and Hyunchul Tae (KITECH)
-> Submitted to *European Journal of Operational Research*, 2026
+> Submitted to *European Journal of Operational Research*, 2026 (major revision v2.0)
 
 ## Overview
 
@@ -15,27 +14,33 @@ among coalitions realizable under revealed arrival dynamics. This repository
 contains all code, seeds, and raw results needed to reproduce the paper's
 numerical claims.
 
-## Key results (sanity checkpoints)
+## Key results (sanity checkpoints, v2.0)
 
 | Paper location | Quantity | Value |
 |---|---|---|
 | Example 4 (Solomon C101) | TNu allocation | (16.67, 20.51, 11.27, 15.18, 16.44) |
-| Table 5 | Theorem 11 predicted-empty accuracy | 12/12 (no false positives) |
-| Corollary 16 | k < n−1 Core stability rate | 95/95 (100%) |
-| Table 6 overall | Sharpness ratio r̄**/r̄* | 3.24 |
+| Table 5 | Theorem 11 complement-coalition fires (NN, 80 applicable) | 14/14 (no false positives) |
+| Corollary 17 (§6.4) | k < n−1 Core stability rate | 79/79 (100%) |
+| Section 6.6 | Sharpness ratio r̄*/r̄** | 3.21 (4.351/1.355) |
+| Appendix B | Scale invariance (r relative std across α) | 0.00e+00 |
+| Appendix C | Restricted Core LP certifies seed 123 emptiness | 5/5 cases |
 
 ## Repository structure
 
 ```
 .
-├── paper/             # LaTeX source + references.bib + compiled PDF
+├── paper/             # LaTeX source + references.bib (main.pdf built locally)
 ├── code/
-│   ├── src/           # algorithm implementations (Held-Karp, LKH, TNu LP, policies)
-│   ├── experiments/   # run scripts + canonical logs (policy_comparison.csv, scaleup.csv)
-│   ├── figures/       # figure generation + PDF outputs
+│   ├── src/           # algorithm implementations (Held-Karp, LKH, TNu LP, policies,
+│   │                  #  config.py, generators.py, core_lp_restricted.py)
+│   ├── experiments/   # v2 runners + logs (policy_comparison_v2_full.csv,
+│   │                  #  scaleup_v2.csv, sensitivity_v2.csv, seed123_core_check.csv)
+│   ├── figures/       # figure generation + PDF outputs (make_figures_v3.py)
 │   └── requirements.txt
-├── docs/              # verification artifacts (35/35 reproduction PASS)
+├── docs/              # verification artifacts
 ├── figures/           # symlink → code/figures (for paper graphicspath)
+├── phase1_design.md   # experimental design rationale
+├── phase3_narrative.md # paper revision narrative
 ├── REPRODUCIBILITY.md # full reproduction guide
 └── LICENSE
 ```
@@ -44,34 +49,24 @@ numerical claims.
 
 ```bash
 # Install dependencies
-cd code
-pip install -r requirements.txt
+pip install -r code/requirements.txt
 
-# Fastest sanity check (~5 seconds)
-python3 figures/solomon_example.py
-# Expected: allocation (16.670, 20.508, 11.268, 15.175, 16.438), slack 52.293
+# Regenerate all figures from v2 experiment data
+cd code/figures
+python3 make_figures_v3.py
 
-# Regenerate all figures from saved experiment data
-python3 figures/make_figures_rev2.py
+# Reproduce main study (~13 min)
+cd ../experiments
+python3 run_main.py --output logs/policy_comparison_v2_full.csv
 ```
 
 See [REPRODUCIBILITY.md](REPRODUCIBILITY.md) for full environment details,
 random seeds, and mapping between paper tables/figures and scripts.
 
-## Pre-freeze verification
-
-This codebase has been verified to reproduce all 35 numerical checkpoints
-in the paper. See [docs/verification_report_pre_freeze.md](docs/verification_report_pre_freeze.md).
-
 ## Reproducibility tags
 
-- `paper-submission-v1`: exact code state at EJOR submission
-- `paper-submission-v1.1`: same + repository URL added to main.tex
-
-Restore submission-time state:
-```bash
-git checkout paper-submission-v1
-```
+- `paper-submission-v1` / `v1.1` / `v1.2`: prior submission states (L = 10 coordinate convention).
+- `paper-submission-v2.0` / `v2.0.1` / local only: major revision under Steele N2 convention (L = √n); restore locally via `git checkout`.
 
 ## Citation
 
@@ -80,8 +75,8 @@ If you use this code or build on the results, please cite:
 ```bibtex
 @article{jeong2026online,
   author = {Jeong, Seyun and Tae, Hyunchul},
-  title  = {Online Traveling Salesman Games: Temporal Nucleolus
-            and the Fragility of the Core under Dynamic Arrivals},
+  title  = {Online Traveling Salesman Games: Temporal Nucleolus,
+            Empty Cores, and Complement-Coalition Mechanisms},
   year   = {2026},
   note   = {Under review at European Journal of Operational Research}
 }
