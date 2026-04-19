@@ -520,29 +520,31 @@ Table~\ref{tab:pattern} reports the salient statistics per arrival pattern, pool
 
 \begin{table}[t]
 \centering
-\caption{Pattern-level aggregate statistics ($5\times 5=25$ instances per pattern). $\bar r^{\ast}$, being a function of coordinates only ($r^{\ast} = \sum_i c(\{i\})/\cstar(N)$), is identical across all patterns at $4.351$ and is reported as an overall value rather than per-pattern. Em-dashes in $\bar r^{\ast\ast}$ indicate patterns where Theorem~\ref{thm:empty-core} is never applicable (no complement coalition is feasible).}
+\caption{Pattern-level aggregate statistics (NN policy, $5\times 5=25$ instances per pattern). $\bar r^{\ast}$, being a function of coordinates only ($r^{\ast} = \sum_i c(\{i\})/\cstar(N)$), is identical across all patterns at $4.351$ and is reported as an overall value rather than per-pattern. Em-dashes in $\bar r^{\ast\ast}$ indicate patterns where Theorem~\ref{thm:empty-core} is never applicable (no complement coalition is feasible).}
 \label{tab:pattern}
 \small
-\begin{tabular}{@{}lccccc@{}}
+\begin{tabular}{@{}lcccccc@{}}
 \toprule
-Pattern & Core rate & $\bar r$ (sd) & $\bar r^{\ast\ast}$ (sd) & $\overline{|\F|/(2^n-1)}$ & Thm.~\ref{thm:empty-core} applicable \\
+Pattern & $\rho$ & Core rate & $\bar r$ (sd) & $\bar r^{\ast\ast}$ (sd) & $\overline{|\F|/(2^n-1)}$ & Thm.~\ref{thm:empty-core} applicable \\
 \midrule
-A (simul.)             & 0.36 & 1.125 (0.102) & 1.181 (0.059) & 1.000 & 25 / 25 \\
-B1 (seq., $\lambda=1$) & 1.00 & 1.286 (0.146) & 1.528 (0.124) & 0.332 & 10 / 25 \\
-B2 (seq., $\lambda=2$) & 1.00 & 1.312 (0.163) & 1.691 (0.064) & 0.158 &  2 / 25 \\
-B5 (seq., $\lambda=5$) & 1.00 & 1.808 (0.328) &      ---      & 0.061 &  0 / 25 \\
-C (clustered)          & 0.88 & 1.199 (0.149) & 1.363 (0.169) & 0.512 & 25 / 25 \\
-D (reverse)            & 1.00 & 1.415 (0.188) &      ---      & 0.101 &  0 / 25 \\
-E (random)             & 1.00 & 1.370 (0.208) & 1.606 (0.043) & 0.207 &  4 / 25 \\
+A                           & $\infty$ & 0.36 & 1.125 (0.102) & 1.181 (0.059) & 1.000 & 25 / 25 \\
+$\text{B}_{\text{heavy}}$   & 4.0      & 0.92 & 1.233 (0.127) & 1.459 (0.114) & 0.505 & 24 / 25 \\
+$\text{B}_{\text{medium}}$  & 2.0      & 1.00 & 1.273 (0.135) & 1.575 (0.117) & 0.307 &  7 / 25 \\
+$\text{B}_{\text{light}}$   & 0.5      & 1.00 & 1.713 (0.184) &      ---      & 0.057 &  0 / 25 \\
+C                           & 2.0      & 0.88 & 1.199 (0.148) & 1.368 (0.170) & 0.505 & 24 / 25 \\
+D                           & 1.0      & 1.00 & 1.332 (0.121) &      ---      & 0.111 &  0 / 25 \\
+E                           & 1.0      & 1.00 & 1.406 (0.168) &      ---      & 0.149 &  0 / 25 \\
 \midrule
-Overall                & 0.89 & 1.359 (0.281) & 1.344 (0.194) & 0.339 & 66 / 175 \\
+Overall                     & ---      & 0.88 & 1.326 (0.228) & 1.355 (0.178) & 0.376 & 80 / 175 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Three patterns stand out. Simultaneous arrivals (A) yield the lowest Core-existence rate (36\%), consistent with $\F=2^N\setminus\{\emptyset\}$ maximizing the number of Core constraints. Heavy sequential patterns (B5, D) leave $|\F|$ at only 6--10\% of $2^n-1$ and render Theorem~\ref{thm:empty-core} inapplicable. The clustered pattern (C) occupies an intermediate regime where Theorem~\ref{thm:empty-core} applies to every instance but is binding in only $12\%$ of them.
+Three patterns stand out. Simultaneous arrivals (A, $\rho=\infty$) yield the lowest Core-existence rate ($36\%$), consistent with $\F=2^N\setminus\{\emptyset\}$ maximizing the number of Core constraints. Light-load and fully-dispersed sequential patterns ($\text{B}_{\text{light}}$, D, E) leave $|\F|$ at only $6$--$15\%$ of $2^n-1$ and render Theorem~\ref{thm:empty-core} inapplicable ($0/25$ in each). The clustered pattern (C) and the heavy-load $\text{B}_{\text{heavy}}$ both have $\rho\ge 2$ and yield $\overline{|\F|/(2^n-1)}\approx 0.5$, placing them in the saturated regime where Theorem~\ref{thm:empty-core} applies to nearly every instance but is binding in only $12\%$ (C) and $8\%$ ($\text{B}_{\text{heavy}}$) of them.
 
-A noteworthy secondary observation: the mean competitive ratio $\bar r$ rises sharply in the heavily sequential regimes (B5: $1.81$, D: $1.42$, E: $1.37$) because the online tour takes detours to reach customers as they arrive while $\cstar(N)$ reflects the offline-optimal route. Despite this large $\bar r$, the empirical Core-existence rate stays at $100\%$ for these patterns---a direct consequence of $|\F|/(2^n-1)$ being small. This is the operational content of Corollary~\ref{cor:cor52} and of the broader sequential-pattern argument of Section~\ref{ssec:discussion}: when the queue stays shallow, a high $\bar r$ does not jeopardize Core stability because the complement-coalition mechanism is structurally blocked, irrespective of how much the online policy must detour to reach staggered arrivals.
+A noteworthy secondary observation: the mean competitive ratio $\bar r$ rises sharply in the heavily sequential regimes ($\text{B}_{\text{light}}$: $1.71$, E: $1.41$, D: $1.33$) because the online tour takes detours to reach customers as they arrive while $\cstar(N)$ reflects the offline-optimal route. Despite this large $\bar r$, the empirical Core-existence rate stays at $100\%$ for these patterns---a direct consequence of $|\F|/(2^n-1)$ being small. This is the operational content of Corollary~\ref{cor:cor52} and of the broader sequential-pattern argument of Section~\ref{ssec:discussion}: when the queue stays shallow, a high $\bar r$ does not jeopardize Core stability because the complement-coalition mechanism is structurally blocked, irrespective of how much the online policy must detour to reach staggered arrivals.
+
+\paragraph{Load parameter $\rho$ alone does not determine Core stability.} Patterns $\text{B}_{\text{medium}}$ and C share the same load parameter $\rho=2$ yet exhibit qualitatively different behavior. For $\text{B}_{\text{medium}}$ (uniform sequential arrivals), Theorem~\ref{thm:empty-core} is applicable in only $7/25$ instances and fires in $0$ of them (Core rate $100\%$). For C (two angularly-interleaved batches), Theorem~\ref{thm:empty-core} is applicable in $24/25$ instances and fires in $3/25$ (Core rate $88\%$). The structural difference in the arrival geometry alone accounts for this gap. This confirms that $\rho$, while necessary for placing a pattern on the saturation spectrum, is not sufficient to characterize Core stability: the spatial-temporal structure of the arrival process matters independently.
 
 
 \begin{figure}[t]
@@ -676,7 +678,7 @@ Figure~\ref{fig:core-n} breaks down the aggregate Core-existence rates of Sectio
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.75\textwidth]{fig3_core_vs_n.pdf}
-\caption{Core-existence rate versus coalition size $n$, broken down by arrival pattern. Sequential and clustered regimes retain full Core existence; simultaneous arrivals (A) collapse to $0\%$ at $n=15$. Patterns B1, B2, B5, D, and E all overlap at $1.00$ across the grid; only A and C visibly decay.}
+\caption{Core-existence rate versus coalition size $n$, broken down by arrival pattern. Sequential and clustered regimes retain full Core existence; simultaneous arrivals (A) collapse to $0\%$ at $n=15$. Patterns $\text{B}_{\text{heavy}}$, $\text{B}_{\text{medium}}$, $\text{B}_{\text{light}}$, D, and E all overlap at $1.00$ across the grid; only A and C visibly decay.}
 \label{fig:core-n}
 \end{figure}
 
