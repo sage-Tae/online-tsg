@@ -65,8 +65,9 @@ random seeds, and mapping between paper tables/figures and scripts.
 
 ## Reproducibility tags
 
-- `paper-submission-v1` / `v1.1` / `v1.2`: prior submission states (L = 10 coordinate convention).
-- `paper-submission-v2.0` / `v2.0.1` / local only: major revision under Steele N2 convention (L = √n); restore locally via `git checkout`.
+- `paper-submission-v1` / `v1.1` / `v1.2`: prior submission states (L = 10 coordinate convention); superseded by v2.1.2.
+- `paper-submission-v2.0` / `v2.0.1` / `v2.0.2` / `v2.0.3` / `v2.1.0` (local only): intermediate revisions under Steele N2 convention; superseded by v2.1.2.
+- `v2.1.2` (current, major revision): 4-mechanism taxonomy (single / balanced / near / intermediate complement), Proposition 12 (balanced-complement threshold via Bondareva-Shapley), Observation 15 (intermediate-coalition mechanism), and corrected feasibility family F generation per paper Definition 2 (post-hoc reconstruction rather than dispatch-iteration enumeration). Restore locally via `git checkout v2.1.2`.
 
 ## Citation
 

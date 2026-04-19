@@ -18,3 +18,6 @@ paper/main.synctex.gz
 **/*.pyo
 .claude/
 *.bak
+
+# Phase 2 pre-correction archives (kept locally, not tracked)
+**/archive_v2_1_0/
