@@ -1,0 +1,9 @@
+Highlights
+
+Online Traveling Salesman Games: Temporal Nucleolus and the Fragility of the Core under Dynamic Arrivals
+
+- Online Traveling Salesman Game: coalitions restricted by arrival dynamics
+- Temporal Nucleolus computed by sequential linear programming over this family
+- Tight emptiness threshold for the complement-coalition mechanism
+- Bounded customer queue structurally blocks both complement-based mechanisms
+- Threshold tightens to one at the classical square-root rate; tested to fifty

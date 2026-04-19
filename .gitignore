@@ -35,3 +35,11 @@ paper/supplementary.synctex.gz
 # Legacy pre-correction seed123 extended CSV (retained locally, not tracked,
 # not included in submission ZIP; superseded by 2-row Appendix C table)
 **/logs/legacy/
+paper/highlights.aux
+paper/highlights.log
+paper/highlights.out
+paper/highlights.toc
+paper/highlights.pdf
+paper/highlights.fdb_latexmk
+paper/highlights.fls
+paper/highlights.synctex.gz
