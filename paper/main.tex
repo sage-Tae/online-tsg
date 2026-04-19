@@ -76,7 +76,7 @@ The classical TSG, however, is defined under the tacit assumption that every cus
 
 \paragraph{Contributions.} We make four contributions.
 \begin{itemize}[leftmargin=1.5em]
-\item[\textbf{C1.}] \emph{Model.} We define the Online TSG $(N, c, \F)$ by restricting cost sharing to the family $\F$ of coalitions feasible under the realized arrival times, and we introduce the Temporal Nucleolus as the lexicographic minimizer of excess over $\F$. The classical static TSG is recovered as the special case where arrivals collapse to a single instant (Theorem~\ref{thm:static-equiv}).
+\item[\textbf{C1.}] \emph{Model.} We define the Online TSG $(N, c, \F)$ by restricting coalitional stability constraints to the family $\F$ of proper sub-coalitions realizable under the realized arrival times (with the grand coalition $N$ handled through the efficiency equality as in restricted-cooperation games), and we introduce the Temporal Nucleolus as the lexicographic minimizer of excess over this restricted family. The classical static TSG is recovered as the special case where arrivals collapse to a single instant and the realized tour is optimal (Theorem~\ref{thm:static-equiv}).
 \item[\textbf{C2.}] \emph{Core theory under dynamics.} We provide a sufficient condition for empty Core based on an arrival-aware ratio $r^{\ast\ast}$, tight relative to the complement-coalition mechanism (Theorem~\ref{thm:empty-core}), paired with a structural obstruction: a bounded peak queue $k = \max_t |U_t| < n-1$ blocks that mechanism (Corollary~\ref{cor:cor52}). Together these delineate the regimes in which complement-coalition instability can arise. A third, near-complement mechanism (Remark~\ref{rem:near-complement}) explains the empirical minority of empty-Core instances at $r\le r^{\ast\ast}$ through simultaneous binding of $(n-1)$- and $(n-2)$-coalitions; its analytic characterization is left open.
 \item[\textbf{C3.}] \emph{Asymptotic refinement.} Under uniform coordinate sampling, $r^{\ast\ast}\to 1$ at rate $O(n^{-1/2})$ almost surely (Theorem~\ref{thm:asymptotic}); this explains the empirical smallness of $r^{\ast\ast}$ without reference to specific simulation parameters and ties the cooperative-game threshold to the classical Beardwood--Halton--Hammersley $\sqrt{n}$ scaling of the Euclidean TSP.
 \item[\textbf{C4.}] \emph{Empirical calibration.} On 175 simulated instances across five coalition sizes and seven arrival patterns under three dispatch policies (525 policy-instance pairs), plus 45 scale-up instances up to $n=50$ and a 24-instance scale-invariance study (Appendix~\ref{app:scale-invariance}), we verify every theoretical claim. The complement-mechanism threshold predicts emptiness in 14 instances under nearest-neighbor dispatch, all confirmed empty (no false positives under any policy); seven additional empty-Core instances occur at $r\le r^{\ast\ast}$ and are explained by the near-complement mechanism (Remark~\ref{rem:near-complement}, Appendix~\ref{app:restricted-lp}). The structural obstruction holds in $79/79$ instances in which it applies; the mean threshold ($1.355$) is sharper than the classical bound ($4.351$) by a factor of $3.21$; and the asymptotic decay $r^{\ast\ast}\to 1$ is consistent with Theorem~\ref{thm:asymptotic}'s $O(n^{-1/2})$ rate on the scale-up grid.
@@ -154,18 +154,18 @@ $\F := \{S\subseteq N : \CW(S)\neq\emptyset\}$
 denote the family of feasible coalitions.
 \end{definition}
 
-Note that $\{i\}\in\F$ for every $i$ (singletons are always feasible at $a_i$) and $N\in\F$ whenever all $n$ customers sit simultaneously in the queue at some instant.
+Note that $\{i\}\in\F$ for every $i$ (singletons are always feasible at $a_i$), and $N\in\F$ whenever all $n$ customers sit simultaneously in the queue at some instant; however, $N$ appears in the Temporal Core only through the efficiency equality (Definition~\ref{def:online-tsg}) and not as a stability constraint.
 
 \begin{definition}[Online TSG]
 \label{def:online-tsg}
 An \emph{Online Traveling Salesman Game} is a triple $(N, c, \F)$ where $N$ is the customer set, $c:2^N\setminus\{\emptyset\}\to\mathbb{R}_+$ is the TSP characteristic cost defined on every nonempty subset (and used in core constraints only for $S\in\F$), and $\F\subseteq 2^N\setminus\{\emptyset\}$ is the family from Definition~\ref{def:feasible}.
 \end{definition}
 
-An \emph{allocation} is a vector $x\in\mathbb{R}^n$ with $\sum_i x_i = C(N)_{\text{online}}$, where $C(N)_{\text{online}}$ denotes the realized online tour cost. The \emph{Temporal Core} is
+An \emph{allocation} is a vector $x\in\mathbb{R}^n$ with $\sum_i x_i = C(N)_{\text{online}}$, where $C(N)_{\text{online}}$ denotes the realized online tour cost. Following the standard convention in restricted-cooperation cooperative games \citep{myerson1977graphs,bilbao2000}, the grand coalition $N$ is handled through the efficiency equality, and coalitional stability constraints are imposed only on \emph{proper} feasible sub-coalitions. The \emph{Temporal Core} is
 \[
-\mathrm{Core}(N,c,\F) := \bigl\{ x\in\mathbb{R}^n : \textstyle\sum_i x_i = C(N)_{\text{online}},\; \sum_{i\in S} x_i \le c(S)\ \forall S\in\F \bigr\}.
+\mathrm{Core}(N,c,\F) := \bigl\{ x\in\mathbb{R}^n : \textstyle\sum_i x_i = C(N)_{\text{online}},\; \sum_{i\in S} x_i \le c(S)\ \forall S\in\F,\ S\subsetneq N \bigr\}.
 \]
-In the static boundary case $C(N)_{\text{online}} = \cstar(N) = c(N)$, and the classical \citet{potters1992tsg} definition is recovered. Compared with the static TSG, the Temporal Core imposes fewer inequalities---only those for $S\in\F$. Table~\ref{tab:static-vs-temporal} summarizes the contrast.
+When $C(N)_{\text{online}} = \cstar(N)$, this definition coincides with the classical \citet{potters1992tsg} static TSG Core on the same constraint family. In general, the online overhead $C(N)_{\text{online}}-\cstar(N)\ge 0$ raises the efficiency budget above the minimum grand-coalition cost; Table~\ref{tab:static-vs-temporal} summarizes the contrast, and the competitive ratio $r$ (defined below) quantifies this overhead.
 
 \paragraph{Characteristic cost versus realized cost.} The characteristic function $c(S)$ is the time-independent optimal TSP tour on $S\cup\{0\}$, matching the classical \citet{potters1992tsg} definition. The realized online tour cost $C(N)_{\text{online}}$, by contrast, is the total travel distance of the tour actually executed by the online dispatch policy, which may exceed $\cstar(N)$ because the online policy cannot anticipate future arrivals; in general $C(N)_{\text{online}} \ge \cstar(N)$. We use $\sum_i x_i = C(N)_{\text{online}}$ as the efficiency budget because this is the cost the platform must actually allocate; the competitive ratio $r = C(N)_{\text{online}}/\cstar(N)$ measures the overhead introduced by online dispatch, since the online policy must commit to visits without seeing future arrivals. The threshold $r^{\ast\ast}$ (Theorem~\ref{thm:empty-core}) is a function of coordinate geometry alone through $c(\{i\})$, $c(N\setminus\{i\})$, and $\cstar(N)$.
 
@@ -252,13 +252,13 @@ The restriction from $2^N\setminus\{\emptyset\}$ to $\F$ materially reduces prob
 
 \subsection{Reduction to the static game at simultaneous arrivals}
 
-\begin{theorem}[Static TSG as a boundary case]
+\begin{theorem}[Reduction at simultaneous arrivals]
 \label{thm:static-equiv}
-If $a_1 = a_2 = \cdots = a_n$ and $s_i > a_1$ for every $i\in N$, then $\F = 2^N\setminus\{\emptyset\}$ and the Temporal Nucleolus coincides with the static Nucleolus of \citet{potters1992tsg}.
+Suppose $a_1 = a_2 = \cdots = a_n$ and $s_i > a_1$ for every $i\in N$, so all customers share a common waiting window. Then $\F = 2^N\setminus\{\emptyset\}$, and the Temporal Nucleolus of $(N,c,\F)$ equals the lexicographic minimizer of excess on the static TSG constraint family over proper coalitions $S\subsetneq N$ with efficiency budget $C(N)_{\text{online}}$. When the realized tour is additionally optimal (i.e.\ $C(N)_{\text{online}}=\cstar(N)$), this coincides with the classical static Nucleolus of \citet{potters1992tsg}.
 \end{theorem}
 
 \begin{proof}
-By assumption there exists $t^{\star}\in[a_1,\min_i s_i)$ with $U_{t^{\star}} = N$. Every $S\subseteq N$ satisfies $S\subseteq U_{t^{\star}}$, so $\CW(S)\supseteq [a_1,\min_i s_i)\neq\emptyset$ and $\F = 2^N\setminus\{\emptyset\}$. The Temporal Nucleolus LP cascade~\eqref{eq:lp-q} reduces to the standard Kohlberg sequence for the TSG, whose fixed point is the static Nucleolus. Since lexicographic minimization is deterministic, the two coincide.
+By assumption there exists $t^{\star}\in[a_1,\min_i s_i)$ with $U_{t^{\star}} = N$. Every $S\subseteq N$ satisfies $S\subseteq U_{t^{\star}}$, so $\CW(S)\supseteq [a_1,\min_i s_i)\neq\emptyset$ and $\F = 2^N\setminus\{\emptyset\}$. The Temporal Core (Definition~\ref{def:online-tsg}) imposes constraints for every proper subset $S\subsetneq N$---i.e.\ the full static TSG inequality family---together with the efficiency equality $\sum_i x_i = C(N)_{\text{online}}$. The sequential-LP cascade~\eqref{eq:lp-q} thus coincides with Kohlberg's procedure for the static TSG on this constraint family, and the lexicographic minimizer is unique. When $C(N)_{\text{online}}=\cstar(N)=c(N)$, the efficiency budget matches the classical static-Nucleolus LPs and the allocation recovered is that of \citet{potters1992tsg}. In general, the Temporal Nucleolus under simultaneous arrivals is the lexicographic minimizer on the same constraint family but with a shifted efficiency budget.
 \end{proof}
 
 In short, the Online TSG is a proper generalization: the static theory is the $k=n$ extremal case where the peak queue contains everybody at once.
