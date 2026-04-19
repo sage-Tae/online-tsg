@@ -325,7 +325,26 @@ x_{i^{\star}} &\le c(\{i^{\star}\}), \label{eq:sing}\\
 Adding~\eqref{eq:sing} and~\eqref{eq:comp} gives $\sum_{j\in N} x_j \le c(\{i^{\star}\}) + c(N\setminus\{i^{\star}\}) = \cstar(N) + \delta_{i^{\star}}$. But the efficiency constraint forces $\sum_j x_j = C(N)_{\text{online}} = r\cdot \cstar(N)$. Hence $r\le 1 + \delta_{i^{\star}}/\cstar(N) = r^{\ast\ast}$, contradicting the hypothesis $r>r^{\ast\ast}$.
 \end{proof}
 
-Because $\min_i \delta_i$ is typically small ($\delta_i=0$ corresponds to $\{i\},N\setminus\{i\}$ partitioning the grand tour with no overhead), $r^{\ast\ast}$ is close to $1$ and thus an operationally informative threshold. We stress that Theorem~\ref{thm:empty-core} is tight only \emph{within the complement-coalition mechanism}: an intermediate-size coalition $S$ with $|S|\in\{2,\ldots,n-2\}$ can independently violate the Core inequality $\sum_{i\in S} x_i \le c(S)$. Section~\ref{sec:experiments} exhibits seven such instances with $r \le r^{\ast\ast}$ whose Core is nonetheless empty.
+Because $\min_i \delta_i$ is typically small ($\delta_i=0$ corresponds to $\{i\},N\setminus\{i\}$ partitioning the grand tour with no overhead), $r^{\ast\ast}$ is close to $1$ and thus an operationally informative threshold. We stress that Theorem~\ref{thm:empty-core} is tight only \emph{within the single-complement mechanism}: even when no single complement $N\setminus\{i\}$ alone violates the Core, a balanced collection of complements can; this is captured by Proposition~\ref{prop:bondareva-complement} below. Intermediate-size coalitions $S$ with $|S|\in\{2,\ldots,n-2\}$ can also independently violate the Core inequality $\sum_{i\in S} x_i \le c(S)$; Section~\ref{sec:experiments} exhibits observed cases of both mechanisms (Remark~\ref{rem:near-complement} and \S\ref{ssec:cor16}).
+
+\begin{proposition}[Balanced-complement threshold]
+\label{prop:bondareva-complement}
+Suppose every complement coalition is feasible, i.e., $N\setminus\{i\}\in\F$ for all $i\in N$. Define
+\[
+r^{\ast\ast\ast} \;:=\; \frac{1}{n-1}\cdot\frac{\sum_{i\in N} c(N\setminus\{i\})}{\cstar(N)}.
+\]
+If $r = C(N)_{\text{online}}/\cstar(N) > r^{\ast\ast\ast}$, then the Temporal Core is empty.
+\end{proposition}
+
+\begin{proof}
+Suppose $x\in\mathrm{Core}(N,c,\F)$. For each $i\in N$, the Core constraint on $N\setminus\{i\}$ reads $\sum_{j\ne i} x_j \le c(N\setminus\{i\})$. Summing over $i\in N$ and exchanging the order of summation gives
+\[
+(n-1)\sum_{j\in N} x_j \;=\; \sum_{i\in N}\sum_{j\ne i} x_j \;\le\; \sum_{i\in N} c(N\setminus\{i\}).
+\]
+The efficiency equality $\sum_j x_j = C(N)_{\text{online}}$ yields $(n-1)\,C(N)_{\text{online}} \le \sum_i c(N\setminus\{i\})$. Dividing by $(n-1)\,\cstar(N)$ produces $r \le r^{\ast\ast\ast}$, contradicting $r>r^{\ast\ast\ast}$.
+\end{proof}
+
+The collection $\{N\setminus\{i\}\}_{i\in N}$ is balanced with weights $\lambda_i = 1/(n-1)$ (each player appears in exactly $n-1$ complements), so Proposition~\ref{prop:bondareva-complement} is the Bondareva--Shapley criterion \citep{shapley1971core} specialised to this collection. Theorem~\ref{thm:empty-core} and Proposition~\ref{prop:bondareva-complement} are incomparable in general: Theorem~\ref{thm:empty-core} depends on the minimum $\delta_i$ and fires when a single complement is cheap, whereas Proposition~\ref{prop:bondareva-complement} averages the complement costs and fires when the balanced collection as a whole is cheap. Section~\ref{sec:experiments} exhibits instances where $r > r^{\ast\ast\ast}$ but $r\le r^{\ast\ast}$, so the Core is certified empty by Proposition~\ref{prop:bondareva-complement} alone.
 
 \begin{corollary}[Fully sequential arrivals disarm Theorem~\ref{thm:empty-core}]
 \label{cor:cor51}
@@ -333,12 +352,17 @@ If arrivals are fully sequential in the sense of Lemma~\ref{lem:lemma52}, then T
 \end{corollary}
 
 \begin{proof}
-Direct from Lemma~\ref{lem:lemma52} and the hypothesis of Theorem~\ref{thm:empty-core}.
+Direct from Lemma~\ref{lem:lemma52} and the hypothesis of Theorem~\ref{thm:empty-core}. The same argument rules out Proposition~\ref{prop:bondareva-complement}'s hypothesis, which additionally requires every $N\setminus\{i\}$ to be feasible; the balanced-complement mechanism is likewise blocked under fully sequential arrivals.
 \end{proof}
 
-\begin{remark}[Near-complement mechanism (empirically observed)]
+\begin{remark}[Near-complement and intermediate mechanisms (empirically observed)]
 \label{rem:near-complement}
-The sufficient condition $r > r^{\ast\ast}$ of Theorem~\ref{thm:empty-core} exploits only complement coalitions $N\setminus\{i\}$. Empirically, we observe instances where Theorem~\ref{thm:empty-core} is vacuous ($r\le r^{\ast\ast}$) yet the Temporal Core is nonetheless empty; in each such instance, the binding constraints in the Core LP include not only a complement coalition (size $n-1$) but also a near-complement coalition (size $n-2$) simultaneously. Section~\ref{ssec:cor16} presents quantitative evidence, and Appendix~\ref{app:restricted-lp} details the restricted-LP methodology used to certify Core emptiness at scales where enumeration of $2^n$ coalitions is infeasible. A tight sufficient condition incorporating near-complement coalitions remains open; we conjecture (Section~\ref{sec:conclusion}) that it involves balanced collections of $(n-1)$- and $(n-2)$-size coalitions.
+Theorem~\ref{thm:empty-core} and Proposition~\ref{prop:bondareva-complement} together cover the single-complement and balanced-complement mechanisms, i.e.\ empty Cores certifiable through coalitions of size $n-1$ alone. Beyond these, Section~\ref{sec:experiments} identifies two further \emph{residual} mechanisms observed in the experimental grid:
+\begin{enumerate}
+  \item[(i)] \emph{Near-complement.} The Core LP's binding constraints at the optimum mix size-$(n-1)$ and size-$(n-2)$ coalitions simultaneously, with neither family alone ruling out feasibility.
+  \item[(ii)] \emph{Intermediate.} The binding constraints concentrate at coalition sizes $|S|\in\{2,\ldots,n-3\}$, with no complement involvement; this arises in instances where no $N\setminus\{i\}$ is feasible at all, so Theorem~\ref{thm:empty-core} and Proposition~\ref{prop:bondareva-complement} are both vacuous.
+\end{enumerate}
+Quantitative evidence is given in Section~\ref{ssec:cor16}; Appendix~\ref{app:restricted-lp} details the restricted-LP methodology used to certify Core emptiness at scales where enumeration of $2^n$ coalitions is infeasible. Tight sufficient conditions for either residual mechanism remain open (Section~\ref{sec:conclusion}); natural candidates are Bondareva--Shapley-style balanced collections that mix size-$(n-1)$ with size-$(n-2)$ coalitions (for (i)) or intermediate-size coalitions (for (ii)).
 \end{remark}
 
 \begin{theorem}[Asymptotic tightening of $r^{\ast\ast}$]
