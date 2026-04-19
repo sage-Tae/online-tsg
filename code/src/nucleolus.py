@@ -1,4 +1,15 @@
-"""Temporal + Static Nucleolus computation using PuLP."""
+"""Temporal + Static Nucleolus computation using PuLP.
+
+Implementation note (degeneracy). This implementation fixes ALL tight
+constraints at each stage's optimum (simplified Kopelowitz). It is
+sufficient for Core existence judgment via the first-stage epsilon
+(returned as ``core_epsilon``), but does not guarantee uniqueness of
+the returned nucleolus coordinates under primal degeneracy. A rank-
+aware procedure following Kopelowitz (1967) and Guajardo-Jornsten
+(2015), which fixes only linearly independent tight constraints, can
+be layered on top without affecting the Core stability results
+reported in the paper.
+"""
 
 import pulp
 from src.tsp import tsp_cost
@@ -38,8 +49,11 @@ def compute_nucleolus(coalition_costs, C_N, players):
         prob += eps
         prob += pulp.lpSum([y[p] for p in players]) == C_N
 
-        for p in players:
-            prob += y[p] >= 0
+        # Note: no y[p] >= 0 constraint -- Definition 3 of the paper does
+        # not require nonnegativity.  Cost allocations may be negative if
+        # some customer's removal would shortcut the grand tour, in which
+        # case the remaining customers effectively pay for the carried
+        # coalition's detour (Potters et al. 1992).
 
         for idx, S in enumerate(coalitions):
             lhs = pulp.lpSum([y[p] for p in S])
