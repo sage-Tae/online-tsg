@@ -471,22 +471,22 @@ Table~\ref{tab:thm5} is the $2\times 2$ contingency of Theorem~\ref{thm:empty-co
 
 \begin{table}[t]
 \centering
-\caption{Theorem~\ref{thm:empty-core}: predicted versus observed Core status on the 66 applicable instances.}
+\caption{Theorem~\ref{thm:empty-core}: predicted versus observed Core status on the 80 applicable instances (NN policy).}
 \label{tab:thm5}
 \small
 \begin{tabular}{@{}lcc|c@{}}
 \toprule
 & \textbf{Core empty (obs.)} & \textbf{Core nonempty (obs.)} & Total \\
 \midrule
-\textbf{Predicted empty} ($r>r^{\ast\ast}$) & 12 & 0 & 12 \\
-\textbf{Not predicted} ($r\le r^{\ast\ast}$) & 7 & 47 & 54 \\
+\textbf{Predicted empty} ($r>r^{\ast\ast}$)   & 14 & 0  & 14 \\
+\textbf{Not predicted} ($r\le r^{\ast\ast}$)  &  7 & 59 & 66 \\
 \midrule
-Total & 19 & 47 & 66 \\
+Total & 21 & 59 & 80 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Every instance classified by Theorem~\ref{thm:empty-core} as ``empty'' is indeed empty (no false positives). This matches the logical content of the theorem: $r>r^{\ast\ast}$ is a \emph{sufficient} condition. Seven additional empty-Core cases occur at $r\le r^{\ast\ast}$; these arise through a different mechanism (binding inequalities on intermediate-size feasible coalitions), which we leave for future work. Figure~\ref{fig:r-rss} plots $r$ versus $r^{\ast\ast}$ and makes the separation visible: red $\times$-marks (empty Core) lie on or above the diagonal, while the blue dots (nonempty Core) lie below. The sharpness of $r^{\ast\ast}$ relative to $r^{\ast}$ is further illustrated in Figure~\ref{fig:rhist}.
+Every instance classified by Theorem~\ref{thm:empty-core} as ``empty'' is indeed empty (no false positives). This matches the logical content of the theorem: $r>r^{\ast\ast}$ is a \emph{sufficient} condition. Seven additional empty-Core cases occur at $r\le r^{\ast\ast}$; these arise through the near-complement mechanism of Remark~\ref{rem:near-complement}, whose quantitative evidence is given in Section~\ref{ssec:cor16} and whose restricted-LP certification is detailed in Appendix~\ref{app:restricted-lp}. Figure~\ref{fig:r-rss} plots $r$ versus $r^{\ast\ast}$ and makes the separation visible: red $\times$-marks (empty Core) lie on or above the diagonal, while the blue dots (nonempty Core) lie below. The sharpness of $r^{\ast\ast}$ relative to $r^{\ast}$ is further illustrated in Figure~\ref{fig:rhist}.
 
 \begin{figure}[t]
 \centering
@@ -637,7 +637,7 @@ Three findings emerge.
 
 \paragraph{Intractability of pattern A at $n\ge 30$.} For pattern A, $|\F| = 2^n-1$, so the Core LP has $\sim\!10^9$ and $\sim\!10^{15}$ constraints at $n=30$ and $n=50$ respectively, well beyond enumeration. Theorem~\ref{thm:empty-core} nevertheless certifies Core emptiness \emph{a priori} in $13$ of the $15$ seed--size combinations: every complement coalition is feasible, so $r^{\ast\ast}$ is well-defined, and numerically $r>r^{\ast\ast}$ holds in $4/5$ seeds at $n=20, 30$ and $5/5$ at $n=50$ (Table~\ref{tab:scaleup}). The two exceptions---seed 123 at $n=20$ and at $n=30$---have $r\le r^{\ast\ast}$; there emptiness is certified by the restricted Core LP of Appendix~\ref{app:restricted-lp} (Finding~4 above). The intractability of pattern A therefore itself \emph{demonstrates} the $k<n-1$ versus $k=n$ divide identified in Corollary~\ref{cor:cor52}: the regime where the Core LP becomes infeasible to enumerate is precisely the regime where Theorem~\ref{thm:empty-core}---supplemented by the near-complement certificate at the few exceptional seeds---can certify emptiness without enumeration.
 
-\paragraph{Summary.} The qualitative findings of the earlier subsections persist up to $n=50$, with one refinement: the tail of Core-empty clustered instances at $n=15$ expands to near-certain Core emptiness by $n=20$ because $r^{\ast\ast}$ tightens with $n$ (Theorem~\ref{thm:asymptotic}). Corollary~\ref{cor:cor52}'s safeguard, in contrast, only strengthens with $n$: even at $\bar r=2.13$, the Core survives whenever $k<n-1$.
+\paragraph{Summary.} The qualitative findings of the earlier subsections persist up to $n=50$, with one refinement: the tail of Core-empty clustered instances at $n=15$ expands to near-certain Core emptiness by $n=20$ because $r^{\ast\ast}$ tightens with $n$ (Theorem~\ref{thm:asymptotic}). Corollary~\ref{cor:cor52}'s safeguard, in contrast, only strengthens with $n$: across every scale-up cell, whenever $\bar k<n-1$ the Core is nonempty irrespective of the realized competitive ratio (observed $\bar r$ as high as $1.39$ at $n=50$ for $\text{B}_{\text{medium}}$).
 
 \section{Conclusion}
 \label{sec:conclusion}
