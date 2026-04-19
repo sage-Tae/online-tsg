@@ -737,4 +737,50 @@ $n$ & Pattern & $\alpha$ & $L$ & $\tau$ & $r$ & $r^{\ast\ast}$ & $k$ \\
 
 \paragraph{Interpretation.} The absence of variation in $r$, $r^{\ast\ast}$, and $k$ across $\alpha$ confirms that the online arrival process, the NN tour construction, and the Core analysis all depend only on the dimensionless parameters $(n,\rho)$ and are insensitive to the absolute scale of $(L,\tau)$. This justifies the specific choice $L=\sqrt{n}$ adopted in Section~\ref{ssec:design} without loss of generality.
 
+\section{Restricted Core LP for near-complement certification}
+\label{app:restricted-lp}
+
+This appendix details the restricted Core LP methodology used in Section~\ref{ssec:cor16} and Section~\ref{ssec:scaleup}'s Finding~4 to certify Core emptiness at scales where enumeration of all $2^n-1$ feasible coalitions is infeasible.
+
+\paragraph{Motivation.} The full Core LP requires one inequality per feasible coalition $S\in\mathcal{F}$, i.e., up to $2^n-1$ constraints. For Pattern~A at $n=30$ this is $2^{30}-1\approx 10^9$ and at $n=50$ it is $\approx 10^{15}$, both intractable to enumerate. Yet for these instances we wish to determine whether the Temporal Core is empty, and if so, which coalition sizes provide the certifying constraints.
+
+\paragraph{Sampling strategy.} We solve a \emph{restricted} Core LP over a sampled subset $\mathcal{S}\subseteq\mathcal{F}$ constructed as follows:
+\begin{enumerate}
+  \item All $n$ singletons $\{i\}$ (always feasible).
+  \item All complements $N\setminus\{i\}$ that are feasible under the arrival dynamics.
+  \item The grand coalition $N$.
+  \item $K$ additional coalitions drawn by uniform random subset sampling of $2^N$, retaining only those that are feasible.
+\end{enumerate}
+We take $K=10{,}000$ in all cases reported below. Pure-distance TSP costs $c^{\ast}(S)$ for each $S\in\mathcal{S}$ are computed exactly by Held--Karp for $|S|\le 15$ and by LKH \citep{helsgaun2000effective} otherwise. The restricted LP then solves the first-stage nucleolus program
+\begin{align}
+  \min_{x\in\mathbb{R}^n,\ \varepsilon\in\mathbb{R}} \varepsilon \quad
+  \text{s.t.} \quad
+  & \sum_{i=1}^n x_i = C_N^{\text{online}},\\
+  & \sum_{i\in S} x_i - c^{\ast}(S) \le \varepsilon, \quad S\in\mathcal{S},\ S\neq N,\notag
+\end{align}
+solved with CBC via PuLP. The Temporal Core restricted to $\mathcal{S}$ is nonempty iff $\varepsilon^{\ast}\le 0$. If $\varepsilon^{\ast}>0$, the sample $\mathcal{S}$ certifies Core emptiness (the true Core is a subset of the restricted Core and is thus also empty). The method is a \emph{one-sided} certificate: it cannot conclude nonemptiness from a restricted sample.
+
+\paragraph{Results.} Table~\ref{tab:restricted-lp} reports five case studies: three seed-123 instances at $n\in\{20,30,50\}$ (where Theorem~\ref{thm:empty-core} is vacuous at $n=20,30$ and fires at $n=50$), and two control instances where Theorem~\ref{thm:empty-core} fires. In all five cases, $\varepsilon^{\ast}>0$, certifying Core emptiness. For each case, we also record the sizes of the binding constraints at the LP optimum---i.e., the $S$ for which $\sum_{i\in S}x_i^{\ast}-c^{\ast}(S)=\varepsilon^{\ast}$ within numerical tolerance $10^{-4}$.
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\caption{Restricted Core LP certification results. $K=10{,}000$ sampled intermediate coalitions plus singletons and complements, yielding $9999$ inequality constraints per instance. All five cases yield $\varepsilon^{\ast}>0$, certifying Core emptiness. Binding sizes are the coalition sizes at which the LP's active constraints concentrate; seed-123 cases bind simultaneously at $n-2$ and $n-1$.}
+\label{tab:restricted-lp}
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+Pattern & $n$ & Seed & $r$ & $r^{\ast\ast}$ & $\varepsilon^{\ast}$ & Binding sizes \\
+\midrule
+A & 20 & 123 & 1.0768 & 1.1117 & $0.77$ & $\{n-2,\,n-1\}$ \\
+A & 30 & 123 & 1.0375 & 1.0880 & $0.66$ & $\{n-2,\,n-1\}$ \\
+A & 50 & 123 & 1.3058 & 1.0809 & $12.39$ & $\{n-2,\,n-1\}$ \\
+\midrule
+A & 20 &   7 & 1.2159 & 1.1725 & $3.57$ & $\{n-2,\,n-1\}$ \\
+A & 30 &  42 & 1.2384 & 1.0835 & $5.60$ & $\{n-1\}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Interpretation.} The single clean Theorem~\ref{thm:empty-core} case in the table (seed $42$, $n=30$) binds only at size $n-1$, consistent with the theorem's single-complement certificate. All other rows exhibit simultaneous binding at sizes $n-1$ and $n-2$. For seed 123 at $n=20,30$, Theorem~\ref{thm:empty-core} is vacuous ($r\le r^{\ast\ast}$, i.e., no single complement coalition certifies emptiness), yet the combined complement-and-near-complement block of constraints does rule out every feasible Core allocation. For seed 123 at $n=50$, Theorem~\ref{thm:empty-core} does fire; nevertheless, size-$(n-2)$ constraints remain binding, indicating that the near-complement mechanism persists into the asymptotic regime where the complement mechanism also applies. This motivates the conjecture in Section~\ref{sec:conclusion}: that a tight sufficient condition for Core emptiness beyond Theorem~\ref{thm:empty-core} involves balanced collections of $(n-1)$- and $(n-2)$-size coalitions in the sense of \citet{shapley1971core}.
+
 \end{document}
