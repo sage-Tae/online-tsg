@@ -6,7 +6,7 @@ Code and data for the paper:
 > Seyun Jeong (POSTECH) and Hyunchul Tae (KITECH)
 > Submitted to *European Journal of Operational Research*, 2026
 
-**Current version: v2.1.4** (major revision, April 19, 2026)
+**Current version: v2.1.6** (major revision, April 19, 2026)
 
 Version history:
 - v2.0.x — initial submission (v2.0, v2.0.1, v2.0.2, v2.0.3)
@@ -14,6 +14,8 @@ Version history:
 - v2.1.2 — F-generation fix + 4-mechanism taxonomy (Proposition 12, Observation 15)
 - v2.1.3 — documentation sync (Conclusion, Figure 1 caption, README, Nucleolus scope, B_medium caveat)
 - v2.1.4 — reproducibility polish (augment step, seed123 CSV alignment, §6.8 Summary tone-down, version labels)
+- v2.1.5 — seed 123 scale-up alignment (Finding 4 two-tier pattern, `run_seed123_check.py` TARGETS 5 → 2, REPRODUCIBILITY labels)
+- v2.1.6 — ZIP-rebuildability fix (`\graphicspath` extended for clean-room extraction, Data-Files table `seed123_core_check.csv` 5 → 2 rows, `scripts/verify_zip_rebuild.sh` added)
 
 ## Overview
 
