@@ -106,11 +106,18 @@ class OnlineTSGSimulator:
         return_leg = dist(vehicle_pos, depot)
         total_travel += return_leg
 
-        # Reconstruct F per paper Definition 2 and compute c(S)
+        # Reconstruct F per paper Definition 2 and compute c(S).
+        # c(N) is added unconditionally since r = C_N_online / c*(N)
+        # needs it regardless of whether N is feasible.
+        from src.tsp import tsp_cost
         F = reconstruct_F(n, early_times, serve_times)
         coalition_costs = compute_coalition_costs(
             F, positions, early_times, depot=depot, speed=self.speed,
         )
+        grand = frozenset(all_ids)
+        if grand not in coalition_costs:
+            cost, _ = tsp_cost(depot, all_ids, positions, early_times, self.speed)
+            coalition_costs[grand] = cost
 
         return {
             'events': events,

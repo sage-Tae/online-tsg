@@ -4,24 +4,24 @@ Running 525 instances -> logs/policy_comparison_v2_full.csv
   seeds: [7, 42, 99, 123, 256]
   policies: ['nearest_neighbor', 'cheapest_insertion', 'batch_reoptimize']
 
-  [1/525] 0%  elapsed=   0.1s  eta=  36.3s
-  [53/525] 10%  elapsed=   2.2s  eta=  19.9s
-  [105/525] 20%  elapsed=   4.3s  eta=  17.0s
-  [158/525] 30%  elapsed=   6.7s  eta=  15.6s
-  [210/525] 40%  elapsed=   9.0s  eta=  13.4s
-  [263/525] 50%  elapsed=  13.9s  eta=  13.8s
-  [315/525] 60%  elapsed=  17.0s  eta=  11.4s
-  [368/525] 70%  elapsed=  39.8s  eta=  17.0s
-  [420/525] 80%  elapsed=  48.1s  eta=  12.0s
-  [473/525] 90%  elapsed= 656.3s  eta=  72.1s
-  [525/525] 100%  elapsed= 803.4s  eta=   0.0s
+  [1/525] 0%  elapsed=   0.1s  eta=  39.8s
+  [53/525] 10%  elapsed=   2.5s  eta=  21.9s
+  [105/525] 20%  elapsed=   4.6s  eta=  18.5s
+  [158/525] 30%  elapsed=   7.1s  eta=  16.4s
+  [210/525] 40%  elapsed=   9.4s  eta=  14.1s
+  [263/525] 50%  elapsed=  15.5s  eta=  15.4s
+  [315/525] 60%  elapsed=  19.7s  eta=  13.2s
+  [368/525] 70%  elapsed=  55.3s  eta=  23.6s
+  [420/525] 80%  elapsed=  73.9s  eta=  18.5s
+  [473/525] 90%  elapsed=1087.3s  eta= 119.5s
+  [525/525] 100%  elapsed=1592.7s  eta=   0.0s
 
-Wrote 525 rows to logs/policy_comparison_v2_full.csv in 803.4s
+Wrote 525 rows to logs/policy_comparison_v2_full.csv in 1592.7s
 Errors: 0
 
 === Summary by policy ===
                     r_mean  core_rate  empty_count  thm11_app  thm11_fires
 policy                                                                    
-batch_reoptimize    1.2141     1.0000            0         80            0
-cheapest_insertion  1.2363     0.9771            4         80            1
-nearest_neighbor    1.3258     0.8800           21         80           14
+batch_reoptimize    1.2011     0.8571           25         97            7
+cheapest_insertion  1.2233     0.8229           31         97           17
+nearest_neighbor    1.3123     0.6171           67         96           37

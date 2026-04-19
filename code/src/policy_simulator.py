@@ -109,13 +109,25 @@ def run_with_policy(positions, arrival_times, policy_fn,
     return_leg = dist(vehicle_pos, depot)
     total_travel += return_leg
 
-    # Reconstruct F per paper Definition 2 and compute c(S) for S in F
+    # Reconstruct F per paper Definition 2 and compute c(S) for S in F.
+    # We additionally compute c(N) unconditionally because it is needed to
+    # form the competitive ratio r = C_N_online / c*(N), independent of
+    # whether N is feasible per Definition 2.
     if n <= 15:
+        from src.tsp import tsp_cost
         F = reconstruct_F(n, arrival_times, serve_times)
         coalition_costs = compute_coalition_costs(
             F, positions, arrival_times, depot=depot, speed=speed,
             cache=coalition_cache,
         )
+        grand = frozenset(all_ids)
+        if grand not in coalition_costs:
+            if grand in coalition_cache:
+                coalition_costs[grand] = coalition_cache[grand]
+            else:
+                cost, _ = tsp_cost(depot, all_ids, positions, arrival_times, speed)
+                coalition_costs[grand] = cost
+                coalition_cache[grand] = cost
     else:
         # Fallback: n too large for full 2^n enumeration.
         # We retain singletons + the grand coalition only; experiments
