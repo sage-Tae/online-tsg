@@ -32,6 +32,7 @@
 
 \theoremstyle{remark}
 \newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
 
 \newcommand{\F}{\mathcal{F}}
 \newcommand{\N}{N}
@@ -82,7 +83,7 @@ The classical TSG, however, is defined under the tacit assumption that every cus
 \item[\textbf{C4.}] \emph{Empirical calibration.} On 175 simulated instances across five coalition sizes and seven arrival patterns under three dispatch policies (525 policy-instance pairs), plus 45 scale-up instances up to $n=50$ and a 24-instance scale-invariance study (Appendix~\ref{app:scale-invariance}), we verify every theoretical claim. The complement-mechanism threshold predicts emptiness in 14 instances under nearest-neighbor dispatch, all confirmed empty (no false positives under any policy); seven additional empty-Core instances occur at $r\le r^{\ast\ast}$ and are explained by the near-complement mechanism (Remark~\ref{rem:near-complement}, Appendix~\ref{app:restricted-lp}). The structural obstruction holds in $79/79$ instances in which it applies; the mean threshold ($1.355$) is sharper than the classical bound ($4.351$) by a factor of $3.21$; and the asymptotic decay $r^{\ast\ast}\to 1$ is consistent with Theorem~\ref{thm:asymptotic}'s $O(n^{-1/2})$ rate on the scale-up grid.
 \end{itemize}
 
-\paragraph{Practical implication.} In operational terms, our results say that an online dispatch regime with fully sequential arrivals ($k<n-1$) is \emph{immune to the complement-coalition empty-Core mechanism} (Theorem~\ref{thm:empty-core}), whereas the pathological regime is the ``morning batch'' in which many orders sit simultaneously in the queue. Intermediate-coalition violations and the near-complement mechanism (Remark~\ref{rem:near-complement}) remain logically possible and are characterized empirically in Section~\ref{sec:experiments}. This aligns with the observation, ubiquitous in practice, that same-day delivery platforms enforce short service windows precisely to keep the queue shallow.
+\paragraph{Practical implication.} In operational terms, our results say that a bounded peak queue $k<n-1$---achievable via short service-time promises---eliminates all complement-coalition empty-Core mechanisms (Theorem~\ref{thm:empty-core} and Proposition~\ref{prop:bondareva-complement}). This covers the pathological ``morning batch'' regime where many orders sit simultaneously in the queue. In the shallow-queue regime, however, the intermediate-coalition mechanism of Observation~\ref{obs:intermediate} remains active and can empty the Core when the realized online competitive ratio is large. This mechanism is policy-sensitive: it was observed only under nearest-neighbor dispatch in our experiments and vanishes under cheapest-insertion or batch re-optimization (Section~\ref{ssec:policy}). Jointly, our findings suggest that short service windows together with moderately-informed dispatch policies are sufficient to preserve Core stability.
 
 \paragraph{Structure.} Section~\ref{sec:related} situates our work within the literature on static TSG/VRG, dynamic and rolling-horizon games, online cooperative games, and nucleolus computation. Section~\ref{sec:problem} formalizes the Online TSG. Section~\ref{sec:nucleolus} defines and computes the Temporal Nucleolus. Section~\ref{sec:theory} develops the Core theory. Section~\ref{sec:experiments} reports computational experiments, and Section~\ref{sec:conclusion} concludes.
 
@@ -355,15 +356,15 @@ If arrivals are fully sequential in the sense of Lemma~\ref{lem:lemma52}, then T
 Direct from Lemma~\ref{lem:lemma52} and the hypothesis of Theorem~\ref{thm:empty-core}. The same argument rules out Proposition~\ref{prop:bondareva-complement}'s hypothesis, which additionally requires every $N\setminus\{i\}$ to be feasible; the balanced-complement mechanism is likewise blocked under fully sequential arrivals.
 \end{proof}
 
-\begin{remark}[Near-complement and intermediate mechanisms (empirically observed)]
+\begin{remark}[Near-complement mechanism (empirically observed)]
 \label{rem:near-complement}
-Theorem~\ref{thm:empty-core} and Proposition~\ref{prop:bondareva-complement} together cover the single-complement and balanced-complement mechanisms, i.e.\ empty Cores certifiable through coalitions of size $n-1$ alone. Beyond these, Section~\ref{sec:experiments} identifies two further \emph{residual} mechanisms observed in the experimental grid:
-\begin{enumerate}
-  \item[(i)] \emph{Near-complement.} The Core LP's binding constraints at the optimum mix size-$(n-1)$ and size-$(n-2)$ coalitions simultaneously, with neither family alone ruling out feasibility.
-  \item[(ii)] \emph{Intermediate.} The binding constraints concentrate at coalition sizes $|S|\in\{2,\ldots,n-3\}$, with no complement involvement; this arises in instances where no $N\setminus\{i\}$ is feasible at all, so Theorem~\ref{thm:empty-core} and Proposition~\ref{prop:bondareva-complement} are both vacuous.
-\end{enumerate}
-Quantitative evidence is given in Section~\ref{ssec:cor16}; Appendix~\ref{app:restricted-lp} details the restricted-LP methodology used to certify Core emptiness at scales where enumeration of $2^n$ coalitions is infeasible. Tight sufficient conditions for either residual mechanism remain open (Section~\ref{sec:conclusion}); natural candidates are Bondareva--Shapley-style balanced collections that mix size-$(n-1)$ with size-$(n-2)$ coalitions (for (i)) or intermediate-size coalitions (for (ii)).
+Theorem~\ref{thm:empty-core} and Proposition~\ref{prop:bondareva-complement} together cover the single-complement and balanced-complement mechanisms, i.e.\ empty Cores certifiable through coalitions of size $n-1$ alone. Beyond these, we observe main-grid instances (10 of 175 under the NN policy) where the Temporal Core is empty, both thresholds are vacuous ($r\le r^{\ast\ast}$ and $r\le r^{\ast\ast\ast}$), and the binding constraints in the Core LP mix size-$(n-1)$ and size-$(n-2)$ coalitions simultaneously---neither family alone certifies emptiness, but their joint action does. Quantitative evidence appears in Section~\ref{ssec:cor16}; Appendix~\ref{app:restricted-lp} gives the restricted-LP methodology for certifying Core emptiness at scales where $2^n$ enumeration is infeasible. A tight sufficient condition for this near-complement mechanism remains open; a natural candidate is a Bondareva--Shapley-style balanced collection mixing size-$(n-1)$ and size-$(n-2)$ coalitions (Section~\ref{sec:conclusion}).
 \end{remark}
+
+\begin{observation}[Intermediate-coalition mechanism]
+\label{obs:intermediate}
+In 9 of the 175 main-grid instances under the NN policy, the Temporal Core is empty despite (i) the hypothesis of Theorem~\ref{thm:empty-core} being vacuous ($r\le r^{\ast\ast}$, or no complement feasible) and (ii) the hypothesis of Proposition~\ref{prop:bondareva-complement} being vacuous. All 9 satisfy $k<n-1$ and arise in patterns $\text{B}_{\text{medium}}$ (7 cases) and E (2 cases) with realized competitive ratio $r\in[1.33,1.61]$. The binding constraints in the Core LP concentrate on intermediate-size coalitions ($2\le |S|\le n-3$) rather than on complements or near-complements. This mechanism is distinct from Theorem~\ref{thm:empty-core} and Proposition~\ref{prop:bondareva-complement} and shows that the structural safeguard of Corollary~\ref{cor:cor52}, while analytically sharp in blocking all complement-based mechanisms, does not rule out Core emptiness via intermediate coalitions when the online competitive ratio is large. An analytic sufficient condition is open (Section~\ref{sec:conclusion}).
+\end{observation}
 
 \begin{theorem}[Asymptotic tightening of $r^{\ast\ast}$]
 \label{thm:asymptotic}
@@ -527,28 +528,58 @@ Every instance classified by Theorem~\ref{thm:empty-core} as ``empty'' is indeed
 \label{fig:r-rss}
 \end{figure}
 
-\subsection{Verification of Corollary~\ref{cor:cor52}}
+\subsection{Verification of Corollary~\ref{cor:cor52} and observed intermediate-coalition mechanism}
 \label{ssec:cor16}
 
-\paragraph{Structural obstruction.} Partitioning the 175 main-study instances (NN policy) by peak queue regime yields three strata (Figure~\ref{fig:core-k}): 79 instances with $k<n-1$, of which 70 have a nonempty Core ($88.6\%$); 16 instances with $k=n-1$, all with nonempty Core ($100\%$); and 80 instances with $k=n$, of which 22 retain a nonempty Core ($27.5\%$). The structural obstruction of Corollary~\ref{cor:cor52} is analytically sharp in that it rules out the complement-based mechanisms: no instance with $k<n-1$ admits the Theorem~\ref{thm:empty-core} or Proposition~\ref{prop:bondareva-complement} certificate (both require at least one feasible complement, hence $k\ge n-1$). Empirically, however, 9 of the 79 instances in the $k<n-1$ regime exhibit empty Cores via the \emph{intermediate-coalition} mechanism of Remark~\ref{rem:near-complement}(ii); these are documented below. A per-pattern breakdown across the size grid $n\in\{5,7,10,12,15\}$ is deferred to Appendix~\ref{app:aux} (Figure~\ref{fig:core-n}).
+\paragraph{Analytic sharpness of Corollary~\ref{cor:cor52}.} The analytic content of Corollary~\ref{cor:cor52} is that both complement-based mechanisms---single (Theorem~\ref{thm:empty-core}) and balanced (Proposition~\ref{prop:bondareva-complement})---are blocked whenever the peak queue satisfies $k<n-1$, because both hypotheses require at least one complement $N\setminus\{i\}$ to be feasible, and feasibility forces $|U_t|=n-1$ at some $t$. Empirically this holds without exception in the 175-instance grid: no NN (or CI, BR) instance with $k<n-1$ satisfies $r>r^{\ast\ast}$ or $r>r^{\ast\ast\ast}$ (false-positive count is zero for both thresholds across all 525 policy-instance pairs).
 
-\paragraph{Four-mechanism decomposition of empty Cores.} Under the NN policy, 67 of the 175 instances have an empty Core. Classifying each by the binding-constraint signature of the first-stage nucleolus LP produces the following decomposition:
+\paragraph{Peak-queue strata.} Partitioning the 175 main-grid instances (NN) by peak-queue regime yields three strata (Figure~\ref{fig:core-k}):
 \begin{itemize}
-  \item \emph{Single-complement} (Theorem~\ref{thm:empty-core}, $r>r^{\ast\ast}$): \textbf{37} instances. Tight constraints concentrate at a single complement $N\setminus\{i^{\star}\}$.
-  \item \emph{Balanced-complement} (Proposition~\ref{prop:bondareva-complement}, $r>r^{\ast\ast\ast}$ but $r\le r^{\ast\ast}$): \textbf{11} instances. Tight constraints cover all $n$ complements $\{N\setminus\{i\}\}_{i\in N}$ simultaneously; no single complement alone certifies emptiness.
-  \item \emph{Near-complement} (Remark~\ref{rem:near-complement}(i), $r\le r^{\ast\ast\ast}$ or Proposition~\ref{prop:bondareva-complement} inapplicable): \textbf{10} instances. Tight constraints mix sizes $n-1$ and $n-2$.
-  \item \emph{Intermediate} (Remark~\ref{rem:near-complement}(ii), no complement feasible, $k<n-1$): \textbf{9} instances, all in patterns $\text{B}_{\text{medium}}$ (7) and E (2). Tight constraints concentrate at sizes in $\{2,\ldots,n-3\}$.
+  \item $k<n-1$: 79 instances, $70$ Core nonempty ($88.6\%$).
+  \item $k=n-1$: 16 instances, $16$ Core nonempty ($100\%$).
+  \item $k=n$:   80 instances, $22$ Core nonempty ($27.5\%$).
 \end{itemize}
-Representative examples: single-complement at $(n{=}5,\,\text{A},\,256)$; balanced-complement at $(n{=}5,\,\text{A},\,7)$; near-complement at $(n{=}10,\,\text{A},\,123)$; intermediate at $(n{=}7,\,\text{B}_{\text{medium}},\,256)$. A full table of the 30 residual (non-single-complement) instances with binding-size distributions is given in Appendix~\ref{app:restricted-lp}.
+A per-pattern breakdown across $n\in\{5,7,10,12,15\}$ appears in Appendix~\ref{app:aux} (Figure~\ref{fig:core-n}).
 
-\paragraph{Core LP false-positive check across mechanisms.} Across all 525 policy-instance pairs (NN, CI, BR), no instance satisfies any of the three analytic thresholds ($r>r^{\ast\ast}$, $r>r^{\ast\ast\ast}$) while retaining a nonempty Core: the thresholds are empirically sound. The 37 single-complement NN instances and the 11 balanced-complement NN instances together certify 48 of the 67 empty Cores a priori; the remaining 19 (10 near-complement + 9 intermediate) are certified only by the Core LP itself and motivate open questions for analytic sufficient conditions (Remark~\ref{rem:near-complement}).
+\paragraph{Nine empty Cores at $k<n-1$: intermediate-coalition mechanism.} The 9 empty-Core instances in the $k<n-1$ regime are all certified by the intermediate-coalition mechanism of Observation~\ref{obs:intermediate}. All 9 lie in $\text{B}_{\text{medium}}$ (7 cases) or E (2 cases), have $k$ between $n-5$ and $n-2$, and realize $r\in[1.33,1.61]$. Since both Theorem~\ref{thm:empty-core} and Proposition~\ref{prop:bondareva-complement} are vacuous in the $k<n-1$ regime, the 9 cases constitute direct evidence of a third mechanism operating outside the complement-coalition framework. Table~\ref{tab:intermediate} summarises these instances; full binding-size distributions are deferred to Appendix~\ref{app:restricted-lp}.
 
-\paragraph{Interpretation.} Theorem~\ref{thm:empty-core}, Proposition~\ref{prop:bondareva-complement}, and Corollary~\ref{cor:cor52} together account for three of the four observed mechanisms: the two complement-based certificates cover 48 of 67 NN empties, and the structural obstruction explains why no complement-based mechanism fires at $k<n-1$. The 10 near-complement and 9 intermediate cases---sitting in the residual that Corollary~\ref{cor:cor52} does not rule out---remain to be characterised analytically; we state this as an open problem in Section~\ref{sec:conclusion}.
+\begin{table}[h]
+\centering
+\small
+\caption{Nine main-grid instances with $k<n-1$ and empty Core (intermediate-coalition mechanism, Observation~\ref{obs:intermediate}). All arise under NN dispatch in patterns $\text{B}_{\text{medium}}$ or E. The ``dominant size'' column reports the coalition size at which the largest number of constraints are tight at the first-stage LP optimum.}
+\label{tab:intermediate}
+\begin{tabular}{@{}rllrrrrr@{}}
+\toprule
+$n$ & pattern & seed & $k$ & $n-1$ & $r$ & $\varepsilon^{\ast}$ & dominant size \\
+\midrule
+ 7 & $\text{B}_{\text{medium}}$ & 256 &  5 &  6 & 1.436 & 0.028 & 4 \\
+10 & $\text{B}_{\text{medium}}$ & 123 &  8 &  9 & 1.423 & 0.192 & 5 (tied with 4) \\
+10 & $\text{B}_{\text{medium}}$ & 256 &  8 &  9 & 1.358 & 0.217 & 7 (tied with 6) \\
+10 & E                          &  42 &  8 &  9 & 1.495 & 0.062 & 3 \\
+12 & $\text{B}_{\text{medium}}$ &  99 & 10 & 11 & 1.395 & 0.744 & 6 (tied with 7) \\
+12 & $\text{B}_{\text{medium}}$ & 123 & 10 & 11 & 1.487 & 0.767 & 6 \\
+12 & $\text{B}_{\text{medium}}$ & 256 & 10 & 11 & 1.423 & 0.941 & 7 (tied with 8) \\
+12 & E                          &  42 &  9 & 11 & 1.610 & 0.289 & 4 (tied with 5, 6) \\
+15 & $\text{B}_{\text{medium}}$ & 256 & 12 & 14 & 1.326 & 0.185 & 9 (tied with 10) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Four-way decomposition of 67 empty Cores (NN).} The 67 empty Cores decompose into four mechanisms:
+\begin{itemize}
+  \item Single-complement (Theorem~\ref{thm:empty-core}): \textbf{37} instances, all at $k=n$.
+  \item Balanced-complement (Proposition~\ref{prop:bondareva-complement}): \textbf{11} instances, all at $k=n$.
+  \item Near-complement (Remark~\ref{rem:near-complement}): \textbf{10} instances, all at $k=n$.
+  \item Intermediate (Observation~\ref{obs:intermediate}): \textbf{9} instances, all at $k<n-1$.
+\end{itemize}
+Two regimes emerge: the saturated regime $k=n$ concentrates the three complement-based mechanisms (single + balanced + near-complement: 58 of 58 empty cases at $k=n$), while the shallow-queue regime $k<n-1$ is governed exclusively by the intermediate mechanism. These regimes are empirically disjoint in our grid.
+
+\paragraph{Practical implication.} Corollary~\ref{cor:cor52} guarantees that keeping $k<n-1$ eliminates the complement-coalition mechanisms. In this regime, however, the intermediate mechanism of Observation~\ref{obs:intermediate} remains active and can empty the Core when the realized competitive ratio is large. Crucially, all 9 intermediate cases arise under nearest-neighbor dispatch: under cheapest-insertion and batch re-optimization, no intermediate-coalition empty Cores are observed in our grid (Section~\ref{ssec:policy}). The intermediate mechanism thus appears \emph{policy-sensitive} and can be mitigated operationally, though an analytic threshold is open.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.7\textwidth]{fig3_core_vs_k.pdf}
-\caption{Temporal Core existence rate stratified by peak-queue regime $k$. The complement-coalition mechanisms of Theorem~\ref{thm:empty-core} and Proposition~\ref{prop:bondareva-complement} require $k\ge n-1$. Empirically, 58 of the 67 empty Cores occur at $k=n$ (complement and near-complement mechanisms); the remaining 9 occur at $k<n-1$ via the intermediate-coalition mechanism of Remark~\ref{rem:near-complement}(ii), and all fall in patterns $\text{B}_{\text{medium}}$ or E.}
+\caption{Temporal Core existence rate stratified by peak-queue regime $k$. The complement-coalition mechanisms (Theorem~\ref{thm:empty-core} and Proposition~\ref{prop:bondareva-complement}) require $k\ge n-1$. Empirically, 58 of the 67 empty Cores concentrate at $k=n$ via complement / balanced-complement / near-complement mechanisms; the remaining 9 occur at $k<n-1$ via the intermediate-coalition mechanism of Observation~\ref{obs:intermediate}, all in patterns $\text{B}_{\text{medium}}$ or E.}
 \label{fig:core-k}
 \end{figure}
 
