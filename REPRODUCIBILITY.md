@@ -1,10 +1,10 @@
-# Reproducibility Guide — Online TSG (v2.1.6)
+# Reproducibility Guide — Online TSG (v2.1.7)
 
-This document describes how to reproduce the empirical results in the paper *"Online Traveling Salesman Games: Temporal Nucleolus, Empty Cores, and Complement-Coalition Mechanisms"* (major revision, v2.1.6).
+This document describes how to reproduce the empirical results in the paper *"Online Traveling Salesman Games: Temporal Nucleolus, Empty Cores, and Complement-Coalition Mechanisms"* (major revision, v2.1.7).
 
 ## Paper Info
 
-- **Version**: v2.1.6 (major revision; supersedes v2.0, v2.1.0, v2.1.2, v2.1.3, v2.1.4, v2.1.5)
+- **Version**: v2.1.7 (major revision; supersedes v2.0, v2.1.0, v2.1.2, v2.1.3, v2.1.4, v2.1.5, v2.1.6)
 - **Pages**: 35
 - **Experimental instances**: 596 total
   - Main study: 525 (5 sizes × 7 patterns × 5 seeds × 3 policies)
@@ -85,7 +85,7 @@ python3 run_sensitivity_v2.py
 - **Expected result**: bit-identical r, r**, k within each (n, pattern) group across α.
 - **Source for**: Appendix B, Table B.1.
 
-### 4. Restricted Core LP certification (5 instances, Appendix C)
+### 4. Restricted Core LP certification (2 instances, Appendix C)
 
 ```bash
 cd code/experiments
@@ -94,7 +94,7 @@ python3 run_seed123_check.py
 
 - **Runtime**: ~5 hours total for the 2 shipped rows (n=20 seed 123 Pattern A ≈ 1 h, n=30 seed 123 Pattern A ≈ 4 h; both dominated by LKH calls on ~10,000 sampled coalitions each). Requires augmented summary CSV from Step 1.5 for cross-checks.
 - **Output**: `logs/seed123_core_check.csv` (2 rows: n=20 and n=30 seed 123 under Pattern A — exactly the Appendix C Table). TARGETS in the script match this scope; `logs/run_seed123_check.log` records execution traces.
-- **Source for**: Appendix C "Scale-up certification" 2-row table. The n=50 seed 123 case is analytically covered by Theorem 11 firing directly (Finding 4) and does not require restricted-LP treatment in v2.1.6.
+- **Source for**: Appendix C "Scale-up certification" 2-row table. The n=50 seed 123 case is analytically covered by Theorem 11 firing directly (Finding 4) and does not require restricted-LP treatment in v2.1.7.
 - **Legacy scope**: the v2.1.4-and-earlier 5-entry TARGETS list (adding n=50 seed 123 and two control rows for Theorem-11-fires sanity checks) is preserved at `code/scripts/legacy/run_seed123_check_extended.py`.
 
 ### 5. Figures regeneration
@@ -149,7 +149,7 @@ For Pattern A at seed = 123 (n ∈ {20, 30}), Theorem 11 is vacuous (r ≤ r**) 
 | `code/src/tsp_scaleup.py` | LKH wrapper (via `elkai`) for large n |
 | `code/src/core_lp_restricted.py` | Restricted Core LP (Appendix C) |
 
-## Data Files (v2.1.6)
+## Data Files (v2.1.7)
 
 All in `code/experiments/logs/`:
 
@@ -164,7 +164,7 @@ All in `code/experiments/logs/`:
 | `run_sensitivity_v2.log` | — | Execution log of sensitivity |
 | `run_seed123_check.log` | — | Execution log of restricted LP |
 
-Legacy CSVs (`policy_comparison.csv`, `scaleup.csv`, etc.) correspond to the v1.2 submission and are retained for historical reference; they are **not** the basis for v2.1.6's reported numbers.
+Legacy CSVs (`policy_comparison.csv`, `scaleup.csv`, etc.) correspond to the v1.2 submission and are retained for historical reference; they are **not** the basis for v2.1.7's reported numbers.
 
 ## Design Documents
 
@@ -186,6 +186,24 @@ Expected output: `paper/main.pdf`, 35 pages, 0 errors, 0 undefined references or
 
 Required TeX packages: `natbib`, `mathtools`, `multirow`, `enumitem`, `authblk`, `setspace`, `caption`, `amsmath`, `amssymb`, `amsthm`, `graphicx`, `booktabs`, `hyperref`, `xcolor`, `geometry`.
 
+## Submission Verification
+
+Two helper scripts at the repository root guard against regressions between iterations:
+
+```bash
+# Clean-room rebuild test: extract ZIP to a tmp dir and verify the paper
+# compiles to 35 pages with 0 errors / 0 undefined refs / 0 undefined cites.
+bash scripts/verify_zip_rebuild.sh TSG_agent_submission_v2_1_7_20260419.zip
+
+# Documentation consistency check: grep-based stale-label sweep over
+# README.md and REPRODUCIBILITY.md (version labels outside historical
+# context, page counts, seed123 row counts, orphan top-level figures/,
+# legacy metric values). Every category must report "(none)".
+bash scripts/verify_doc_consistency.sh
+```
+
+Both are expected to pass on a clean `v2.1.7` checkout. Use them on every future iteration before tagging a new version.
+
 ## Version History
 
 - **v1.2** (initial submission): 23 pages, 625 instances, L = 10 coordinate convention.
@@ -195,4 +213,5 @@ Required TeX packages: `natbib`, `mathtools`, `multirow`, `enumitem`, `authblk`,
 - **v2.1.3** (intermediate): 34 pages. Sync fixes: Conclusion and README numerics aligned to v2.1.2 data, Figure 1 caption corrected (broken "Fig None" reference fixed, four-mechanism decomposition explicit), Nucleolus §4.2 algorithmic-details tone-downed to two-tier scope (first-stage LP for Core judgment; simplified cascade for Nucleolus point under non-degeneracy), B_medium nonemptiness claim at n>15 restricted-LP-caveated.
 - **v2.1.4** (intermediate): 35 pages. Reproducibility polish: Step 1.5 `augment_summary.py` documented; seed123 CSV aligned with Appendix C (2 rows; 3 legacy rows retained untracked); §6.8 Summary tone-down.
 - **v2.1.5** (intermediate): 35 pages. Scale-up near-complement scope aligned across paper/script/CSV. Finding 4 rewritten as a two-tier pattern (restricted LP at n=20, 30; Theorem 11 fires directly at n=50), consistent with Theorem 14's $O(n^{-1/2})$ tightening. `run_seed123_check.py` TARGETS reduced from 5 to 2 to match Appendix C (legacy 5-entry version retained at `code/scripts/legacy/run_seed123_check_extended.py`).
-- **v2.1.6** (current): 35 pages. Submission-ZIP rebuildability fix. `paper/main.tex` `\graphicspath` extended from `{../figures/}` to `{../figures/}{../code/figures/}` so that a clean-room extraction of the submission ZIP — which ships `paper/` and `code/figures/` but not a top-level `figures/` symlink — compiles without `! LaTeX Error: File ... not found`. `REPRODUCIBILITY.md` Data-Files table `seed123_core_check.csv` row corrected from `5` to `2` to match Appendix C and the shipped CSV. `scripts/verify_zip_rebuild.sh` added as an automated clean-room rebuild check (extract ZIP to tmp → 3-pass LaTeX → verify 35 pages). No theoretical, experimental, or figure changes.
+- **v2.1.6** (intermediate): 35 pages. Submission-ZIP rebuildability fix. `paper/main.tex` `\graphicspath` extended from `{../figures/}` to `{../figures/}{../code/figures/}` so that a clean-room extraction of the submission ZIP — which ships `paper/` and `code/figures/` but not a top-level `figures/` symlink — compiles without `! LaTeX Error: File ... not found`. `REPRODUCIBILITY.md` Data-Files table `seed123_core_check.csv` row corrected from `5` to `2` to match Appendix C and the shipped CSV. `scripts/verify_zip_rebuild.sh` added as an automated clean-room rebuild check (extract ZIP to tmp → 3-pass LaTeX → verify 35 pages). No theoretical, experimental, or figure changes.
+- **v2.1.7** (current): 35 pages. Documentation semantic-sweep consistency pass. `REPRODUCIBILITY.md` §4 heading "Restricted Core LP certification (5 instances, Appendix C)" corrected to "(2 instances, Appendix C)" — the last residual `5 instances` label from the v2.1.2 scope, which had survived prior line-local fixes because it lived in a section heading rather than body text. `README.md` header current-version label bumped to v2.1.7, version history appended, and `Reproducibility tags` section updated so that the `(current, major revision)` marker follows the active tag rather than `v2.1.2`. Both files given an end-to-end semantic review rather than a pattern-local edit. `scripts/verify_doc_consistency.sh` added: automated stale-label grep check (version labels / page counts / seed123 row counts / orphan top-level `figures/` / stale metrics) so that future iterations fail loudly at the same class of issue. No theoretical, experimental, figure, CSV, or paper-source changes.
