@@ -22,7 +22,7 @@
 
 set -u
 
-CURRENT_VERSION="v2.1.9"
+CURRENT_VERSION="v2.1.10"
 CURRENT_MAIN_PAGES="30"
 CURRENT_SUPP_PAGES="6"
 SEED123_ROWS="2"
@@ -69,11 +69,13 @@ strip_history() {
 
 ALL_NONHIST=$(strip_history "$README"; strip_history "$REPRO")
 
-# 1. Stale version labels v2.1.0 – v2.1.8 outside historical blocks.
+# 1. Stale version labels v2.1.0 – v2.1.9 outside historical blocks.
 #    Also exclude per-line historical markers: supersedes / Supersedes /
 #    legacy / prior / v2.1.X-and-earlier (phrases that signal the label is
-#    being cited as history, not as current).
-VERSION_HITS=$(echo "$ALL_NONHIST" | grep -E ":.*v2\.1\.[0-8]\b" 2>/dev/null | \
+#    being cited as history, not as current). Note: v2.1.10 is the current
+#    version, so v2.1.[0-9] (not v2.1.[0-9]+) is the correct stale-match
+#    regex — \b prevents it from matching v2.1.10.
+VERSION_HITS=$(echo "$ALL_NONHIST" | grep -E ":.*v2\.1\.[0-9]\b" 2>/dev/null | \
     grep -vE "supersedes|Supersedes|legacy|Legacy|-and-earlier|and earlier|prior submission|historical" || true)
 report "Stale version labels (non-historical)" "$VERSION_HITS"
 

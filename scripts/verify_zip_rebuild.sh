@@ -123,7 +123,16 @@ else
     echo "  supplementary.tex: skipped (not present in ZIP)"
 fi
 
-if [ "$MAIN_OK" = "1" ] && [ "$SUPP_OK" = "1" ]; then
+HIGH_OK=1
+if [ -f highlights.tex ]; then
+    build_one highlights
+    HIGH_OK=0
+    check_one highlights "" && HIGH_OK=1 || true
+else
+    echo "  highlights.tex: skipped (not present in ZIP)"
+fi
+
+if [ "$MAIN_OK" = "1" ] && [ "$SUPP_OK" = "1" ] && [ "$HIGH_OK" = "1" ]; then
     echo "Clean-room rebuild: PASS"
     exit 0
 else
