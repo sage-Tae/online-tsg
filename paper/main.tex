@@ -330,6 +330,11 @@ If arrivals are fully sequential in the sense of Lemma~\ref{lem:lemma52}, then T
 Direct from Lemma~\ref{lem:lemma52} and the hypothesis of Theorem~\ref{thm:empty-core}.
 \end{proof}
 
+\begin{remark}[Near-complement mechanism (empirically observed)]
+\label{rem:near-complement}
+The sufficient condition $r > r^{\ast\ast}$ of Theorem~\ref{thm:empty-core} exploits only complement coalitions $N\setminus\{i\}$. Empirically, we observe instances where Theorem~\ref{thm:empty-core} is vacuous ($r\le r^{\ast\ast}$) yet the Temporal Core is nonetheless empty; in each such instance, the binding constraints in the Core LP include not only a complement coalition (size $n-1$) but also a near-complement coalition (size $n-2$) simultaneously. Section~\ref{ssec:cor16} presents quantitative evidence, and Appendix~\ref{app:restricted-lp} details the restricted-LP methodology used to certify Core emptiness at scales where enumeration of $2^n$ coalitions is infeasible. A tight sufficient condition incorporating near-complement coalitions remains open; we conjecture (Section~\ref{sec:conclusion}) that it involves balanced collections of $(n-1)$- and $(n-2)$-size coalitions.
+\end{remark}
+
 \begin{theorem}[Asymptotic tightening of $r^{\ast\ast}$]
 \label{thm:asymptotic}
 Assume customer coordinates $x_1,\ldots,x_n$ are drawn i.i.d.\ from the uniform distribution on $[0,L]^2$, with the depot placed at the origin $(0,0)$. Suppose the arrival pattern is such that $N\setminus\{i\}\in\F$ for at least one index $i$. Then
@@ -491,8 +496,15 @@ Every instance classified by Theorem~\ref{thm:empty-core} as ``empty'' is indeed
 \end{figure}
 
 \subsection{Verification of Corollary~\ref{cor:cor52}}
+\label{ssec:cor16}
 
-Partitioning the 175 instances by peak queue regime yields the following (Figure~\ref{fig:core-k}): 95 instances with $k<n-1$ all have nonempty Core, consistent with Corollary~\ref{cor:cor52}; 14 instances with $k=n-1$ also all have nonempty Core; and 47 of 66 instances with $k=n$ retain a nonempty Core. Empty Cores occur only in the $k=n$ regime---and even there, as a minority phenomenon---strongly supporting the structural bound as an organizing principle, even though Corollary~\ref{cor:cor52} does not formally exclude intermediate-coalition violations when $k<n-1$. A per-pattern breakdown across the size grid $n\in\{5,7,10,12,15\}$ is deferred to Appendix~\ref{app:aux} (Figure~\ref{fig:core-n}).
+\paragraph{Structural obstruction.} Partitioning the 175 main-study instances (NN policy) by peak queue regime yields three strata (Figure~\ref{fig:core-k}): 79 instances with $k<n-1$ all have nonempty Core ($100\%$); 16 instances with $k=n-1$ also all have nonempty Core ($100\%$); and 59 of 80 instances with $k=n$ retain a nonempty Core ($73.8\%$). The structural obstruction of Corollary~\ref{cor:cor52} holds without exception: whenever the peak queue depth stays below $n-1$, the Temporal Core is nonempty. All empty Cores occur in the saturated regime $k=n$, consistent with the requirement that at least one complement coalition $N\setminus\{i\}$ be feasible. A per-pattern breakdown across the size grid $n\in\{5,7,10,12,15\}$ is deferred to Appendix~\ref{app:aux} (Figure~\ref{fig:core-n}).
+
+\paragraph{Decomposition of empty Cores ($k=n$ regime).} Of the 21 empty-Core instances in the $k=n$ regime, Theorem~\ref{thm:empty-core} accounts for 14 via its complement-coalition certificate ($r>r^{\ast\ast}$). The remaining 7 satisfy $r\le r^{\ast\ast}$---Theorem~\ref{thm:empty-core} is vacuous---yet the Core is empty. We refer to this as the \emph{near-complement regime} (Remark~\ref{rem:near-complement}) and characterize it below.
+
+\paragraph{Near-complement mechanism (quantitative evidence).} Consider the instance (Pattern A, $n=30$, seed 123), representative of the seven near-complement cases in the main grid and of the scale-up observations in Section~\ref{ssec:scaleup}. At this instance the NN policy yields $r=1.038<r^{\ast\ast}=1.088$, so Theorem~\ref{thm:empty-core} is vacuous. However, a restricted Core LP over 10{,}000 sampled coalitions---including all singletons, all complements $N\setminus\{i\}$, and random intermediate-size subsets---is \emph{infeasible} with optimal nucleolus excess $\varepsilon^{\ast}=0.662>0$, certifying that the Temporal Core is empty. The binding constraints at the LP optimum include both size-$(n-1)$ (complement) and size-$(n-2)$ (near-complement) coalitions simultaneously, indicating that no single complement violation can certify emptiness, but the joint effect of complement and near-complement constraints does. The same pattern recurs at $n=20$ ($\varepsilon^{\ast}=0.765$) and $n=50$ ($\varepsilon^{\ast}=12.4$) for seed 123 under Pattern A, with binding sizes $\{n-2,n-1\}$ in each case. By contrast, a clean Theorem~\ref{thm:empty-core} case (Pattern A, $n=30$, seed 42, $r>r^{\ast\ast}$) binds only at size $n-1$. Appendix~\ref{app:restricted-lp} details the methodology and reports the full case studies.
+
+\paragraph{Interpretation.} Theorem~\ref{thm:empty-core} and Corollary~\ref{cor:cor52} together characterize two of three mechanisms affecting Temporal Core stability: the complement-coalition mechanism (Theorem~\ref{thm:empty-core}) and the structural obstruction at $k<n-1$ (Corollary~\ref{cor:cor52}). The remaining seven main-grid instances---and the seed-123 scaleup cases at $n\in\{20,30,50\}$---reveal a third, near-complement, mechanism (Remark~\ref{rem:near-complement}), whose analytic characterization we leave open.
 
 \begin{figure}[t]
 \centering
