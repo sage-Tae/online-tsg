@@ -19,11 +19,14 @@ numerical claims.
 | Paper location | Quantity | Value |
 |---|---|---|
 | Example 4 (Solomon C101) | TNu allocation | (16.67, 20.51, 11.27, 15.18, 16.44) |
-| Table 5 | Theorem 11 complement-coalition fires (NN, 80 applicable) | 14/14 (no false positives) |
-| Corollary 17 (§6.4) | k < n−1 Core stability rate | 79/79 (100%) |
-| Section 6.6 | Sharpness ratio r̄*/r̄** | 3.21 (4.351/1.355) |
+| Table 5 | Theorem 11 single-complement fires (NN, 96 applicable) | 37/37 (no false positives) |
+| Table 5 | Proposition 12 balanced-complement fires (NN, 80 applicable) | 57/57 (no false positives) |
+| §6.4 | Four-mechanism decomposition of 67 NN empties | 37 + 11 + 10 + 9 |
+| Corollary 17 (§6.4) | k < n−1 Core empirical nonempty rate | 70/79 (88.6%; 9 intermediate-mechanism exceptions) |
+| §6.6 | Sharpness ratio r̄*/r̄**, r̄*/r̄*** | 3.56 (4.351/1.223), 3.97 (4.351/1.096) |
 | Appendix B | Scale invariance (r relative std across α) | 0.00e+00 |
-| Appendix C | Restricted Core LP certifies seed 123 emptiness | 5/5 cases |
+| Appendix C | Near-complement cases (Table 10) | 10 |
+| Appendix C | Intermediate cases (Table 11) | 9 |
 
 ## Repository structure
 

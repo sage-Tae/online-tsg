@@ -73,7 +73,7 @@ ax.scatter(near_comp['r_ss'], near_comp['r'], s=55, alpha=0.95,
 # on this (r, r**) panel.  Annotate count.
 inter_count = len(nn[nn['empty_mechanism'] == 'intermediate'])
 ax.text(0.02, 0.98,
-        f'+{inter_count} intermediate (Obs 15) at r**=undefined; see Fig {None}',
+        f'+{inter_count} intermediate (Obs 15) at r**=undefined; see Appendix C',
         transform=ax.transAxes, fontsize=8, verticalalignment='top',
         color='#2ca02c', style='italic')
 
