@@ -6,7 +6,7 @@ Code and data for the paper:
 > Seyun Jeong (POSTECH) and Hyunchul Tae (KITECH)
 > Submitted to *European Journal of Operational Research*, 2026
 
-**Current version: v2.1.6** (major revision, April 19, 2026)
+**Current version: v2.1.7** (major revision, April 19, 2026)
 
 Version history:
 - v2.0.x — initial submission (v2.0, v2.0.1, v2.0.2, v2.0.3)
@@ -16,6 +16,7 @@ Version history:
 - v2.1.4 — reproducibility polish (augment step, seed123 CSV alignment, §6.8 Summary tone-down, version labels)
 - v2.1.5 — seed 123 scale-up alignment (Finding 4 two-tier pattern, `run_seed123_check.py` TARGETS 5 → 2, REPRODUCIBILITY labels)
 - v2.1.6 — ZIP-rebuildability fix (`\graphicspath` extended for clean-room extraction, Data-Files table `seed123_core_check.csv` 5 → 2 rows, `scripts/verify_zip_rebuild.sh` added)
+- v2.1.7 — documentation semantic-sweep consistency pass (REPRODUCIBILITY §4 heading `5 instances` → `2 instances`, README version/Reproducibility-tags/repo-tree synced, `scripts/verify_doc_consistency.sh` added)
 
 ## Overview
 
@@ -25,7 +26,7 @@ among coalitions realizable under revealed arrival dynamics. This repository
 contains all code, seeds, and raw results needed to reproduce the paper's
 numerical claims.
 
-## Key results (sanity checkpoints, v2.0)
+## Key results (sanity checkpoints, v2.1.7)
 
 | Paper location | Quantity | Value |
 |---|---|---|
@@ -52,7 +53,10 @@ numerical claims.
 │   ├── figures/       # figure generation + PDF outputs (make_figures_v3.py)
 │   └── requirements.txt
 ├── docs/              # verification artifacts
-├── figures/           # symlink → code/figures (for paper graphicspath)
+│                      # (dev-only: a `figures/` symlink to `code/figures/`
+│                      #  exists locally for the paper's graphicspath, but
+│                      #  is NOT shipped in the submission ZIP — the ZIP
+│                      #  references `code/figures/` directly)
 ├── phase1_design.md   # experimental design rationale
 ├── phase3_narrative.md # paper revision narrative
 ├── REPRODUCIBILITY.md # full reproduction guide
@@ -79,9 +83,10 @@ random seeds, and mapping between paper tables/figures and scripts.
 
 ## Reproducibility tags
 
-- `paper-submission-v1` / `v1.1` / `v1.2`: prior submission states (L = 10 coordinate convention); superseded by v2.1.2.
-- `paper-submission-v2.0` / `v2.0.1` / `v2.0.2` / `v2.0.3` / `v2.1.0` (local only): intermediate revisions under Steele N2 convention; superseded by v2.1.2.
-- `v2.1.2` (current, major revision): 4-mechanism taxonomy (single / balanced / near / intermediate complement), Proposition 12 (balanced-complement threshold via Bondareva-Shapley), Observation 15 (intermediate-coalition mechanism), and corrected feasibility family F generation per paper Definition 2 (post-hoc reconstruction rather than dispatch-iteration enumeration). Restore locally via `git checkout v2.1.2`.
+- `paper-submission-v1` / `v1.1` / `v1.2`: prior submission states (L = 10 coordinate convention); superseded by v2.1.2 and subsequent iterations.
+- `paper-submission-v2.0` / `v2.0.1` / `v2.0.2` / `v2.0.3` / `v2.1.0` (local only): intermediate revisions under Steele N2 convention; superseded by v2.1.2 and subsequent iterations.
+- `v2.1.2` / `v2.1.3` / `v2.1.4` / `v2.1.5` / `v2.1.6` (intermediate major-revision iterations): 4-mechanism taxonomy, Proposition 12, Observation 15, corrected feasibility family F, then a sequence of documentation-polish and ZIP-rebuildability fixes. See the version-history block above for per-iteration scope. Restore any locally via `git checkout <tag>`.
+- `v2.1.7` (current, major revision): documentation semantic-sweep consistency pass — `REPRODUCIBILITY.md` §4 heading corrected from `5 instances` to `2 instances` (the last residual v2.1.2-scope label), version/supersedes labels synced across README and REPRODUCIBILITY, repo-tree clarified that the top-level `figures/` symlink is dev-only (not shipped in the ZIP; the shipped paper resolves figures via `code/figures/`), and `scripts/verify_doc_consistency.sh` added so future iterations cannot silently regress on the same class of stale labels. Restore locally via `git checkout v2.1.7`.
 
 ## Citation
 
