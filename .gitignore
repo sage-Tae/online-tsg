@@ -15,6 +15,16 @@ paper/main.pdf
 paper/main.fdb_latexmk
 paper/main.fls
 paper/main.synctex.gz
+paper/supplementary.aux
+paper/supplementary.log
+paper/supplementary.bbl
+paper/supplementary.blg
+paper/supplementary.out
+paper/supplementary.toc
+paper/supplementary.pdf
+paper/supplementary.fdb_latexmk
+paper/supplementary.fls
+paper/supplementary.synctex.gz
 **/*.pyo
 .claude/
 *.bak

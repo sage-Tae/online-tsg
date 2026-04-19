@@ -80,7 +80,7 @@ The classical TSG, however, is defined under the tacit assumption that every cus
 \item[\textbf{C1.}] \emph{Model.} We define the Online TSG $(N, c, \F)$ by restricting coalitional stability constraints to the family $\F$ of proper sub-coalitions realizable under the realized arrival dynamics, with the grand coalition handled through the efficiency equality. This places the Online TSG within the taxonomy of restricted-cooperation games (Section~\ref{sec:related}) but with a novel source of restriction: $\F$ is not an exogenous graph or combinatorial structure but an endogenous random family induced by the arrival-service process. We introduce the Temporal Nucleolus as the lexicographic minimizer of excess over this time-induced restricted family. The classical static TSG is recovered as the special case where arrivals collapse to a single instant and the realized tour is optimal (Theorem~\ref{thm:static-equiv}).
 \item[\textbf{C2.}] \emph{Core theory under dynamics.} We provide two complementary sufficient conditions for empty Core: Theorem~\ref{thm:empty-core} ($r>r^{\ast\ast}$, single-complement) and Proposition~\ref{prop:bondareva-complement} ($r>r^{\ast\ast\ast}$, balanced-complement via Bondareva--Shapley on the collection of all complements). Corollary~\ref{cor:cor52} provides a structural obstruction: a bounded peak queue $k=\max_t|U_t|<n-1$ blocks both complement-based mechanisms. Together these delineate the regimes in which complement-coalition instability arises. Two residual mechanisms remain empirically active: a near-complement mechanism (Remark~\ref{rem:near-complement}) mixing $(n-1)$- and $(n-2)$-coalitions, and an intermediate-coalition mechanism (Observation~\ref{obs:intermediate}) operating at $k<n-1$ with binding on intermediate-size coalitions; analytic characterizations of both are left open.
 \item[\textbf{C3.}] \emph{Asymptotic refinement.} Under uniform coordinate sampling, $r^{\ast\ast}\to 1$ at rate $O(n^{-1/2})$ almost surely (Theorem~\ref{thm:asymptotic}); this explains the empirical smallness of $r^{\ast\ast}$ without reference to specific simulation parameters and ties the cooperative-game threshold to the classical Beardwood--Halton--Hammersley $\sqrt{n}$ scaling of the Euclidean TSP.
-\item[\textbf{C4.}] \emph{Empirical calibration.} On 175 simulated instances across five coalition sizes and seven arrival patterns under three dispatch policies (525 policy-instance pairs), plus 45 scale-up instances up to $n=50$ and a 24-instance scale-invariance study (Appendix~\ref{app:scale-invariance}), we verify every theoretical claim. Under NN dispatch, Theorem~\ref{thm:empty-core} fires in 37 instances (all observed empty) and Proposition~\ref{prop:bondareva-complement} adds 11 balanced-complement certifications; a further 10 near-complement and 9 intermediate-coalition empty Cores complete the 67 observed empties. No false positives arise under any policy. The mean thresholds ($\bar r^{\ast\ast}=1.223$, $\bar r^{\ast\ast\ast}=1.096$) are sharper than the classical bound ($\bar r^{\ast}=4.351$) by factors of $3.56$ and $3.97$. Corollary~\ref{cor:cor52} holds analytically without exception: no instance with $k<n-1$ satisfies either threshold; the 9 intermediate-coalition empties all lie at $k<n-1$ under NN and vanish under cheapest-insertion and batch-reoptimization. The asymptotic decay $r^{\ast\ast}\to 1$ is consistent with Theorem~\ref{thm:asymptotic}'s $O(n^{-1/2})$ rate on the scale-up grid.
+\item[\textbf{C4.}] \emph{Empirical calibration.} On 175 simulated instances across five coalition sizes and seven arrival patterns under three dispatch policies (525 policy-instance pairs), plus 45 scale-up instances up to $n=50$ and a 24-instance scale-invariance study (Supplementary Materials, \S S2), we verify every theoretical claim. Under NN dispatch, Theorem~\ref{thm:empty-core} fires in 37 instances (all observed empty) and Proposition~\ref{prop:bondareva-complement} adds 11 balanced-complement certifications; a further 10 near-complement and 9 intermediate-coalition empty Cores complete the 67 observed empties. No false positives arise under any policy. The mean thresholds ($\bar r^{\ast\ast}=1.223$, $\bar r^{\ast\ast\ast}=1.096$) are sharper than the classical bound ($\bar r^{\ast}=4.351$) by factors of $3.56$ and $3.97$. Corollary~\ref{cor:cor52} holds analytically without exception: no instance with $k<n-1$ satisfies either threshold; the 9 intermediate-coalition empties all lie at $k<n-1$ under NN and vanish under cheapest-insertion and batch-reoptimization. The asymptotic decay $r^{\ast\ast}\to 1$ is consistent with Theorem~\ref{thm:asymptotic}'s $O(n^{-1/2})$ rate on the scale-up grid.
 \end{itemize}
 
 \paragraph{Practical implication.} In operational terms, our results say that a bounded peak queue $k<n-1$---achievable via short service-time promises---eliminates all complement-coalition empty-Core mechanisms (Theorem~\ref{thm:empty-core} and Proposition~\ref{prop:bondareva-complement}). This covers the pathological ``morning batch'' regime where many orders sit simultaneously in the queue. In the shallow-queue regime, however, the intermediate-coalition mechanism of Observation~\ref{obs:intermediate} remains active and can empty the Core when the realized online competitive ratio is large. This mechanism is policy-sensitive: it was observed only under nearest-neighbor dispatch in our experiments and vanishes under cheapest-insertion or batch re-optimization (Section~\ref{ssec:policy}). Jointly, our findings suggest that short service windows together with moderately-informed dispatch policies are sufficient to preserve Core stability.
@@ -90,19 +90,13 @@ The classical TSG, however, is defined under the tacit assumption that every cus
 \section{Related Work}
 \label{sec:related}
 
-We organize prior work along four streams and state, for each, the precise point of departure of our contribution.
+We organize prior work along three streams and state, for each, the precise point of departure of our contribution.
 
-\subsection{Static Traveling Salesman and Vehicle Routing Games}
-The cooperative TSP was initiated by \citet{potters1992tsg} with a characteristic function equal to the optimal TSP tour cost on the chosen coalition. \citet{tamir1989core} showed that the Core may be empty even on the Euclidean line, and the gap between fair and feasible allocations was quantified via approximation in \citet{faigle1998approximate} and \citet{blaser2008metric}. In parallel the Vehicle Routing Game (VRG) received a Nucleolus-based treatment by \citet{gothe1996vrg}, extended to heterogeneous fleets by \citet{engevall2004heterogeneous} and to time-window settings by \citet{tae2020vrgtw} and \citet{arroyo2024vrptw}. The Shapley value formulation of cooperative TSP under rolling horizons is treated by \citet{kimms2016rolling}, and a core-based variant by \citet{kimms2016core}. A broad survey is given by \citet{guajardo2016review}. \emph{Departure.} Every cited study defines coalitions over the full customer set $2^N$: coalition identity is assumed known \emph{a priori}. We replace $2^N$ with the data-dependent family $\F$ of coalitions realizable under the online arrival process.
+\subsection{Cooperative Routing Games: Static, Dynamic, and Rolling-Horizon}
+The cooperative TSP was initiated by \citet{potters1992tsg} with a characteristic function equal to the optimal TSP tour cost on the chosen coalition. \citet{tamir1989core} showed that the Core may be empty even on the Euclidean line, and the gap between fair and feasible allocations was quantified via approximation in \citet{faigle1998approximate} and \citet{blaser2008metric}. In parallel the Vehicle Routing Game (VRG) received a Nucleolus-based treatment by \citet{gothe1996vrg}, extended to heterogeneous fleets by \citet{engevall2004heterogeneous} and to time-window settings by \citet{tae2020vrgtw} and \citet{arroyo2024vrptw}. The Shapley value formulation of cooperative TSP under rolling horizons is treated by \citet{kimms2016rolling}, and a core-based variant by \citet{kimms2016core}; a broad survey is given by \citet{guajardo2016review}. On the temporal side, \citet{kranich2005dynamic} proposed Core concepts for TU games played over discrete time, \citet{habis2010weak} defined the weak sequential Core to accommodate renegotiation, and \citet{lehrer2013dynamic} studied how the Core evolves as information unfolds. \emph{Departure.} Every cited study either defines coalitions over the full customer set $2^N$ (so coalition identity is assumed known \emph{a priori}) or abstracts away the physical routing cost structure, describing coalitions combinatorially with exogenous values $v(S,t)$. We replace $2^N$ with the data-dependent family $\F$ of coalitions realizable under the online arrival process while retaining the metric TSP cost $c(S)$, so temporality enters through the \emph{admissibility} of coalitions and couples the game to the dispatch policy.
 
-\subsection{Dynamic and Rolling-Horizon Cooperative Games}
-\citet{kranich2005dynamic} proposed Core concepts for TU games played over discrete time. \citet{habis2010weak} defined the weak sequential Core to accommodate renegotiation, and \citet{lehrer2013dynamic} studied how the Core evolves as information unfolds. \citet{kimms2016rolling} applied rolling horizons to cooperative TSP, redistributing cost as new customers enter. \emph{Departure.} These works abstract away the physical routing cost structure: coalitions are described combinatorially with exogenous values $v(S,t)$. In contrast we retain the metric TSP cost $c(S)$ and let temporality enter through the \emph{admissibility} of coalitions, which couples the game to the dispatch policy.
-
-\subsection{Online Cooperative Games}
-\citet{bullinger2023online} studied online coalition formation under random arrival and dissolution. \citet{ge2024incentives} and \citet{zhang2025incentives} designed incentives for early arrival in online cost-sharing settings. \citet{aziz2025participation} characterized participation incentives for players entering over time. \citet{goyal2025temporal} introduce Temporal Cooperative Games, in which the characteristic function is indexed by time. \emph{Departure.} These models differ from ours in two respects. First, \citet{bullinger2023online} formalize coalition \emph{formation} (which players group with whom) rather than cost sharing within a fixed grand coalition, so their stability concepts and ours address distinct strategic problems. Second, and common to the whole stream, none of these models equip the online coalition process with a TSP or routing cost structure; the inequalities that define our Temporal Core reflect exactly the geometric interactions among customers in the plane, allowing the sharp thresholds $r^{\ast\ast}$ and structural bound $k<n-1$ established in Section~\ref{sec:theory}.
-
-\subsection{Nucleolus Computation}
-\citet{schmeidler1969nucleolus} introduced the Nucleolus as the lexicographic minimizer of the excess vector. The sequential-LP approach that we adopt descends from Kohlberg's algorithm and its careful modernization by \citet{guajardo2015nucleolus}, with further scaling to large games by \citet{nguyen2016large}. Nucleolus-based ridesharing is treated in \citet{lu2019ridesharing}, and Nucleolus computation for the VRG with time windows (VRPTW) in \citet{tae2020vrgtw}. \emph{Departure.} Our LP cascade is defined over $\F$ rather than $2^N\setminus\{\emptyset\}$: in sequential arrival regimes this can reduce the per-LP constraint count by more than an order of magnitude (Section~\ref{sec:experiments}), keeping the method computationally viable for realistic problem sizes.
+\subsection{Online Cooperative Games and Nucleolus Computation}
+\citet{bullinger2023online} studied online coalition formation under random arrival and dissolution. \citet{ge2024incentives} and \citet{zhang2025incentives} designed incentives for early arrival in online cost-sharing settings. \citet{aziz2025participation} characterized participation incentives for players entering over time. \citet{goyal2025temporal} introduce Temporal Cooperative Games, in which the characteristic function is indexed by time. On the algorithmic side, \citet{schmeidler1969nucleolus} introduced the Nucleolus as the lexicographic minimizer of the excess vector; the sequential-LP approach that we adopt descends from Kohlberg's algorithm and its modernization by \citet{guajardo2015nucleolus}, with further scaling to large games by \citet{nguyen2016large}, Nucleolus-based ridesharing in \citet{lu2019ridesharing}, and Nucleolus computation for the VRG with time windows (VRPTW) in \citet{tae2020vrgtw}. \emph{Departure.} The online-game literature differs from ours in two respects. First, \citet{bullinger2023online} formalize coalition \emph{formation} (which players group with whom) rather than cost sharing within a fixed grand coalition, so their stability concepts and ours address distinct strategic problems. Second, and common to the whole stream, none of these models equip the online coalition process with a TSP or routing cost structure; the inequalities that define our Temporal Core reflect exactly the geometric interactions among customers in the plane, allowing the sharp thresholds $r^{\ast\ast}$ and structural bound $k<n-1$ established in Section~\ref{sec:theory}. On the algorithmic side, our LP cascade is defined over $\F$ rather than $2^N\setminus\{\emptyset\}$: in sequential arrival regimes this can reduce the per-LP constraint count by more than an order of magnitude (Section~\ref{sec:experiments}).
 
 \subsection{Restricted Cooperation Games}
 
@@ -358,7 +352,7 @@ Direct from Lemma~\ref{lem:lemma52} and the hypothesis of Theorem~\ref{thm:empty
 
 \begin{remark}[Near-complement mechanism (empirically observed)]
 \label{rem:near-complement}
-Theorem~\ref{thm:empty-core} and Proposition~\ref{prop:bondareva-complement} together cover the single-complement and balanced-complement mechanisms, i.e.\ empty Cores certifiable through coalitions of size $n-1$ alone. Beyond these, we observe main-grid instances (10 of 175 under the NN policy) where the Temporal Core is empty, both thresholds are vacuous ($r\le r^{\ast\ast}$ and $r\le r^{\ast\ast\ast}$), and the binding constraints in the Core LP mix size-$(n-1)$ and size-$(n-2)$ coalitions simultaneously---neither family alone certifies emptiness, but their joint action does. Quantitative evidence appears in Section~\ref{ssec:cor16}; Appendix~\ref{app:restricted-lp} gives the restricted-LP methodology for certifying Core emptiness at scales where $2^n$ enumeration is infeasible. A tight sufficient condition for this near-complement mechanism remains open; a natural candidate is a Bondareva--Shapley-style balanced collection mixing size-$(n-1)$ and size-$(n-2)$ coalitions (Section~\ref{sec:conclusion}).
+Theorem~\ref{thm:empty-core} and Proposition~\ref{prop:bondareva-complement} together cover the single-complement and balanced-complement mechanisms, i.e.\ empty Cores certifiable through coalitions of size $n-1$ alone. Beyond these, we observe main-grid instances (10 of 175 under the NN policy) where the Temporal Core is empty, both thresholds are vacuous ($r\le r^{\ast\ast}$ and $r\le r^{\ast\ast\ast}$), and the binding constraints in the Core LP mix size-$(n-1)$ and size-$(n-2)$ coalitions simultaneously---neither family alone certifies emptiness, but their joint action does. Quantitative evidence appears in Section~\ref{ssec:cor16}; Supplementary Materials \S S3 gives the restricted-LP methodology for certifying Core emptiness at scales where $2^n$ enumeration is infeasible. A tight sufficient condition for this near-complement mechanism remains open; a natural candidate is a Bondareva--Shapley-style balanced collection mixing size-$(n-1)$ and size-$(n-2)$ coalitions (Section~\ref{sec:conclusion}).
 \end{remark}
 
 \begin{observation}[Intermediate-coalition mechanism]
@@ -460,7 +454,7 @@ We report a computational study whose purpose is to (i) verify that the theoreti
 \[
   \rho \;=\; \frac{L/v}{\tau} \;=\; \frac{\text{characteristic travel time}}{\text{mean inter-arrival interval}},
 \]
-where $\tau$ is the mean inter-arrival interval of a given pattern. All theoretical bounds and empirical statistics depend on $(n,\rho)$ alone; the joint rescaling $(L,v,\tau)\to(\alpha L,\alpha v,\alpha\tau)$ for any $\alpha>0$ leaves all observables invariant. We verify this invariance empirically to machine precision in Appendix~\ref{app:scale-invariance}.
+where $\tau$ is the mean inter-arrival interval of a given pattern. All theoretical bounds and empirical statistics depend on $(n,\rho)$ alone; the joint rescaling $(L,v,\tau)\to(\alpha L,\alpha v,\alpha\tau)$ for any $\alpha>0$ leaves all observables invariant. We verify this invariance empirically to machine precision in Supplementary Materials \S S2.
 
 \paragraph{Arrival patterns.} Seven arrival patterns span the $\rho$-spectrum:
 \begin{itemize}
@@ -542,9 +536,9 @@ Every instance classified by any of the four mechanisms as ``empty'' is indeed e
   \item $k=n-1$: 16 instances, $16$ Core nonempty ($100\%$).
   \item $k=n$:   80 instances, $22$ Core nonempty ($27.5\%$).
 \end{itemize}
-A per-pattern breakdown across $n\in\{5,7,10,12,15\}$ appears in Appendix~\ref{app:aux} (Figure~\ref{fig:core-n}).
+A per-pattern breakdown across $n\in\{5,7,10,12,15\}$ appears in Supplementary Materials \S S1 (Supplementary Figure~S1).
 
-\paragraph{Nine empty Cores at $k<n-1$: intermediate-coalition mechanism.} The 9 empty-Core instances in the $k<n-1$ regime are all certified by the intermediate-coalition mechanism of Observation~\ref{obs:intermediate}. All 9 lie in $\text{B}_{\text{medium}}$ (7 cases) or E (2 cases), have $k$ between $n-5$ and $n-2$, and realize $r\in[1.33,1.61]$. Since both Theorem~\ref{thm:empty-core} and Proposition~\ref{prop:bondareva-complement} are vacuous in the $k<n-1$ regime, the 9 cases constitute direct evidence of a third mechanism operating outside the complement-coalition framework. Table~\ref{tab:intermediate} summarises these instances; full binding-size distributions are deferred to Appendix~\ref{app:restricted-lp}.
+\paragraph{Nine empty Cores at $k<n-1$: intermediate-coalition mechanism.} The 9 empty-Core instances in the $k<n-1$ regime are all certified by the intermediate-coalition mechanism of Observation~\ref{obs:intermediate}. All 9 lie in $\text{B}_{\text{medium}}$ (7 cases) or E (2 cases), have $k$ between $n-5$ and $n-2$, and realize $r\in[1.33,1.61]$. Since both Theorem~\ref{thm:empty-core} and Proposition~\ref{prop:bondareva-complement} are vacuous in the $k<n-1$ regime, the 9 cases constitute direct evidence of a third mechanism operating outside the complement-coalition framework. Table~\ref{tab:intermediate} summarises these instances; full binding-size distributions are deferred to Supplementary Materials \S S3.
 
 \begin{table}[h]
 \centering
@@ -670,11 +664,11 @@ Applicability counts are nearly identical across policies: Theorem~\ref{thm:empt
 
 Our main study at $n\le 15$ is capped by the $O(n^2 2^n)$ cost of Held--Karp. To test whether the theoretical and empirical findings of the preceding subsections persist at larger scales, we extend the study to $n\in\{20,30,50\}$ for three representative patterns---A ($\rho=\infty$, simultaneous), $\text{B}_{\text{medium}}$ ($\rho=2$, sequential), and C ($\rho=2$, clustered)---spanning the Core-fragile, Core-safe, and intermediate regimes. Each cell uses 5 seeds, giving 45 scale-up instances with NN dispatch.
 
-\paragraph{Solver and calibration.} For $n\le 20$ we use exact Held--Karp (pure distance); for $n>20$ we use the LKH heuristic of \citet{helsgaun2000effective} via the \texttt{elkai} Python wrapper. Calibration against Held--Karp on 15 instances at $n=15$ yielded a relative error of $0.000\%$ in every case, so at this scale LKH is effectively exact for our pure-distance $c^{\ast}(S)$.
+\paragraph{Solver and calibration.} For $n\le 20$ we use exact Held--Karp (pure distance); for $n>20$ we use the LKH heuristic of \citet{helsgaun2000effective} via the \texttt{elkai} Python wrapper. Calibration against Held--Karp on 15 instances at $n=15$ yielded a relative error of $0.000\%$ in every case, so at this scale LKH is effectively exact for our pure-distance $c^{\ast}(S)$. Where the full Core LP is intractable to enumerate (pattern A at $n\ge 30$), we use a \emph{restricted} Core LP over a sample $\mathcal{S}\subseteq\F$ consisting of all singletons, all feasible complements $N\setminus\{i\}$, the grand coalition, and $10{,}000$ randomly sampled intermediate-size coalitions. A strictly positive first-stage LP optimum certifies Core emptiness on the sample, a one-sided certificate for the full Temporal Core (it cannot conclude nonemptiness). Full methodology and the near-complement / intermediate-coalition case tables are in Supplementary Materials \S S3.
 
 \begin{table}[t]
 \centering
-\caption{Scale-up aggregate statistics (5 seeds each). Em-dashes in $\bar r^{\ast\ast}$ indicate no feasible complement coalition (Theorem~\ref{thm:empty-core} vacuous). For pattern A with $n\ge 30$ the Core LP is intractable to enumerate, since $|\F|=2^n-1$; emptiness there is certified a priori by Theorem~\ref{thm:empty-core} for the 4 of 5 seeds at $n=30$ and 5 of 5 at $n=50$ where $r>r^{\ast\ast}$, and by a restricted Core LP (Appendix~\ref{app:restricted-lp}) for the one seed at $n=30$ where $r\le r^{\ast\ast}$.}
+\caption{Scale-up aggregate statistics (5 seeds each). Em-dashes in $\bar r^{\ast\ast}$ indicate no feasible complement coalition (Theorem~\ref{thm:empty-core} vacuous). For pattern A with $n\ge 30$ the Core LP is intractable to enumerate, since $|\F|=2^n-1$; emptiness there is certified a priori by Theorem~\ref{thm:empty-core} for the 4 of 5 seeds at $n=30$ and 5 of 5 at $n=50$ where $r>r^{\ast\ast}$, and by a restricted Core LP (Supplementary Materials \S S3) for the one seed at $n=30$ where $r\le r^{\ast\ast}$.}
 \label{tab:scaleup}
 \small
 \begin{tabular}{@{}lccccc@{}}
@@ -695,7 +689,7 @@ C                          & 50 & 0 / 5 & 1.282 & 1.068 & 50.0 \\
 \bottomrule
 \end{tabular}
 
-{\footnotesize $^{\dagger}$ Core LP not enumerated at this scale; Theorem~\ref{thm:empty-core} fires in $4/5$ seeds at $n=30$ and $5/5$ at $n=50$; the one non-firing seed at $n=30$ (seed 123) is certified by a restricted Core LP (Appendix~\ref{app:restricted-lp}). $^{\ddagger}$ At $n=20$, Theorem~\ref{thm:empty-core} is vacuous ($r\le r^{\ast\ast}$) at seeds 99 and 123 and fires at seeds 7, 42, 256; at $n=30$, it is vacuous at seed 123 only. Core emptiness for the vacuous seeds is certified by the near-complement mechanism (Remark~\ref{rem:near-complement}, Section~\ref{ssec:cor16}). At $n>15$ the Core-existence judgment is made via the restricted LP of Appendix~\ref{app:restricted-lp} rather than full $2^n-1$ enumeration; the absence of an observed violation in the sampled LP (e.g.\ all $\text{B}_{\text{medium}}$ rows) does not constitute a proof of full Core nonemptiness.}
+{\footnotesize $^{\dagger}$ Core LP not enumerated at this scale; Theorem~\ref{thm:empty-core} fires in $4/5$ seeds at $n=30$ and $5/5$ at $n=50$; the one non-firing seed at $n=30$ (seed 123) is certified by a restricted Core LP (Supplementary Materials \S S3). $^{\ddagger}$ At $n=20$, Theorem~\ref{thm:empty-core} is vacuous ($r\le r^{\ast\ast}$) at seeds 99 and 123 and fires at seeds 7, 42, 256; at $n=30$, it is vacuous at seed 123 only. Core emptiness for the vacuous seeds is certified by the near-complement mechanism (Remark~\ref{rem:near-complement}, Section~\ref{ssec:cor16}). At $n>15$ the Core-existence judgment is made via the restricted LP of Supplementary Materials \S S3 rather than full $2^n-1$ enumeration; the absence of an observed violation in the sampled LP (e.g.\ all $\text{B}_{\text{medium}}$ rows) does not constitute a proof of full Core nonemptiness.}
 \end{table}
 
 Four findings emerge.
@@ -708,12 +702,12 @@ Four findings emerge.
 
 \paragraph{Finding 4: Near-complement mechanism at seed 123 across scales.} Seed 123 under Pattern~A exhibits a two-tier certification pattern consistent with Theorem~\ref{thm:asymptotic}'s $O(n^{-1/2})$ tightening of $\bar r^{\ast\ast}$:
 \begin{itemize}
-  \item \emph{At $n=20$ and $n=30$}, Theorem~\ref{thm:empty-core} is vacuous ($r=1.077<r^{\ast\ast}=1.112$ and $r=1.038<r^{\ast\ast}=1.088$ respectively). A restricted Core LP over $10{,}000$ sampled coalitions certifies Core emptiness with binding constraints concentrated at sizes $n-1$ and $n-2$ simultaneously, consistent with the near-complement mechanism of Remark~\ref{rem:near-complement}. These two cases constitute the Appendix~\ref{app:restricted-lp} case study.
+  \item \emph{At $n=20$ and $n=30$}, Theorem~\ref{thm:empty-core} is vacuous ($r=1.077<r^{\ast\ast}=1.112$ and $r=1.038<r^{\ast\ast}=1.088$ respectively). A restricted Core LP over $10{,}000$ sampled coalitions certifies Core emptiness with binding constraints concentrated at sizes $n-1$ and $n-2$ simultaneously, consistent with the near-complement mechanism of Remark~\ref{rem:near-complement}. These two cases constitute the Supplementary Materials \S S3 case study.
   \item \emph{At $n=50$}, Theorem~\ref{thm:empty-core} directly fires ($r=1.306>r^{\ast\ast}=1.081$), analytically certifying Core emptiness without requiring restricted-LP evidence. The threshold $r^{\ast\ast}$ at $n=50$ is small enough (by Theorem~\ref{thm:asymptotic}'s decay) that the realized competitive ratio clears it, so the analytic certificate takes over and the near-complement auxiliary no longer needs to be invoked.
 \end{itemize}
 By contrast, a clean Theorem-\ref{thm:empty-core}-fires instance at smaller scale (Pattern A, $n=30$, seed 42) binds only at size $n-1$ (Section~\ref{ssec:cor16}). This transition from restricted-LP certification at the smaller seed-123 scales ($n=20,30$) to analytical certification at $n=50$ is the natural consequence of $r^{\ast\ast}\to 1$; seed 123 is not itself anomalous in the asymptotic limit, only uncovered by Theorem~\ref{thm:empty-core} at finite $n$ below the transition.
 
-\paragraph{Intractability of pattern A at $n\ge 30$.} For pattern A, $|\F| = 2^n-1$, so the Core LP has $\sim\!10^9$ and $\sim\!10^{15}$ constraints at $n=30$ and $n=50$ respectively, well beyond enumeration. Theorem~\ref{thm:empty-core} nevertheless certifies Core emptiness \emph{a priori} in $12$ of the $15$ seed--size combinations: every complement coalition is feasible, so $r^{\ast\ast}$ is well-defined, and numerically $r>r^{\ast\ast}$ holds in $3/5$ seeds at $n=20$, $4/5$ at $n=30$, and $5/5$ at $n=50$ (Table~\ref{tab:scaleup}). The three exceptions---seeds 99 and 123 at $n=20$, and seed 123 at $n=30$---have $r\le r^{\ast\ast}$; for these the restricted Core LP of Appendix~\ref{app:restricted-lp} certifies emptiness (Finding~4 above). The intractability of pattern A therefore itself \emph{demonstrates} the $k<n-1$ versus $k=n$ divide identified in Corollary~\ref{cor:cor52}: the regime where the Core LP becomes infeasible to enumerate is precisely the regime where Theorem~\ref{thm:empty-core}---supplemented by the near-complement certificate at the few exceptional seeds---can certify emptiness without enumeration.
+\paragraph{Intractability of pattern A at $n\ge 30$.} For pattern A, $|\F| = 2^n-1$, so the Core LP has $\sim\!10^9$ and $\sim\!10^{15}$ constraints at $n=30$ and $n=50$ respectively, well beyond enumeration. Theorem~\ref{thm:empty-core} nevertheless certifies Core emptiness \emph{a priori} in $12$ of the $15$ seed--size combinations: every complement coalition is feasible, so $r^{\ast\ast}$ is well-defined, and numerically $r>r^{\ast\ast}$ holds in $3/5$ seeds at $n=20$, $4/5$ at $n=30$, and $5/5$ at $n=50$ (Table~\ref{tab:scaleup}). The three exceptions---seeds 99 and 123 at $n=20$, and seed 123 at $n=30$---have $r\le r^{\ast\ast}$; for these the restricted Core LP of Supplementary Materials \S S3 certifies emptiness (Finding~4 above). The intractability of pattern A therefore itself \emph{demonstrates} the $k<n-1$ versus $k=n$ divide identified in Corollary~\ref{cor:cor52}: the regime where the Core LP becomes infeasible to enumerate is precisely the regime where Theorem~\ref{thm:empty-core}---supplemented by the near-complement certificate at the few exceptional seeds---can certify emptiness without enumeration.
 
 \paragraph{Summary.} The qualitative findings of the earlier subsections persist up to $n=50$, with one refinement: the tail of Core-empty clustered instances at $n=15$ expands to near-certain Core emptiness by $n=20$ because $r^{\ast\ast}$ tightens with $n$ (Theorem~\ref{thm:asymptotic}). Corollary~\ref{cor:cor52}'s structural safeguard, in contrast, only strengthens with $n$: across every scale-up cell, $\bar k<n-1$ analytically rules out both complement-based mechanisms (Theorem~\ref{thm:empty-core} and Proposition~\ref{prop:bondareva-complement}), and no Core violation is observed in our sampled restricted LP even at $\bar r$ as high as $1.39$ at $n=50$ for $\text{B}_{\text{medium}}$. The absence of violation in the sampled LP does not constitute a full-$\F$ proof of Core nonemptiness (cf.\ the restricted-LP caveat in \S\ref{sec:conclusion}(ii)), but it is consistent with the main-grid observation that intermediate-coalition empty Cores vanish under cheapest-insertion and batch re-optimization (\S\ref{ssec:policy}).
 
@@ -728,7 +722,7 @@ We introduced the Online Traveling Salesman Game, in which coalitions are restri
 
 \emph{(i) Dispatch policy.} Theorems~\ref{thm:empty-core} and~\ref{thm:core-inheritance} and Corollary~\ref{cor:cor52} use only the realized tuple $(r, \F, k)$ and are therefore policy-independent in their statements. Section~\ref{ssec:policy} extends the empirical study to cheapest-insertion and batch re-optimization policies: the qualitative conclusions---Theorem~\ref{thm:empty-core}'s direction of implication and Corollary~\ref{cor:cor52}'s structural obstruction---are preserved, while the absolute value of $\bar r$ varies by policy as expected. Extending to learning-based or forecasting-aware dispatch policies remains open.
 
-\emph{(ii) Instance scale.} Section~\ref{ssec:scaleup} extends the study to $n\in\{20,30,50\}$ for patterns A, $\text{B}_{\text{medium}}$, and C, using LKH \citep{helsgaun2000effective} for $c^{\ast}(S)$ at $n>20$ with calibration error $\eta=0.000\%$ on $n=15$ pure-distance benchmarks. Four findings emerge: $\bar r^{\ast\ast}$ decays as $O(n^{-1/2})$ (Theorem~\ref{thm:asymptotic}); pattern C undergoes a phase transition between $n=15$ and $n=20$ as $\bar r$ overtakes $\bar r^{\ast\ast}$; pattern $\text{B}_{\text{medium}}$ avoids the complement-coalition empty-Core mechanism at every scale as its queue stays shallow ($\bar k<n-1$ throughout), and no Core violation is observed in our sampled LP; and the near-complement mechanism (Remark~\ref{rem:near-complement}) certifies seed 123 emptiness at $n=20,30$ via the restricted LP of Appendix~\ref{app:restricted-lp}, while at $n=50$ Theorem~\ref{thm:empty-core} directly fires and analytically covers the same instance---a two-tier pattern consistent with $\bar r^{\ast\ast}\to 1$ from Theorem~\ref{thm:asymptotic}. Pattern A is Core-LP intractable for $n\ge 30$ because $|\F| = 2^n - 1$ there; emptiness is nevertheless certified \emph{a priori} by Theorem~\ref{thm:empty-core} (12 of 15 seed--size combinations) and by a restricted Core LP (Appendix~\ref{app:restricted-lp}) for the three exceptions (seeds 99 and 123 at $n=20$, and seed 123 at $n=30$). At $n>15$ the Core-existence judgment is based on the restricted LP of Appendix~\ref{app:restricted-lp} rather than full $2^n-1$ enumeration, which limits the strength of the $\text{B}_{\text{medium}}$ nonemptiness claim: absence of an observed violation in the sampled LP does not constitute a proof of full Core nonemptiness. Extending to $n\ge 100$, to non-uniform geometries, to explicit heavy-tailed queueing models, and to full-$\F$ Core certification at scale-up remains for future work.
+\emph{(ii) Instance scale.} Section~\ref{ssec:scaleup} extends the study to $n\in\{20,30,50\}$ for patterns A, $\text{B}_{\text{medium}}$, and C, using LKH \citep{helsgaun2000effective} for $c^{\ast}(S)$ at $n>20$ with calibration error $\eta=0.000\%$ on $n=15$ pure-distance benchmarks. Four findings emerge: $\bar r^{\ast\ast}$ decays as $O(n^{-1/2})$ (Theorem~\ref{thm:asymptotic}); pattern C undergoes a phase transition between $n=15$ and $n=20$ as $\bar r$ overtakes $\bar r^{\ast\ast}$; pattern $\text{B}_{\text{medium}}$ avoids the complement-coalition empty-Core mechanism at every scale as its queue stays shallow ($\bar k<n-1$ throughout), and no Core violation is observed in our sampled LP; and the near-complement mechanism (Remark~\ref{rem:near-complement}) certifies seed 123 emptiness at $n=20,30$ via the restricted LP of Supplementary Materials \S S3, while at $n=50$ Theorem~\ref{thm:empty-core} directly fires and analytically covers the same instance---a two-tier pattern consistent with $\bar r^{\ast\ast}\to 1$ from Theorem~\ref{thm:asymptotic}. Pattern A is Core-LP intractable for $n\ge 30$ because $|\F| = 2^n - 1$ there; emptiness is nevertheless certified \emph{a priori} by Theorem~\ref{thm:empty-core} (12 of 15 seed--size combinations) and by a restricted Core LP (Supplementary Materials \S S3) for the three exceptions (seeds 99 and 123 at $n=20$, and seed 123 at $n=30$). At $n>15$ the Core-existence judgment is based on the restricted LP of Supplementary Materials \S S3 rather than full $2^n-1$ enumeration, which limits the strength of the $\text{B}_{\text{medium}}$ nonemptiness claim: absence of an observed violation in the sampled LP does not constitute a proof of full Core nonemptiness. Extending to $n\ge 100$, to non-uniform geometries, to explicit heavy-tailed queueing models, and to full-$\F$ Core certification at scale-up remains for future work.
 
 \emph{(iii) Near-complement mechanism.} Remark~\ref{rem:near-complement} documents 10 main-grid NN instances where Core emptiness is certified only by the combined effect of $(n-1)$- and $(n-2)$-size binding constraints, with neither Theorem~\ref{thm:empty-core} nor Proposition~\ref{prop:bondareva-complement} firing. A tight sufficient condition is open; we conjecture it involves balanced collections (in the sense of \citealp{shapley1971core}) mixing size-$(n-1)$ and size-$(n-2)$ coalitions, extending the single- and balanced-complement arguments of Theorem~\ref{thm:empty-core} and Proposition~\ref{prop:bondareva-complement}.
 
@@ -748,153 +742,8 @@ The authors declare no competing financial interests or personal relationships t
 \section*{Data and code availability}
 All code, random seeds, and raw CSV results used in the computational study (Sections~\ref{sec:experiments} and~\ref{ssec:scaleup}) are available at \url{https://github.com/sage-Tae/online-tsg}. The repository contains the Held--Karp and LKH implementations, the dispatch-policy simulators for nearest-neighbor, cheapest-insertion, and batch re-optimization, and the Temporal Nucleolus LP solver, along with scripts reproducing all tables and figures in this paper.
 
+\setlength{\bibsep}{0pt plus 0.3ex}
 \bibliographystyle{plainnat}
 \bibliography{references}
-
-\appendix
-\section{Auxiliary plots}
-\label{app:aux}
-
-Figure~\ref{fig:core-n} breaks down the aggregate Core-existence rates of Section~\ref{sec:experiments} by arrival pattern and coalition size $n$. Patterns $\text{B}_{\text{medium}}$, $\text{B}_{\text{light}}$, D, and E retain $100\%$ Core existence across all $n\in\{5,7,10,12,15\}$. Pattern $\text{B}_{\text{heavy}}$ is at $100\%$ for $n\le 10$ and drops to $80\%$ at $n\in\{12,15\}$; the clustered pattern C dips to $80\%$ at $n=10$ and $60\%$ at $n=12$ before recovering to $100\%$ at $n=15$. Simultaneous arrivals (A) collapse from $60\%$ at $n=5$ to $0\%$ at $n=15$. Figure~\ref{fig:core-k} in the main text summarizes this by peak-queue regime $k$.
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.75\textwidth]{fig3_core_vs_n.pdf}
-\caption{Core-existence rate versus coalition size $n$, broken down by arrival pattern. Patterns $\text{B}_{\text{medium}}$, $\text{B}_{\text{light}}$, D, and E overlap at $1.00$ across the grid. $\text{B}_{\text{heavy}}$ remains at $1.00$ for $n\le 10$ and drops to $0.80$ at $n\in\{12,15\}$; C dips to $0.80$--$0.60$ at $n\in\{10,12\}$ before recovering; simultaneous arrivals (A) collapse to $0\%$ at $n=15$.}
-\label{fig:core-n}
-\end{figure}
-
-\section{Scale invariance: empirical verification}
-\label{app:scale-invariance}
-
-This appendix verifies empirically the scale invariance stated in Section~\ref{ssec:design}: that all dimensionless observables are invariant under the joint rescaling $(L, v, \tau) \to (\alpha L, \alpha v, \alpha \tau)$ for any $\alpha > 0$. Since we fix $v = 1$ throughout, this reduces to the simultaneous scaling $(L, \tau) \to (\alpha L, \alpha \tau)$ with the ratio $L/\tau$ (hence the load parameter $\rho$) preserved.
-
-\paragraph{Experimental setup.} Fixing seed $=42$, we generate instances at $n\in\{10,20\}$ and patterns $\{\text{B}_{\text{heavy}},\text{B}_{\text{medium}}, C\}$ under four scale factors $\alpha\in\{0.5,1.0,2.0,5.0\}$. For each configuration, coordinates are sampled from $[0,\alpha\sqrt{n}]^2$ and arrival intervals are scaled from the pattern-prescribed base $\tau_0=\beta_{\mathrm{BHH}}/\rho$ to $\alpha\tau_0$. The nearest-neighbor dispatch policy runs on all 24 instances. Statistics $r$, $r^{\ast\ast}$, and $k$ are recorded.
-
-\paragraph{Results.} Table~\ref{tab:scale-invariance} reports the full 24 instances. For each of the six $(n,\text{pattern})$ configurations, all four $\alpha$ values yield \emph{bit-identical} statistics: the relative standard deviation of $r$ across $\alpha$ is $0$ to machine precision, and $k$ and $r^{\ast\ast}$ are unchanged across $\alpha$ in every configuration. Only the dimensional quantities $L$ and $\tau$ scale linearly with $\alpha$ as expected.
-
-\begin{table}[htbp]
-\centering
-\footnotesize
-\caption{Scale invariance verification (NN policy, seed $=42$). Each row corresponds to one $(n,\text{pattern},\alpha)$ configuration; 24 rows total. Within each $(n,\text{pattern})$ block, the four $\alpha$ values yield identical $r$, $r^{\ast\ast}$, and $k$, confirming joint-rescaling invariance to machine precision. Em-dashes in $r^{\ast\ast}$ indicate configurations where Theorem~\ref{thm:empty-core} is inapplicable (no complement coalition feasible).}
-\label{tab:scale-invariance}
-\begin{tabular}{@{}cccccccc@{}}
-\toprule
-$n$ & Pattern & $\alpha$ & $L$ & $\tau$ & $r$ & $r^{\ast\ast}$ & $k$ \\
-\midrule
-10 & $\text{B}_{\text{heavy}}$ & 0.5 & 1.5811 & 0.0891 & 1.4225 & 1.1324 & 10 \\
-10 & $\text{B}_{\text{heavy}}$ & 1.0 & 3.1623 & 0.1781 & 1.4225 & 1.1324 & 10 \\
-10 & $\text{B}_{\text{heavy}}$ & 2.0 & 6.3246 & 0.3562 & 1.4225 & 1.1324 & 10 \\
-10 & $\text{B}_{\text{heavy}}$ & 5.0 & 15.8114 & 0.8905 & 1.4225 & 1.1324 & 10 \\
-\midrule
-10 & $\text{B}_{\text{medium}}$ & 0.5 & 1.5811 & 0.1781 & 1.4225 & 1.1324 & 10 \\
-10 & $\text{B}_{\text{medium}}$ & 1.0 & 3.1623 & 0.3562 & 1.4225 & 1.1324 & 10 \\
-10 & $\text{B}_{\text{medium}}$ & 2.0 & 6.3246 & 0.7124 & 1.4225 & 1.1324 & 10 \\
-10 & $\text{B}_{\text{medium}}$ & 5.0 & 15.8114 & 1.7810 & 1.4225 & 1.1324 & 10 \\
-\midrule
-10 & C & 0.5 & 1.5811 & 0.1781 & 1.2531 & 1.1324 & 10 \\
-10 & C & 1.0 & 3.1623 & 0.3562 & 1.2531 & 1.1324 & 10 \\
-10 & C & 2.0 & 6.3246 & 0.7124 & 1.2531 & 1.1324 & 10 \\
-10 & C & 5.0 & 15.8114 & 1.7810 & 1.2531 & 1.1324 & 10 \\
-\midrule
-20 & $\text{B}_{\text{heavy}}$ & 0.5 & 2.2361 & 0.0891 & 1.4896 & 1.1039 & 20 \\
-20 & $\text{B}_{\text{heavy}}$ & 1.0 & 4.4721 & 0.1781 & 1.4896 & 1.1039 & 20 \\
-20 & $\text{B}_{\text{heavy}}$ & 2.0 & 8.9443 & 0.3562 & 1.4896 & 1.1039 & 20 \\
-20 & $\text{B}_{\text{heavy}}$ & 5.0 & 22.3607 & 0.8905 & 1.4896 & 1.1039 & 20 \\
-\midrule
-20 & $\text{B}_{\text{medium}}$ & 0.5 & 2.2361 & 0.1781 & 1.4896 & --- & 17 \\
-20 & $\text{B}_{\text{medium}}$ & 1.0 & 4.4721 & 0.3562 & 1.4896 & --- & 17 \\
-20 & $\text{B}_{\text{medium}}$ & 2.0 & 8.9443 & 0.7124 & 1.4896 & --- & 17 \\
-20 & $\text{B}_{\text{medium}}$ & 5.0 & 22.3607 & 1.7810 & 1.4896 & --- & 17 \\
-\midrule
-20 & C & 0.5 & 2.2361 & 0.1781 & 1.3469 & 1.1039 & 20 \\
-20 & C & 1.0 & 4.4721 & 0.3562 & 1.3469 & 1.1039 & 20 \\
-20 & C & 2.0 & 8.9443 & 0.7124 & 1.3469 & 1.1039 & 20 \\
-20 & C & 5.0 & 22.3607 & 1.7810 & 1.3469 & 1.1039 & 20 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\paragraph{Interpretation.} The absence of variation in $r$, $r^{\ast\ast}$, and $k$ across $\alpha$ confirms that the online arrival process, the NN tour construction, and the Core analysis all depend only on the dimensionless parameters $(n,\rho)$ and are insensitive to the absolute scale of $(L,\tau)$. This justifies the specific choice $L=\sqrt{n}$ adopted in Section~\ref{ssec:design} without loss of generality.
-
-\section{Restricted Core LP and mechanism classification}
-\label{app:restricted-lp}
-
-This appendix (i) documents the restricted Core LP methodology used for scale-up instances where $2^n-1$ enumeration is infeasible, and (ii) gives the full binding-size distributions for the 10 near-complement and 9 intermediate main-grid cases under NN.
-
-\paragraph{Motivation (scale-up).} The full Core LP requires one inequality per feasible coalition $S\in\mathcal{F}$, i.e., up to $2^n-1$ constraints. For Pattern~A at $n=30$ this is $\sim 10^9$ and at $n=50$ it is $\sim 10^{15}$, both intractable to enumerate directly.
-
-\paragraph{Sampling strategy.} We solve a \emph{restricted} Core LP over a sampled subset $\mathcal{S}\subseteq\mathcal{F}$: all singletons, all feasible complements $N\setminus\{i\}$, the grand coalition, and $K=10{,}000$ additional random intermediate-size coalitions retained after feasibility filtering. TSP costs $c^{\ast}(S)$ are computed by Held--Karp for $|S|\le 15$ and LKH \citep{helsgaun2000effective} otherwise. The first-stage nucleolus LP
-\begin{align}
-  \min_{x,\varepsilon}\ \varepsilon\quad\text{s.t.}\quad
-  & \sum_i x_i = C(N)_{\text{online}},\qquad
-    \sum_{i\in S} x_i - c^{\ast}(S)\le \varepsilon\;\;(S\in\mathcal{S},\ S\ne N) \notag
-\end{align}
-is solved by CBC via PuLP. If $\varepsilon^{\ast}>0$, $\mathcal{S}$ certifies Core emptiness (the true restricted Core is a subset of the unrestricted Core); the method is one-sided and cannot conclude nonemptiness from a sample.
-
-\paragraph{Scale-up certification (Pattern A seed 123).} After the Phase-4 simulator corrections, the previous 5-case study of Appendix C collapses to the 2 cases at $n=20, 30$ where seed 123 under Pattern A still eludes Theorem~\ref{thm:empty-core}:
-\begin{center}
-\footnotesize
-\begin{tabular}{@{}lccccccc@{}}
-\toprule
-Pattern & $n$ & Seed & $r$ & $r^{\ast\ast}$ & $\varepsilon^{\ast}$ & Binding sizes & Mechanism \\
-\midrule
-A & 20 & 123 & 1.077 & 1.112 & $0.77$ & $\{n-2,\,n-1\}$ & near-complement \\
-A & 30 & 123 & 1.038 & 1.088 & $0.66$ & $\{n-2,\,n-1\}$ & near-complement \\
-\bottomrule
-\end{tabular}
-\end{center}
-The remaining seed-123 scale-up cases at $n=50$ (and at $n\in\{20,30,50\}$ under Pattern~C) now fire Theorem~\ref{thm:empty-core} directly and do not require the restricted-LP certificate.
-
-\paragraph{Main-grid near-complement cases (Remark~\ref{rem:near-complement}).} Table~\ref{tab:near-main} lists the 10 NN main-grid instances classified as near-complement by the first-stage LP's binding-size distribution.
-
-\begin{table}[htbp]
-\centering
-\footnotesize
-\caption{Ten main-grid NN instances in the near-complement class (Remark~\ref{rem:near-complement}). Thm~\ref{thm:empty-core} and Prop~\ref{prop:bondareva-complement} are both vacuous (or the latter inapplicable). Tight binding concentrates at sizes $\{n-2, n-1\}$.}
-\label{tab:near-main}
-\begin{tabular}{@{}rllrrrrr@{}}
-\toprule
-$n$ & pattern & seed & $k$ & $r$ & $r^{\ast\ast}$ & $r^{\ast\ast\ast}$ & binding at $n-2, n-1$ \\
-\midrule
-10 & A        & 123 & 10 & 1.053 & 1.150 & 1.053 & yes \\
-10 & B\_heavy & 256 & 10 & 1.126 & 1.138 & 1.061 & yes \\
-10 & C        & 123 & 10 & 1.124 & 1.150 & 1.053 & yes \\
-15 & A        &  42 & 15 & 1.048 & 1.121 & 1.051 & yes \\
-15 & A        &  99 & 15 & 1.051 & 1.151 & 1.043 & yes \\
-15 & A        & 123 & 15 & 1.075 & 1.145 & 1.042 & yes \\
-15 & B\_heavy &   7 & 15 & 1.185 & 1.194 & 1.046 & yes \\
-15 & C        &  42 & 15 & 1.068 & 1.121 & 1.051 & yes \\
-15 & C        &  99 & 15 & 1.148 & 1.151 & 1.043 & yes \\
-15 & C        & 123 & 15 & 1.141 & 1.145 & 1.042 & yes \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\paragraph{Main-grid intermediate cases (Observation~\ref{obs:intermediate}).} Table~\ref{tab:inter-binding} gives the full binding-size distribution for the 9 intermediate instances. Binding concentrates on sizes $|S|\in\{3,\ldots,n-3\}$, with no size-$(n-1)$ or size-$(n-2)$ involvement.
-
-\begin{table}[htbp]
-\centering
-\footnotesize
-\caption{Nine main-grid NN instances in the intermediate-coalition class (Observation~\ref{obs:intermediate}). The ``binding sizes'' column lists $|S|=c$ pairs, meaning $c$ constraints of size $|S|$ are tight at the first-stage LP optimum.}
-\label{tab:inter-binding}
-\begin{tabular}{@{}rllrrrl@{}}
-\toprule
-$n$ & pattern & seed & $k$ & $r$ & $\varepsilon^{\ast}$ & binding sizes (count) \\
-\midrule
- 7 & B\_medium & 256 &  5 & 1.436 & 0.028 & $\{1{=}1,\,2{=}1,\,3{=}4,\,4{=}6,\,5{=}2\}$ \\
-10 & B\_medium & 123 &  8 & 1.423 & 0.192 & $\{1{=}1,\,2{=}3,\,3{=}6,\,4{=}9,\,5{=}9,\,6{=}5,\,7{=}1\}$ \\
-10 & B\_medium & 256 &  8 & 1.358 & 0.217 & $\{1{=}2,\,2{=}2,\,3{=}1,\,4{=}2,\,5{=}1,\,6{=}3,\,7{=}3,\,8{=}1\}$ \\
-10 & E        &  42 &  8 & 1.495 & 0.062 & $\{1{=}1,\,2{=}1,\,3{=}5,\,4{=}3,\,5{=}3,\,6{=}2,\,7{=}1\}$ \\
-12 & B\_medium &  99 & 10 & 1.395 & 0.744 & $\{3{=}2,\,4{=}2,\,5{=}6,\,6{=}12,\,7{=}12,\,8{=}6,\,9{=}1\}$ \\
-12 & B\_medium & 123 & 10 & 1.487 & 0.767 & $\{1{=}1,\,2{=}1,\,3{=}2,\,4{=}2,\,5{=}6,\,6{=}9,\,7{=}7,\,8{=}4,\,9{=}1\}$ \\
-12 & B\_medium & 256 & 10 & 1.423 & 0.941 & $\{1{=}1,\,2{=}1,\,6{=}3,\,7{=}9,\,8{=}9,\,9{=}5,\,10{=}1\}$ \\
-12 & E        &  42 &  9 & 1.610 & 0.289 & $\{3{=}4,\,4{=}5,\,5{=}5,\,6{=}5,\,7{=}3,\,8{=}1\}$ \\
-15 & B\_medium & 256 & 12 & 1.326 & 0.185 & $\{1{=}1,\,2{=}1,\,3{=}3,\,4{=}2,\,7{=}1,\,8{=}5,\,9{=}7,\,10{=}7,\,11{=}2,\,12{=}1\}$ \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\paragraph{Interpretation.} The near-complement table (Table~\ref{tab:near-main}) confirms that the 10 Remark~\ref{rem:near-complement} cases share the signature $\{n-2, n-1\}$ binding: neither size alone certifies emptiness, but the combined presence of both sizes does. The intermediate table (Table~\ref{tab:inter-binding}) shows that the 9 Observation~\ref{obs:intermediate} cases have binding concentrated on small-to-medium coalition sizes, with $r\in[1.33,1.61]$ and $k<n-1$ in every case. A tight analytic sufficient condition for either class remains open (\S\ref{sec:conclusion}).
 
 \end{document}
