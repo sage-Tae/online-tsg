@@ -684,4 +684,57 @@ Figure~\ref{fig:core-n} breaks down the aggregate Core-existence rates of Sectio
 \label{fig:core-n}
 \end{figure}
 
+\section{Scale invariance: empirical verification}
+\label{app:scale-invariance}
+
+This appendix verifies empirically the scale invariance stated in Section~\ref{ssec:design}: that all dimensionless observables are invariant under the joint rescaling $(L, v, \tau) \to (\alpha L, \alpha v, \alpha \tau)$ for any $\alpha > 0$. Since we fix $v = 1$ throughout, this reduces to the simultaneous scaling $(L, \tau) \to (\alpha L, \alpha \tau)$ with the ratio $L/\tau$ (hence the load parameter $\rho$) preserved.
+
+\paragraph{Experimental setup.} Fixing seed $=42$, we generate instances at $n\in\{10,20\}$ and patterns $\{\text{B}_{\text{heavy}},\text{B}_{\text{medium}}, C\}$ under four scale factors $\alpha\in\{0.5,1.0,2.0,5.0\}$. For each configuration, coordinates are sampled from $[0,\alpha\sqrt{n}]^2$ and arrival intervals are scaled from the pattern-prescribed base $\tau_0=\beta_{\mathrm{BHH}}/\rho$ to $\alpha\tau_0$. The nearest-neighbor dispatch policy runs on all 24 instances. Statistics $r$, $r^{\ast\ast}$, and $k$ are recorded.
+
+\paragraph{Results.} Table~\ref{tab:scale-invariance} reports the full 24 instances. For each of the six $(n,\text{pattern})$ configurations, all four $\alpha$ values yield \emph{bit-identical} statistics: the relative standard deviation of $r$ across $\alpha$ is $0$ to machine precision, and $k$ and $r^{\ast\ast}$ are unchanged across $\alpha$ in every configuration. Only the dimensional quantities $L$ and $\tau$ scale linearly with $\alpha$ as expected.
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\caption{Scale invariance verification (NN policy, seed $=42$). Each row corresponds to one $(n,\text{pattern},\alpha)$ configuration; 24 rows total. Within each $(n,\text{pattern})$ block, the four $\alpha$ values yield identical $r$, $r^{\ast\ast}$, and $k$, confirming joint-rescaling invariance to machine precision. Em-dashes in $r^{\ast\ast}$ indicate configurations where Theorem~\ref{thm:empty-core} is inapplicable (no complement coalition feasible).}
+\label{tab:scale-invariance}
+\begin{tabular}{@{}cccccccc@{}}
+\toprule
+$n$ & Pattern & $\alpha$ & $L$ & $\tau$ & $r$ & $r^{\ast\ast}$ & $k$ \\
+\midrule
+10 & $\text{B}_{\text{heavy}}$ & 0.5 & 1.5811 & 0.0891 & 1.4225 & 1.1324 & 10 \\
+10 & $\text{B}_{\text{heavy}}$ & 1.0 & 3.1623 & 0.1781 & 1.4225 & 1.1324 & 10 \\
+10 & $\text{B}_{\text{heavy}}$ & 2.0 & 6.3246 & 0.3562 & 1.4225 & 1.1324 & 10 \\
+10 & $\text{B}_{\text{heavy}}$ & 5.0 & 15.8114 & 0.8905 & 1.4225 & 1.1324 & 10 \\
+\midrule
+10 & $\text{B}_{\text{medium}}$ & 0.5 & 1.5811 & 0.1781 & 1.4225 & 1.1324 & 10 \\
+10 & $\text{B}_{\text{medium}}$ & 1.0 & 3.1623 & 0.3562 & 1.4225 & 1.1324 & 10 \\
+10 & $\text{B}_{\text{medium}}$ & 2.0 & 6.3246 & 0.7124 & 1.4225 & 1.1324 & 10 \\
+10 & $\text{B}_{\text{medium}}$ & 5.0 & 15.8114 & 1.7810 & 1.4225 & 1.1324 & 10 \\
+\midrule
+10 & C & 0.5 & 1.5811 & 0.1781 & 1.2531 & 1.1324 & 10 \\
+10 & C & 1.0 & 3.1623 & 0.3562 & 1.2531 & 1.1324 & 10 \\
+10 & C & 2.0 & 6.3246 & 0.7124 & 1.2531 & 1.1324 & 10 \\
+10 & C & 5.0 & 15.8114 & 1.7810 & 1.2531 & 1.1324 & 10 \\
+\midrule
+20 & $\text{B}_{\text{heavy}}$ & 0.5 & 2.2361 & 0.0891 & 1.4896 & 1.1039 & 20 \\
+20 & $\text{B}_{\text{heavy}}$ & 1.0 & 4.4721 & 0.1781 & 1.4896 & 1.1039 & 20 \\
+20 & $\text{B}_{\text{heavy}}$ & 2.0 & 8.9443 & 0.3562 & 1.4896 & 1.1039 & 20 \\
+20 & $\text{B}_{\text{heavy}}$ & 5.0 & 22.3607 & 0.8905 & 1.4896 & 1.1039 & 20 \\
+\midrule
+20 & $\text{B}_{\text{medium}}$ & 0.5 & 2.2361 & 0.1781 & 1.4896 & --- & 17 \\
+20 & $\text{B}_{\text{medium}}$ & 1.0 & 4.4721 & 0.3562 & 1.4896 & --- & 17 \\
+20 & $\text{B}_{\text{medium}}$ & 2.0 & 8.9443 & 0.7124 & 1.4896 & --- & 17 \\
+20 & $\text{B}_{\text{medium}}$ & 5.0 & 22.3607 & 1.7810 & 1.4896 & --- & 17 \\
+\midrule
+20 & C & 0.5 & 2.2361 & 0.1781 & 1.3469 & 1.1039 & 20 \\
+20 & C & 1.0 & 4.4721 & 0.3562 & 1.3469 & 1.1039 & 20 \\
+20 & C & 2.0 & 8.9443 & 0.7124 & 1.3469 & 1.1039 & 20 \\
+20 & C & 5.0 & 22.3607 & 1.7810 & 1.3469 & 1.1039 & 20 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Interpretation.} The absence of variation in $r$, $r^{\ast\ast}$, and $k$ across $\alpha$ confirms that the online arrival process, the NN tour construction, and the Core analysis all depend only on the dimensionless parameters $(n,\rho)$ and are insensitive to the absolute scale of $(L,\tau)$. This justifies the specific choice $L=\sqrt{n}$ adopted in Section~\ref{ssec:design} without loss of generality.
+
 \end{document}
