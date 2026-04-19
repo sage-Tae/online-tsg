@@ -6,14 +6,15 @@
 #   scripts/verify_zip_rebuild.sh <path-to-submission.zip>
 #
 # The script extracts the ZIP into a temporary directory, runs the standard
-# pdflatex → bibtex → pdflatex → pdflatex sequence on paper/main.tex, and
-# reports the resulting page count. Exit code 0 on success; non-zero on
-# missing paper/main.pdf or an unexpected page count (not 35).
+# pdflatex → bibtex → pdflatex → pdflatex sequence on BOTH paper/main.tex
+# and paper/supplementary.tex (if the latter exists), and reports the page
+# counts. Exit code 0 on success; non-zero on missing PDFs, undefined
+# refs/cites, or a main.pdf page count exceeding the EJOR 30-page limit.
 #
 # The intent is to catch path-sensitive bugs that only surface when the
 # repository is extracted in isolation from the development tree — e.g.,
 # LaTeX \graphicspath entries pointing to symlinks that exist only in the
-# working copy.
+# working copy — as well as EJOR-compliance regressions on the main PDF.
 
 set -e
 
@@ -28,7 +29,7 @@ if [ ! -f "$ZIP" ]; then
 fi
 
 ZIP_ABS=$(cd "$(dirname "$ZIP")" && pwd)/$(basename "$ZIP")
-EXPECTED_PAGES=35
+EXPECTED_MAIN_PAGES=30
 
 TMPDIR=$(mktemp -d)
 trap 'rm -rf "$TMPDIR"' EXIT
@@ -43,39 +44,89 @@ if [ -z "$PAPER_DIR" ]; then
 fi
 
 cd "$PAPER_DIR"
-pdflatex -interaction=nonstopmode main.tex > build1.log 2>&1 || true
-bibtex main > build_bib.log 2>&1 || true
-pdflatex -interaction=nonstopmode main.tex > build2.log 2>&1 || true
-pdflatex -interaction=nonstopmode main.tex > build3.log 2>&1 || true
 
-if [ ! -f main.pdf ]; then
-    echo "Clean-room rebuild: FAIL (main.pdf not produced)"
-    echo "--- tail of final build log ---"
-    tail -40 build3.log
-    exit 1
-fi
+get_pages() {
+    local pdf="$1"
+    local log="$2"
+    if command -v pdfinfo > /dev/null 2>&1; then
+        pdfinfo "$pdf" 2>/dev/null | awk '/^Pages:/ {print $2}'
+    else
+        awk -v pdf="$pdf" '
+            $0 ~ "Output written on " pdf {
+                for (i=1;i<=NF;i++) if ($i ~ /^\(/) {gsub(/[()]/, "", $i); print $i; exit}
+            }
+        ' "$log"
+    fi
+}
 
-# Prefer pdfinfo if available; otherwise parse the pdflatex log line
-# "Output written on main.pdf (NN pages, NNNN bytes)."
-if command -v pdfinfo > /dev/null 2>&1; then
-    PAGES=$(pdfinfo main.pdf 2>/dev/null | awk '/^Pages:/ {print $2}')
+build_one() {
+    local stem="$1"
+    pdflatex -interaction=nonstopmode "${stem}.tex" > "${stem}_build1.log" 2>&1 || true
+    bibtex "$stem" > "${stem}_bibtex.log" 2>&1 || true
+    pdflatex -interaction=nonstopmode "${stem}.tex" > "${stem}_build2.log" 2>&1 || true
+    pdflatex -interaction=nonstopmode "${stem}.tex" > "${stem}_build3.log" 2>&1 || true
+}
+
+check_one() {
+    local stem="$1"
+    local expected_pages="$2"   # "" means no page-count check
+    local log="${stem}_build3.log"
+    if [ ! -f "${stem}.pdf" ]; then
+        echo "Clean-room rebuild: FAIL (${stem}.pdf not produced)"
+        echo "--- tail of final ${stem} build log ---"
+        tail -40 "$log"
+        return 1
+    fi
+    local pages
+    pages=$(get_pages "${stem}.pdf" "$log")
+    local undef_refs undef_cites errors
+    undef_refs=$(grep -c "undefined references" "$log" 2>/dev/null || true)
+    undef_cites=$(grep -c "Citation .* undefined" "$log" 2>/dev/null || true)
+    errors=$(grep -c "^! " "$log" 2>/dev/null || true)
+
+    local page_ok=1
+    if [ -n "$expected_pages" ]; then
+        # Allow "up to $expected_pages" (i.e., <=)
+        if [ "$pages" -gt "$expected_pages" ] 2>/dev/null; then
+            page_ok=0
+        fi
+    fi
+
+    if [ "$errors" = "0" ] && [ "$undef_refs" = "0" ] && [ "$undef_cites" = "0" ] && [ "$page_ok" = "1" ]; then
+        if [ -n "$expected_pages" ]; then
+            echo "  ${stem}.pdf: PASS ($pages pages, limit $expected_pages)"
+        else
+            echo "  ${stem}.pdf: PASS ($pages pages)"
+        fi
+        return 0
+    else
+        echo "  ${stem}.pdf: FAIL"
+        echo "    pages=$pages (limit=${expected_pages:-unchecked}), errors=$errors, undef_refs=$undef_refs, undef_cites=$undef_cites"
+        echo "    --- tail of final ${stem} build log ---"
+        tail -40 "$log"
+        return 1
+    fi
+}
+
+echo "=== Clean-room rebuild ==="
+
+build_one main
+MAIN_OK=0
+check_one main "$EXPECTED_MAIN_PAGES" && MAIN_OK=1 || true
+
+SUPP_OK=1
+if [ -f supplementary.tex ]; then
+    build_one supplementary
+    SUPP_OK=0
+    check_one supplementary "" && SUPP_OK=1 || true
 else
-    PAGES=$(awk '/Output written on main\.pdf/ {for (i=1;i<=NF;i++) if ($i ~ /^\(/) {gsub(/[()]/, "", $i); print $i; exit}}' build3.log)
+    echo "  supplementary.tex: skipped (not present in ZIP)"
 fi
-# grep -c always prints a count, so use `|| true` to absorb its non-zero
-# exit on no-matches rather than `|| echo 0` (which would append an extra line).
-UNDEF_REFS=$(grep -c "undefined references" build3.log 2>/dev/null || true)
-UNDEF_CITES=$(grep -c "Citation .* undefined" build3.log 2>/dev/null || true)
-ERRORS=$(grep -c "^! " build3.log 2>/dev/null || true)
 
-if [ "$PAGES" = "$EXPECTED_PAGES" ] && [ "$ERRORS" = "0" ] && [ "$UNDEF_REFS" = "0" ] && [ "$UNDEF_CITES" = "0" ]; then
-    echo "Clean-room rebuild: PASS ($PAGES pages)"
+if [ "$MAIN_OK" = "1" ] && [ "$SUPP_OK" = "1" ]; then
+    echo "Clean-room rebuild: PASS"
     exit 0
 else
     echo "Clean-room rebuild: FAIL"
-    echo "  pages=$PAGES (expected $EXPECTED_PAGES)"
-    echo "  errors=$ERRORS, undef_refs=$UNDEF_REFS, undef_cites=$UNDEF_CITES"
-    echo "--- tail of final build log ---"
-    tail -40 build3.log
     exit 1
 fi

@@ -22,8 +22,9 @@
 
 set -u
 
-CURRENT_VERSION="v2.1.7"
-CURRENT_PAGES="35"
+CURRENT_VERSION="v2.1.8"
+CURRENT_MAIN_PAGES="30"
+CURRENT_SUPP_PAGES="6"
 SEED123_ROWS="2"
 
 README="README.md"
@@ -68,16 +69,18 @@ strip_history() {
 
 ALL_NONHIST=$(strip_history "$README"; strip_history "$REPRO")
 
-# 1. Stale version labels v2.1.0 – v2.1.6 outside historical blocks.
+# 1. Stale version labels v2.1.0 – v2.1.7 outside historical blocks.
 #    Also exclude per-line historical markers: supersedes / Supersedes /
 #    legacy / prior / v2.1.X-and-earlier (phrases that signal the label is
 #    being cited as history, not as current).
-VERSION_HITS=$(echo "$ALL_NONHIST" | grep -E ":.*v2\.1\.[0-6]\b" 2>/dev/null | \
+VERSION_HITS=$(echo "$ALL_NONHIST" | grep -E ":.*v2\.1\.[0-7]\b" 2>/dev/null | \
     grep -vE "supersedes|Supersedes|legacy|Legacy|-and-earlier|and earlier|prior submission|historical" || true)
 report "Stale version labels (non-historical)" "$VERSION_HITS"
 
-# 2. Stale page counts — 23 / 29 / 30 / 34 outside historical blocks.
-PAGE_HITS=$(echo "$ALL_NONHIST" | grep -E ":.*\b(23|29|30|34) pages\b" 2>/dev/null || true)
+# 2. Stale page counts — previous main-manuscript page counts (pre-v2.1.8:
+#    23 / 29 / 34 / 35) outside historical blocks. Do NOT flag the current
+#    values (30 main, 6 supplementary).
+PAGE_HITS=$(echo "$ALL_NONHIST" | grep -E ":.*\b(23|29|34|35) pages\b" 2>/dev/null || true)
 report "Stale page counts" "$PAGE_HITS"
 
 # 3. Stale seed123 row counts — `5 instances` / `5 rows` / `five instances`
@@ -101,7 +104,7 @@ report "Stale metrics (1.355 / 3.21)" "$METRIC_HITS"
 
 echo ""
 if [ "$FAIL" = "0" ]; then
-    echo "Doc consistency check: PASS (current version = $CURRENT_VERSION, $CURRENT_PAGES pages, seed123 = $SEED123_ROWS rows)"
+    echo "Doc consistency check: PASS (current version = $CURRENT_VERSION, main $CURRENT_MAIN_PAGES pages / supplementary $CURRENT_SUPP_PAGES pages, seed123 = $SEED123_ROWS rows)"
     exit 0
 else
     echo "Doc consistency check: FAIL — review hits above."
