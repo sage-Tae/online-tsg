@@ -1,10 +1,10 @@
-# Reproducibility Guide — Online TSG (v2.1.8)
+# Reproducibility Guide — Online TSG (v2.1.9)
 
-This document describes how to reproduce the empirical results in the paper *"Online Traveling Salesman Games: Temporal Nucleolus and the Fragility of the Core under Dynamic Arrivals"* (major revision, v2.1.8).
+This document describes how to reproduce the empirical results in the paper *"Online Traveling Salesman Games: Temporal Nucleolus and the Fragility of the Core under Dynamic Arrivals"* (major revision, v2.1.9).
 
 ## Paper Info
 
-- **Version**: v2.1.8 (major revision; supersedes v2.0, v2.1.0, v2.1.2, v2.1.3, v2.1.4, v2.1.5, v2.1.6, v2.1.7)
+- **Version**: v2.1.9 (major revision; supersedes v2.0, v2.1.0, v2.1.2, v2.1.3, v2.1.4, v2.1.5, v2.1.6, v2.1.7, v2.1.8)
 - **Pages**: main manuscript 30 pages (EJOR-compliant), Supplementary Materials 6 pages
 - **Experimental instances**: 596 total
   - Main study: 525 (5 sizes × 7 patterns × 5 seeds × 3 policies)
@@ -97,7 +97,7 @@ python3 run_sensitivity_v2.py
 - **Expected result**: bit-identical r, r**, k within each (n, pattern) group across α.
 - **Source for**: Appendix B, Table B.1.
 
-### 4. Restricted Core LP certification (2 instances, Appendix C)
+### 4. Restricted Core LP certification (2 instances, Supplementary Materials §S3)
 
 ```bash
 cd code/experiments
@@ -105,8 +105,8 @@ python3 run_seed123_check.py
 ```
 
 - **Runtime**: ~5 hours total for the 2 shipped rows (n=20 seed 123 Pattern A ≈ 1 h, n=30 seed 123 Pattern A ≈ 4 h; both dominated by LKH calls on ~10,000 sampled coalitions each). Requires augmented summary CSV from Step 1.5 for cross-checks.
-- **Output**: `logs/seed123_core_check.csv` (2 rows: n=20 and n=30 seed 123 under Pattern A — exactly the Appendix C Table). TARGETS in the script match this scope; `logs/run_seed123_check.log` records execution traces.
-- **Source for**: Supplementary Materials §S3 "Scale-up certification" 2-row table. The n=50 seed 123 case is analytically covered by Theorem 11 firing directly (Finding 4) and does not require restricted-LP treatment in v2.1.8.
+- **Output**: `logs/seed123_core_check.csv` (2 rows: n=20 and n=30 seed 123 under Pattern A — exactly the Supplementary Materials §S3 Table). TARGETS in the script match this scope.
+- **Source for**: Supplementary Materials §S3 "Scale-up certification" 2-row table. The n=50 seed 123 case is analytically covered by Theorem 11 firing directly (Finding 4) and does not require restricted-LP treatment in v2.1.9.
 - **Legacy scope**: the v2.1.4-and-earlier 5-entry TARGETS list (adding n=50 seed 123 and two control rows for Theorem-11-fires sanity checks) is preserved at `code/scripts/legacy/run_seed123_check_extended.py`.
 
 ### 5. Figures regeneration
@@ -161,7 +161,7 @@ For Pattern A at seed = 123 (n ∈ {20, 30}), Theorem 11 is vacuous (r ≤ r**) 
 | `code/src/tsp_scaleup.py` | LKH wrapper (via `elkai`) for large n |
 | `code/src/core_lp_restricted.py` | Restricted Core LP (Supplementary Materials §S3) |
 
-## Data Files (v2.1.8)
+## Data Files (v2.1.9)
 
 All in `code/experiments/logs/`:
 
@@ -172,17 +172,8 @@ All in `code/experiments/logs/`:
 | `sensitivity_v2.csv` | 24 | Scale invariance verification (Supplementary Materials §S2) |
 | `seed123_core_check.csv` | 2 | Near-complement certification (Supplementary Materials §S3; n=20 and n=30 seed 123 under Pattern A — legacy 5-row version at `logs/legacy/seed123_core_check_extended.csv`) |
 | `run_main_v2_full.log` | — | Execution log of main study |
-| `run_scaleup_v2.log` | — | Execution log of scale-up |
-| `run_sensitivity_v2.log` | — | Execution log of sensitivity |
-| `run_seed123_check.log` | — | Execution log of restricted LP |
 
-Legacy CSVs (`policy_comparison.csv`, `scaleup.csv`, etc.) correspond to the v1.2 submission and are retained for historical reference; they are **not** the basis for v2.1.8's reported numbers.
-
-## Design Documents
-
-- `phase1_design.md` — Experimental design rationale (N2 convention, pattern taxonomy)
-- `phase3_narrative.md` — Paper revision narrative with section-by-section plan
-- `phase3_results_summary.json` — Aggregated numerical results used in the paper
+Legacy CSVs (`policy_comparison.csv`, `scaleup.csv`, etc.) correspond to the v1.2 submission and are retained for historical reference; they are **not** the basis for v2.1.9's reported numbers.
 
 ## Compiling the Paper
 
@@ -233,7 +224,7 @@ bash scripts/verify_zip_rebuild.sh TSG_agent_submission_v2_1_8_20260419.zip
 bash scripts/verify_doc_consistency.sh
 ```
 
-Both are expected to pass on a clean `v2.1.8` checkout. Use them on every future iteration before tagging a new version.
+Both are expected to pass on a clean `v2.1.9` checkout. Use them on every future iteration before tagging a new version.
 
 ## Version History
 
@@ -246,4 +237,5 @@ Both are expected to pass on a clean `v2.1.8` checkout. Use them on every future
 - **v2.1.5** (intermediate): 35 pages. Scale-up near-complement scope aligned across paper/script/CSV. Finding 4 rewritten as a two-tier pattern (restricted LP at n=20, 30; Theorem 11 fires directly at n=50), consistent with Theorem 14's $O(n^{-1/2})$ tightening. `run_seed123_check.py` TARGETS reduced from 5 to 2 to match Appendix C (legacy 5-entry version retained at `code/scripts/legacy/run_seed123_check_extended.py`).
 - **v2.1.6** (intermediate): 35 pages. Submission-ZIP rebuildability fix. `paper/main.tex` `\graphicspath` extended from `{../figures/}` to `{../figures/}{../code/figures/}` so that a clean-room extraction of the submission ZIP — which ships `paper/` and `code/figures/` but not a top-level `figures/` symlink — compiles without `! LaTeX Error: File ... not found`. `REPRODUCIBILITY.md` Data-Files table `seed123_core_check.csv` row corrected from `5` to `2` to match Appendix C and the shipped CSV. `scripts/verify_zip_rebuild.sh` added as an automated clean-room rebuild check (extract ZIP to tmp → 3-pass LaTeX → verify 35 pages). No theoretical, experimental, or figure changes.
 - **v2.1.7** (intermediate): 35 pages. Documentation semantic-sweep consistency pass. `REPRODUCIBILITY.md` §4 heading "Restricted Core LP certification (5 instances, Appendix C)" corrected to "(2 instances, Appendix C)" — the last residual `5 instances` label from the v2.1.2 scope, which had survived prior line-local fixes because it lived in a section heading rather than body text. `README.md` header current-version label bumped to v2.1.7, version history appended, and `Reproducibility tags` section updated so that the `(current, major revision)` marker follows the active tag rather than `v2.1.2`. Both files given an end-to-end semantic review rather than a pattern-local edit. `scripts/verify_doc_consistency.sh` added: automated stale-label grep check (version labels / page counts / seed123 row counts / orphan top-level `figures/` / stale metrics) so that future iterations fail loudly at the same class of issue. No theoretical, experimental, figure, CSV, or paper-source changes.
-- **v2.1.8** (current): main manuscript 30 pages (EJOR-compliant), Supplementary Materials 6 pages. EJOR 30-page compliance split: the three appendices (per-pattern Core-existence, scale-invariance verification, restricted Core LP methodology + classification tables) are moved out of `main.tex` into a new `paper/supplementary.tex` (sections §S1, §S2, §S3). Main-body references rewritten as `Supplementary Materials §S1–§S3` and `Supplementary Figure/Table S*`. §6.8 gains a one-paragraph self-contained summary of the restricted-LP methodology so the main manuscript does not depend on the supplement to explain its scale-up certifications. §2 Related Work consolidated from five subsections to three (Static+Dynamic merged; Online+Nucleolus merged; Restricted Cooperation kept) and bibliography `\bibsep` compressed so the references fit on page 30. `scripts/verify_zip_rebuild.sh` extended to build and validate both `main.pdf` (≤30 pages hard cap) and `supplementary.pdf`. Theorem/Proposition/Corollary/Remark/Observation statements and proofs are unchanged; experimental CSVs and figure PDFs are unchanged bit-for-bit.
+- **v2.1.8** (intermediate): main manuscript 30 pages (EJOR-compliant), Supplementary Materials 6 pages. EJOR 30-page compliance split: the three appendices (per-pattern Core-existence, scale-invariance verification, restricted Core LP methodology + classification tables) are moved out of `main.tex` into a new `paper/supplementary.tex` (sections §S1, §S2, §S3). Main-body references rewritten as `Supplementary Materials §S1–§S3` and `Supplementary Figure/Table S*`. §6.8 gains a one-paragraph self-contained summary of the restricted-LP methodology so the main manuscript does not depend on the supplement to explain its scale-up certifications. §2 Related Work consolidated from five subsections to three (Static+Dynamic merged; Online+Nucleolus merged; Restricted Cooperation kept) and bibliography `\bibsep` compressed so the references fit on page 30. `scripts/verify_zip_rebuild.sh` extended to build and validate both `main.pdf` (≤30 pages hard cap) and `supplementary.pdf`. Theorem/Proposition/Corollary/Remark/Observation statements and proofs are unchanged; experimental CSVs and figure PDFs are unchanged bit-for-bit.
+- **v2.1.9** (current): main manuscript 30 pages, Supplementary Materials 6 pages. EJOR desk-check compliance pass. Abstract rewritten (formula-free, theorem-reference-free, all abbreviations defined on first use, 238 words — within the 50–250 EJOR band). Keywords trimmed from 7 to 5, one of them from the EJOR official list (Routing). `code/figures/make_figures_v3.py` Figure 2 caption text corrected from "see Appendix C" to "see Supplementary Materials S3" (the last Appendix-era reference lingering in a figure PDF); Figure 2 regenerated. `REPRODUCIBILITY.md` Data-Files table pruned of four unshipped-log rows (only the main-study execution log is shipped) and the Design-Documents section removed (three internal working files were being listed but are not in the submission ZIP). Theorem statements, CSV data, and Python source unchanged.

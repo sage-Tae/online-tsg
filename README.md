@@ -6,7 +6,7 @@ Code and data for the paper:
 > Seyun Jeong (POSTECH) and Hyunchul Tae (KITECH)
 > Submitted to *European Journal of Operational Research*, 2026
 
-**Current version: v2.1.8** (major revision, April 19, 2026)
+**Current version: v2.1.9** (major revision, April 19, 2026)
 
 Version history:
 - v2.0.x — initial submission (v2.0, v2.0.1, v2.0.2, v2.0.3)
@@ -18,6 +18,7 @@ Version history:
 - v2.1.6 — ZIP-rebuildability fix (`\graphicspath` extended for clean-room extraction, Data-Files table `seed123_core_check.csv` 5 → 2 rows, `scripts/verify_zip_rebuild.sh` added)
 - v2.1.7 — documentation semantic-sweep consistency pass (REPRODUCIBILITY §4 heading `5 instances` → `2 instances`, README version/Reproducibility-tags/repo-tree synced, `scripts/verify_doc_consistency.sh` added)
 - v2.1.8 — EJOR 30-page compliance split (Appendix A/B/C moved to a separate `paper/supplementary.pdf`; main manuscript trimmed to 30 pages; §2 Related Work consolidated; `scripts/verify_zip_rebuild.sh` extended to validate both PDFs)
+- v2.1.9 — EJOR desk-check compliance (Abstract rewritten formula-free and theorem-reference-free at 238 words; Keywords trimmed 7 → 5 with one EJOR-list term; `make_figures_v3.py` Figure 2 caption's "see Appendix C" → "see Supplementary Materials S3" + Fig 2 regenerated; REPRODUCIBILITY Data-Files table pruned of unshipped logs / Design-Documents section)
 
 ## Overview
 
@@ -27,7 +28,7 @@ among coalitions realizable under revealed arrival dynamics. This repository
 contains all code, seeds, and raw results needed to reproduce the paper's
 numerical claims.
 
-## Key results (sanity checkpoints, v2.1.8)
+## Key results (sanity checkpoints, v2.1.9)
 
 | Paper location | Quantity | Value |
 |---|---|---|
@@ -86,8 +87,8 @@ random seeds, and mapping between paper tables/figures and scripts.
 
 - `paper-submission-v1` / `v1.1` / `v1.2`: prior submission states (L = 10 coordinate convention); superseded by v2.1.2 and subsequent iterations.
 - `paper-submission-v2.0` / `v2.0.1` / `v2.0.2` / `v2.0.3` / `v2.1.0` (local only): intermediate revisions under Steele N2 convention; superseded by v2.1.2 and subsequent iterations.
-- `v2.1.2` / `v2.1.3` / `v2.1.4` / `v2.1.5` / `v2.1.6` / `v2.1.7` (intermediate major-revision iterations): 4-mechanism taxonomy, Proposition 12, Observation 15, corrected feasibility family F, then a sequence of documentation-polish and ZIP-rebuildability fixes capped by the v2.1.7 end-to-end consistency sweep. See the version-history block above for per-iteration scope. Restore any locally via `git checkout <tag>`.
-- `v2.1.8` (current, major revision): EJOR 30-page compliance split. The three appendices are moved from `paper/main.tex` into a new `paper/supplementary.tex` (§S1 per-pattern Core-existence, §S2 scale invariance, §S3 restricted Core LP + classification tables). The main manuscript is trimmed to exactly 30 pages (`\bibsep` compression + §2 Related Work consolidated from 5 subsections to 3); the Supplementary is 6 pages. Body references rewritten as "Supplementary Materials §S*" and "Supplementary Figure/Table S*". §6.8 adds a self-contained one-paragraph summary of the restricted-LP methodology. `scripts/verify_zip_rebuild.sh` extended to build and validate both `main.pdf` (≤30-page hard cap) and `supplementary.pdf`. Theorem/proof statements, CSV data, and figure PDFs are unchanged. Restore locally via `git checkout v2.1.8`.
+- `v2.1.2` / `v2.1.3` / `v2.1.4` / `v2.1.5` / `v2.1.6` / `v2.1.7` / `v2.1.8` (intermediate major-revision iterations): 4-mechanism taxonomy, Proposition 12, Observation 15, corrected feasibility family F; a sequence of documentation-polish and ZIP-rebuildability fixes; and the EJOR 30-page compliance split at v2.1.8 (appendices moved to a separate `paper/supplementary.pdf`). See the version-history block above for per-iteration scope. Restore any locally via `git checkout <tag>`.
+- `v2.1.9` (current, major revision): EJOR desk-check compliance pass. Abstract rewritten formula-free and theorem-reference-free at 238 words (within EJOR's 50–250 band) with all abbreviations defined on first use; Keywords trimmed 7 → 5 with one entry (Routing) drawn from EJOR's official keyword list; `code/figures/make_figures_v3.py` Figure 2 caption's "see Appendix C" replaced by "see Supplementary Materials S3" and Figure 2 regenerated (no figure PDF contains the word "Appendix"); `REPRODUCIBILITY.md` Data-Files table pruned of four unshipped-log rows (only `run_main_v2_full.log` is actually in the ZIP) and the Design-Documents section removed (phase1_design.md, phase3_narrative.md, phase3_results_summary.json are internal working files not shipped). Theorem / Proposition / Corollary / Remark / Observation statements and proofs are unchanged; CSVs and `src/` are unchanged bit-for-bit. Restore locally via `git checkout v2.1.9`.
 
 ## Citation
 
