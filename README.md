@@ -4,7 +4,7 @@
 > Seyun Jeong and Hyunchul Tae (Korea Institute of Industrial Technology)
 > Submitted to *European Journal of Operational Research*, 2026
 
-Current: v2.2.5 (April 2026)
+Current: v2.2.8 (April 2026)
 
 ## Overview
 
