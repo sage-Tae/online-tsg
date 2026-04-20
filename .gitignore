@@ -43,3 +43,14 @@ paper/highlights.pdf
 paper/highlights.fdb_latexmk
 paper/highlights.fls
 paper/highlights.synctex.gz
+
+# Internal docs and working artifacts (not part of public release)
+docs/
+phase*_*.md
+phase*_*.json
+scripts/
+figures
+
+# Stale submission bundles (current submission stays tracked explicitly)
+TSG_agent_submission_v2_*_*.zip
+TSG_agent_submission_v2_*_*.sha256
