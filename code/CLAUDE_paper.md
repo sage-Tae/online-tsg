@@ -2,7 +2,7 @@
 
 ## 현재 상태 (완료된 것)
 논문 paper/main.tex이 완성되어 있음.
-- 저자: Seyun Jeong (POSTECH), Hyunchul Tae (KITECH)
+- 저자: Seyun Jeong, Hyunchul Tae (both at Korea Institute of Industrial Technology, KITECH)
 - Related Work 4개 스트림
 - Theorem 6, 11, 13, Corollary 14 + 증명
 - Figure 1~5
@@ -30,14 +30,14 @@
 
 ## 저자 정보
 1저자: Seyun Jeong
-  Department of Industrial and Management Engineering
-  Pohang University of Science and Technology (POSTECH)
-  77 Cheongam-ro, Nam-gu, Pohang, Gyeongbuk 37673, Republic of Korea
-
-2저자: Hyunchul Tae
   Korea Institute of Industrial Technology (KITECH)
-  89 Yangdaegiro-gil, Ipjang-myeon, Seobuk-gu
-  Cheonan-si, Chungcheongnam-do 31056, Republic of Korea
+  Cheonan, Republic of Korea
+  Email: jeongsseyyun@kitech.re.kr
+
+2저자: Hyunchul Tae (corresponding author)
+  Korea Institute of Industrial Technology (KITECH)
+  Cheonan, Republic of Korea
+  Email: sage@kitech.re.kr
 
 ## Transportation Science 제출 요건
 - 페이지: 본문+참조+표+그림 최대 35페이지

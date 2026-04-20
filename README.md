@@ -1,7 +1,7 @@
 # Online Traveling Salesman Games
 
 > **Online Traveling Salesman Games: Temporal Nucleolus and the Fragility of the Core under Dynamic Arrivals**
-> Seyun Jeong (POSTECH) and Hyunchul Tae (KITECH)
+> Seyun Jeong and Hyunchul Tae (Korea Institute of Industrial Technology)
 > Submitted to *European Journal of Operational Research*, 2026
 
 Current: v2.2.5 (April 2026)
@@ -53,5 +53,5 @@ MIT — see [LICENSE](LICENSE).
 
 ## Contact
 
-- Seyun Jeong, POSTECH (Department of Industrial and Management Engineering)
-- Hyunchul Tae, KITECH (Korea Institute of Industrial Technology)
+- Seyun Jeong, Korea Institute of Industrial Technology (KITECH) — jeongsseyyun@kitech.re.kr
+- Hyunchul Tae, Korea Institute of Industrial Technology (KITECH), corresponding author — sage@kitech.re.kr
